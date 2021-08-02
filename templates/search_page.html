@@ -1,14 +1,57 @@
+{% load custom_filters %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Hello</title>
+    <link rel="stylesheet" href="{% static 'styles/search_page.css' %}">
 </head>
 <body>
-Hello there!
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header">
+        <h1>All cars are here!</h1>
+    </div>
+</header>
+
+<!-- CONTENT -->
+<div class="content">
+
+    <!--  FILTERS  -->
+    <div class="filters">
+        <div class="filters header"></div>
+        <div class="filters row"></div>
+        <div class="filters actions"></div>
+    </div>
+
+    <!--  ADS  -->
+    <div class="ads">
+        {% for i, ad in ads.iterrows %}
+        <div class="ad">
+            <div class="add inner">
+                <div class="ad photo">
+                    <img src="{{ ad.photos|as_list_of_str|pop:'0' }}">
+                </div>
+                <div class="ad description">
+                    <a href="{{ ad.url }}" target="_blank">
+                        {{ ad.make }} {{ ad.model }}, {{ ad.year }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer"></div>
 
 <script>
-    console.log({{ ads|safe }});
 </script>
+
 </body>
 </html>

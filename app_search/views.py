@@ -33,10 +33,12 @@ def render_search_page(request: django.http.request.HttpRequest) -> render:
     """Renders the main search page of the website."""
     query = """
     select *
-    from parsers.ads
-    limit 50
+    from web.ads
+    limit 25
     """
-    ads = pd.read_sql(query, connection).to_json(orient='records')
+    ads = pd.read_sql(query, connection)
+    ads['year'] = ads.year.astype(int)
+    # ads = ads.to_json(orient='records')
 
     # import pygeoip
     # gi = pygeoip.GeoIP('GeoIPCity.dat')
