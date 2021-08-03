@@ -2,6 +2,7 @@ from django import template
 
 register = template.Library()
 
+
 @register.filter(name='as_list_of_str')
 def as_list_of_str(value: str, key: str = ',') -> list:
   """Returns the value turned into a list."""

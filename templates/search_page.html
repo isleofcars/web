@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hello</title>
+    <title>All cars for sale</title>
     <link rel="stylesheet" href="{% static 'styles/search_page.css' %}">
 </head>
 <body>
@@ -35,14 +35,36 @@
                 <div class="ad photo">
                     <img src="{{ ad.photos|as_list_of_str|pop:'0' }}">
                 </div>
-                <div class="ad description">
-                    <a href="{{ ad.url }}" target="_blank">
-                        {{ ad.make }} {{ ad.model }}, {{ ad.year }}
-                    </a>
-                </div>
+                <a href="{{ ad.url }}" target="_blank">
+                    <div class="ad description">
+                        <div class="ad description model">
+                            {{ ad.make }} {{ ad.model }}
+                            <br>
+                            {{ ad.location }}
+                            <br>
+                            {{ ad.source }}
+                        </div>
+                        <div class="ad description price">
+                            {{ ad.price }}
+                        </div>
+                        <div class="ad description year">
+                            {{ ad.year }}
+                        </div>
+                        <div class="ad description mileage">
+                            {{ ad.mileage }}
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination">
+        {% if page != 1%}<a href="/?page={{ page|add:'-1' }}"><</a>{% endif %}
+        <span>{{ page }}</span>
+        <a href="/?page={{ page|add:'1' }}">></a>
     </div>
 
 </div>

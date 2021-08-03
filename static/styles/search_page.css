@@ -1,15 +1,72 @@
-.ads {
+.content {
     margin-left: 20vw;
     width: 60vw;
 }
-.ad.photo {
-    width: 205px;
-    height: 154px;
-    position: relative;
-    overflow: hidden;
+.ads {
+    /* margin-left: 20vw; */
+    /* width: 60vw; */
 }
+.ad {
+    display: flex;
+    /* padding: 15px 16px; */
+    border: 1px dashed rgb(248, 128, 48);
+}
+    .ad.photo {
+        width: 205px;
+        height: 154px;
+        position: relative;
+        overflow: hidden;
+        float: left;
+        justify-content: center;
+        align-items: center;
+    }
     .ad.photo img {
         max-width:100%;
         max-height:100%;
         position: absolute;
     }
+    .ad.description {
+        display: float;
+        flex-direction: row;
+        margin: 0 0 0 15px;
+    }
+        .ad.description.model {
+            display: flex;
+            flex-direction: column;
+            border: 1px dashed greenyellow;
+            width: 299px;
+            min-height: 154px;
+        }
+        .ad.description.price {
+            display: flex;
+            flex-direction: column;
+            border: 1px dashed greenyellow;
+            width: 135px;
+            min-height: 154px;
+        }
+        .ad.description.year {
+            display: flex;
+            flex-direction: column;
+            width: 55px;
+            min-height: 154px;
+            border: 1px dashed greenyellow;
+        }
+        .ad.description.mileage {
+            display: flex;
+            flex-direction: column;
+            width: 188px;
+            min-height: 154px;
+            border: 1px dashed greenyellow;
+        }
+
+/* PAGINATION */
+.pagination {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+/* FOOTER */
+.footer {
+    min-height: 50px;
+}

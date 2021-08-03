@@ -1,4 +1,5 @@
 import json
+import time
 
 import django
 from django.shortcuts import render
@@ -23,40 +24,50 @@ def get_location(request):
         ip=get_client_ip(request)
     )).text
     location = json.loads(response)
-    latitude, longitude = location.get('loc', '41.2426,-82.6157').split(',', 1)
+    # My home in Bakersfiled
+    my_home_coordinates = '35.40949754729655,-118.93465648638583'
+    latitude, longitude = location.get('loc', my_home_coordinates).split(',', 1)
     latitude, longitude = float(latitude), float(longitude)
-    print(f'ip: {latitude}, {longitude}')
-    # todo: range all ads by distance (in sql + offset for pagination)
+    return latitude, longitude
 
 
 def render_search_page(request: django.http.request.HttpRequest) -> render:
     """Renders the main search page of the website."""
-    query = """
-    select *
-    from web.ads
-    limit 25
-    """
-    ads = pd.read_sql(query, connection)
-    ads['year'] = ads.year.astype(int)
-    # ads = ads.to_json(orient='records')
+    total = 25
+    if request.method == 'GET':
+        page = int(request.GET.get('page', 1))
+        print(f'page: {page}')
+        latitude, longitude = get_location(request)
+        print(latitude, longitude)
+        # todo: range all ads by distance (in sql + offset for pagination)
 
-    # import pygeoip
-    # gi = pygeoip.GeoIP('GeoIPCity.dat')
-    # ip = gi.record_by_addr(get_client_ip(request))
-
-    # from urllib2 import urlopen
-
-
-
-
-    # g = GeoIP()
-    # ip = request.META.get('REMOTE_ADDR', None)
-
-
-    return render(
-        request=request,
-        template_name='search_page.html',
-        context=dict(
-            ads=ads
+        sql_query = """
+        select
+            *,
+            coalesce(ACOS(SIN(latitude * 3.14159 / 180) * SIN({latitude} * 3.14159 / 180) + COS(latitude * 3.14159 / 180) * COS({latitude} * 3.14159 / 180) * COS((longitude - {longitude}) * 3.14159 / 180)), 99999) as distance
+        from web.ads
+        ORDER BY distance asc
+        limit {offset}, {total};
+        """
+        query = sql_query.format(
+            latitude=latitude,
+            longitude=longitude,
+            total=total,
+            offset=page * total
         )
-    )
+        print(query)
+        t_s = time.time()
+        ads = pd.read_sql(query, connection)
+        print(f'Fetched results in {time.time() - t_s}')
+        ads['price'] = ads.price.apply(lambda x: f'${x:,.0f}' if x else 'No price')
+        print(ads[ads.year.isna()])
+        ads['year'] = ads.year.astype(int)
+        ads['mileage'] = ads.mileage.apply(lambda x: f'{x:,.0f} miles')
+        return render(
+            request=request,
+            template_name='search_page.html',
+            context=dict(
+                ads=ads,
+                page=page
+            )
+        )
