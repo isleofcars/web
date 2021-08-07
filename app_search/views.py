@@ -36,24 +36,32 @@ def render_search_page(request: django.http.request.HttpRequest) -> render:
     total = 25
     if request.method == 'GET':
         page = int(request.GET.get('page', 1))
-        print(f'page: {page}')
+        condition = request.GET.get('condition', 'All')
         latitude, longitude = get_location(request)
         print(latitude, longitude)
         # todo: range all ads by distance (in sql + offset for pagination)
-
-        sql_query = """
+        makes_query = """
+        select distinct make
+        from web.ads
+        """
+        makes = pd.read_sql(makes_query, connection)['make'].tolist()
+        makes.sort()
+        ads_query = """
         select
             *,
             coalesce(ACOS(SIN(latitude * 3.14159 / 180) * SIN({latitude} * 3.14159 / 180) + COS(latitude * 3.14159 / 180) * COS({latitude} * 3.14159 / 180) * COS((longitude - {longitude}) * 3.14159 / 180)), 99999) as distance
         from web.ads
+        where 1 = 1
+            {conditions}
         ORDER BY distance asc
         limit {offset}, {total};
         """
-        query = sql_query.format(
+        query = ads_query.format(
             latitude=latitude,
             longitude=longitude,
-            total=total,
-            offset=page * total
+            conditions='',
+            offset=page * total,
+            total=total
         )
         print(query)
         t_s = time.time()
@@ -62,12 +70,17 @@ def render_search_page(request: django.http.request.HttpRequest) -> render:
         ads['price'] = ads.price.apply(lambda x: f'${x:,.0f}' if x else 'No price')
         print(ads[ads.year.isna()])
         ads['year'] = ads.year.astype(int)
-        ads['mileage'] = ads.mileage.apply(lambda x: f'{x:,.0f} miles')
+        ads['mileage'] = ads.mileage.apply(lambda x: f'{x:,.0f} mi')
+        filters = dict(
+            page=page,
+            condition=condition,
+            makes=makes
+        )
         return render(
             request=request,
             template_name='search_page.html',
             context=dict(
                 ads=ads,
-                page=page
+                filters=filters
             )
         )

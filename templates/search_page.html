@@ -7,8 +7,20 @@
     <meta charset="UTF-8">
     <title>All cars for sale</title>
     <link rel="stylesheet" href="{% static 'styles/search_page.css' %}">
+    <!-- Google Material -->
+    <!-- <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet"> -->
+    <!-- <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"> -->
+
+    <!-- jQuery -->
+    <script   src="https://code.jquery.com/jquery-3.6.0.min.js"   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="   crossorigin="anonymous"></script>
 </head>
 <body>
+
+<!-- GLOBAL VARIABLES -->
+<script>
+
+</script>
 
 <!-- HEADER -->
 <header class="header">
@@ -21,9 +33,30 @@
 <div class="content">
 
     <!--  FILTERS  -->
-    <div class="filters">
-        <div class="filters header"></div>
-        <div class="filters row"></div>
+    <div class="filters-container">
+        <div class="filters header">
+            <div class="toggle-radio">
+                <input type="radio" name="default" id="default_Option1" value="All" {% if filters.condition == 'All' %} checked {% endif %}>
+                <label for="default_Option1">All</label>
+                <input type="radio" name="default" id="default_Option2" value="Used" {% if filters.condition == 'Used' %} checked {% endif %}>
+                <label for="default_Option2">Used</label>         
+                <input type="radio" name="default" id="default_Option3" value="New" {% if filters.condition == 'New' %} checked {% endif %}>
+                <label for="default_Option3">New</label>
+              </div>
+        </div>
+        <div class="filters row">
+            <div class="filter make">
+                <select>
+                    <option>All</option>
+                    {% for make in filters.makes %}
+                    <option>{{ make }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter model">
+
+            </div>
+        </div>
         <div class="filters actions"></div>
     </div>
 
@@ -32,26 +65,54 @@
         {% for i, ad in ads.iterrows %}
         <div class="ad">
             <div class="add inner">
-                <div class="ad photo">
+                <div class="ad-photo">
                     <img src="{{ ad.photos|as_list_of_str|pop:'0' }}">
                 </div>
                 <a href="{{ ad.url }}" target="_blank">
-                    <div class="ad description">
-                        <div class="ad description model">
-                            {{ ad.make }} {{ ad.model }}
-                            <br>
-                            {{ ad.location }}
-                            <br>
-                            {{ ad.source }}
+                    <div class="ad-info">
+                        <div class="ad-info-col col-1">
+                            <div class="ad-info-title">
+                                {{ ad.make }} {{ ad.model }}
+                            </div>
+                            <div class="ad-info-specs">
+                                <div class="ad-info-cpecs-col col-1">
+                                    <div class="ad-info-specs-power">
+                                        {{ ad.power }}
+                                    </div>
+                                    <div class="ad-info-specs-transmission">
+                                        {{ ad.transmission }}
+                                    </div>
+                                    <div class="ad-info-specs-body">
+                                        {{ ad.body }}
+                                    </div>
+                                </div>
+                                <div class="ad-info-cpecs-col col-2">
+                                    <div class="ad-info-specs-drive">
+                                        {{ ad.drive }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ad-info-location">
+                                {{ ad.location }}
+                            </div>
                         </div>
-                        <div class="ad description price">
-                            {{ ad.price }}
+                        <div class="ad-info-col col-2">
+                            <div class="ad-info-price">
+                                {{ ad.price }}
+                            </div>
                         </div>
-                        <div class="ad description year">
-                            {{ ad.year }}
+                        <div class="ad-info-col col-3">
+                            <div class="ad-info-year">
+                                {{ ad.year }}
+                            </div>
                         </div>
-                        <div class="ad description mileage">
-                            {{ ad.mileage }}
+                        <div class="ad-info-col col-4">
+                            <div class="ad-info-mileage">
+                                {{ ad.mileage }}
+                            </div>
+                            <div class="ad-info-source">
+                                {{ ad.source }}
+                            </div>
                         </div>
                     </div>
                 </a>
@@ -62,8 +123,8 @@
 
     <!-- PAGINATION -->
     <div class="pagination">
-        {% if page != 1%}<a href="/?page={{ page|add:'-1' }}"><</a>{% endif %}
-        <span>{{ page }}</span>
+        {% if filters.page != 1%}<a href="/?page={{ filters.page|add:'-1' }}"><</a>{% endif %}
+        <span>{{ filters.page }}</span>
         <a href="/?page={{ page|add:'1' }}">></a>
     </div>
 
