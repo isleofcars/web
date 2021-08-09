@@ -34,8 +34,9 @@
 
     <!--  FILTERS  -->
     <div class="filters-container">
-        <div class="filters header">
-            <div class="toggle-radio">
+        <!-- Condition filters -->
+        <div class="filters-row">
+            <div class="filter toggle-radio">
                 <input type="radio" name="default" id="default_Option1" value="All" {% if filters.condition == 'All' %} checked {% endif %}>
                 <label for="default_Option1">All</label>
                 <input type="radio" name="default" id="default_Option2" value="Used" {% if filters.condition == 'Used' %} checked {% endif %}>
@@ -44,8 +45,9 @@
                 <label for="default_Option3">New</label>
               </div>
         </div>
-        <div class="filters row">
-            <div class="filter make">
+        <!-- Make/Model filters -->
+        <div class="filters-row">
+            <div class="filter filter-make">
                 <select>
                     <option>All</option>
                     {% for make in filters.makes %}
@@ -53,11 +55,58 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="filter model">
-
+            <div class="filter filter-model">
+                <select>
+                    <option>All</option>
+                </select>
             </div>
         </div>
-        <div class="filters actions"></div>
+        <!-- Specs filters -->
+        <div class="filters-row">
+            <div class="filter filter-body">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+            <div class="filter filter-transmission">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+            <div class="filter filter-drive">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+            <div class="filter filter-power">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+        </div>
+        <!-- Countable filters (year, price, mileage) -->
+        <div class="filters-row">
+            <div class="filter filter-year">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+            <div class="filter filter-mileage">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+            <div class="filter filter-price">
+                <select>
+                    <option>All</option>
+                </select>
+            </div>
+        </div>
+        <div class="filters-row">
+            <div class="filter filter-total">
+                Found {{ total }} {% if total == '1' %}ad{% else %}ads{% endif %}
+            </div>
+        </div>
     </div>
 
     <!--  ADS  -->
@@ -66,51 +115,58 @@
         <div class="ad">
             <div class="add inner">
                 <div class="ad-photo">
-                    <img src="{{ ad.photos|as_list_of_str|pop:'0' }}">
+                    <img {% if ad.photos|as_list_of_str|pop:'0' %}
+                        src="{{ ad.photos|as_list_of_str|pop:'0' }}"
+                    {% else %}
+                        src={% static 'images/no_image.png' %}
+                    {% endif %}
+                    >
                 </div>
                 <a href="{{ ad.url }}" target="_blank">
                     <div class="ad-info">
                         <div class="ad-info-col col-1">
                             <div class="ad-info-title">
-                                {{ ad.make }} {{ ad.model }}
+                                {% if ad.make %} {{ ad.make }} {{ ad.model }} {% else %} {{ ad.title }} {% endif %}
                             </div>
                             <div class="ad-info-specs">
                                 <div class="ad-info-cpecs-col col-1">
-                                    <div class="ad-info-specs-power">
+                                    <div class="ad-info-specs-power" title="Power">
                                         {{ ad.power }}
                                     </div>
-                                    <div class="ad-info-specs-transmission">
+                                    <div class="ad-info-specs-transmission" title="Transmission">
                                         {{ ad.transmission }}
-                                    </div>
-                                    <div class="ad-info-specs-body">
-                                        {{ ad.body }}
                                     </div>
                                 </div>
                                 <div class="ad-info-cpecs-col col-2">
                                     <div class="ad-info-specs-drive">
-                                        {{ ad.drive }}
+                                        <abbr title="{{ ad.drive_title }}">
+                                            {{ ad.drive }}
+                                        </abbr>
+                                    </div>
+                                    <div class="ad-info-specs-body" title="Body Style">
+                                        {{ ad.body }}
                                     </div>
                                 </div>
                             </div>
-                            <div class="ad-info-location">
+                            <div class="ad-info-location" title="Location">
                                 {{ ad.location }}
                             </div>
                         </div>
                         <div class="ad-info-col col-2">
-                            <div class="ad-info-price">
+                            <div class="ad-info-price" title="Price">
                                 {{ ad.price }}
                             </div>
                         </div>
                         <div class="ad-info-col col-3">
-                            <div class="ad-info-year">
-                                {{ ad.year }}
+                            <div class="ad-info-year" title="Model Year">
+                                {% if ad.year %} {{ ad.year }} {% endif %}
                             </div>
                         </div>
                         <div class="ad-info-col col-4">
-                            <div class="ad-info-mileage">
+                            <div class="ad-info-mileage" title="Mileage">
                                 {{ ad.mileage }}
                             </div>
-                            <div class="ad-info-source">
+                            <div class="ad-info-source" title="Ad Source">
                                 {{ ad.source }}
                             </div>
                         </div>
@@ -125,7 +181,7 @@
     <div class="pagination">
         {% if filters.page != 1%}<a href="/?page={{ filters.page|add:'-1' }}"><</a>{% endif %}
         <span>{{ filters.page }}</span>
-        <a href="/?page={{ page|add:'1' }}">></a>
+        <a href="/?page={{ filters.page|add:'1' }}">></a>
     </div>
 
 </div>

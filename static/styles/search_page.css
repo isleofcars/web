@@ -1,6 +1,9 @@
 * {
     font-family: Arial, Helvetica, sans-serif;
 }
+abbr {
+    text-decoration: none;
+}
 
 .content {
     margin-left: 10vw;
@@ -14,12 +17,17 @@
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 3px 14px rgba(0,0,0,.12);
-    height: 150px;
 }
-    .filters {
+    .filters-row {
+        height: 32px;
         margin-bottom: 15px;
         display: block;
     }
+        .filter-total {
+            text-align: right;
+        }
+
+    /* Toggle buttons */
     .toggle-radio {
         display: inline-flex;
         border-radius: 4px;
@@ -32,8 +40,8 @@
         .toggle-radio > input + label:not(:last-of-type) {
             border-right: 1px solid #ccc;
         }
-        .filters .toggle-radio > input + label,
-        .filters select {
+        .filter .toggle-radio > input + label,
+        .filter select {
             display: inline-block;
             margin-bottom: 0;
             padding: 5px 10px;
@@ -68,6 +76,7 @@
     border-radius: 8px;
     box-shadow: 0 3px 14px rgb(0 0 0 / 12%);
     border: none;
+    border-top: 1px solid white;
 }
 .ad a {
     text-decoration: none;
@@ -85,9 +94,10 @@
         margin-right: 15px;
     }
     .ad-photo img {
-        max-width:100%;
-        max-height:100%;
+        max-width: 100%;
+        max-height: 100%;
         position: absolute;
+        /* min-width: 100%; */
     }
     .ad-info {
         display: flex;
@@ -112,8 +122,10 @@
                 font-size: 17px;
                 font-weight: 700;
                 line-height: 20px;
+                min-height: 40px;
             }
             .ad-info-specs {
+                display: flex;
                 flex-direction: row;
                 font-size: 15px;
                 line-height: 22px;
@@ -121,10 +133,16 @@
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 color: grey;
+                margin-top: 15px;
             }
                 .ad-info-cpecs-col {
                     flex-direction: column;
+                    width: 50%;
                 }
+                    .ad-info-specs-power,
+                    .ad-info-specs-drive {
+                        min-height: 22px;
+                    }
             .ad-info-location {
                 flex-direction: row;
                 position: absolute;
