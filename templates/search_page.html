@@ -1,4 +1,3 @@
-{% load custom_filters %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -19,7 +18,9 @@
 
 <!-- GLOBAL VARIABLES -->
 <script>
-
+    var ajaxRequest;
+    var data;            // Filter values
+    var url;
 </script>
 
 <!-- HEADER -->
@@ -48,7 +49,8 @@
         <!-- Make/Model filters -->
         <div class="filters-row">
             <div class="filter filter-make">
-                <select>
+                <label>Make</label>
+                <select id="make">
                     <option>All</option>
                     {% for make in filters.makes %}
                     <option>{{ make }}</option>
@@ -56,7 +58,8 @@
                 </select>
             </div>
             <div class="filter filter-model">
-                <select>
+                <label>Model</label>
+                <select id="model">
                     <option>All</option>
                 </select>
             </div>
@@ -64,42 +67,54 @@
         <!-- Specs filters -->
         <div class="filters-row">
             <div class="filter filter-body">
-                <select>
+                <label>Body</label>
+                <select id="body">
                     <option>All</option>
+                    {% for body in filters.bodies %}
+                    <option>{{ body }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="filter filter-transmission">
-                <select>
+                <label>Transmission</label>
+                <select id="transmission">
                     <option>All</option>
+                    {% for transmission in filters.transmissions %}
+                    <option>{{ transmission }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="filter filter-drive">
-                <select>
+                <label>Drive Type</label>
+                <select id="drive">
                     <option>All</option>
+                    {% for drive in filters.drives %}
+                    <option>{{ drive }}</option>
+                    {% endfor %}
                 </select>
             </div>
-            <div class="filter filter-power">
-                <select>
-                    <option>All</option>
-                </select>
-            </div>
+            <!-- <div class="filter filter-power">
+                <label>Power</label>
+                <input id="power">
+                <input>
+            </div> -->
         </div>
         <!-- Countable filters (year, price, mileage) -->
         <div class="filters-row">
             <div class="filter filter-year">
-                <select>
-                    <option>All</option>
-                </select>
+                <label>Year</label>
+                <input id="year_min">
+                <input id="year_max">
             </div>
             <div class="filter filter-mileage">
-                <select>
-                    <option>All</option>
-                </select>
+                <label>Mileage</label>
+                <input id="mileage_min">
+                <input id="mileage_max">
             </div>
             <div class="filter filter-price">
-                <select>
-                    <option>All</option>
-                </select>
+                <label>Price</label>
+                <input id="price_min">
+                <input id="price_max">
             </div>
         </div>
         <div class="filters-row">
@@ -110,76 +125,17 @@
     </div>
 
     <!--  ADS  -->
-    <div class="ads">
-        {% for i, ad in ads.iterrows %}
-        <div class="ad">
-            <div class="add inner">
-                <div class="ad-photo">
-                    <img {% if ad.photos|as_list_of_str|pop:'0' %}
-                        src="{{ ad.photos|as_list_of_str|pop:'0' }}"
-                    {% else %}
-                        src={% static 'images/no_image.png' %}
-                    {% endif %}
-                    >
-                </div>
-                <a href="{{ ad.url }}" target="_blank">
-                    <div class="ad-info">
-                        <div class="ad-info-col col-1">
-                            <div class="ad-info-title">
-                                {% if ad.make %} {{ ad.make }} {{ ad.model }} {% else %} {{ ad.title }} {% endif %}
-                            </div>
-                            <div class="ad-info-specs">
-                                <div class="ad-info-cpecs-col col-1">
-                                    <div class="ad-info-specs-power" title="Power">
-                                        {{ ad.power }}
-                                    </div>
-                                    <div class="ad-info-specs-transmission" title="Transmission">
-                                        {{ ad.transmission }}
-                                    </div>
-                                </div>
-                                <div class="ad-info-cpecs-col col-2">
-                                    <div class="ad-info-specs-drive">
-                                        <abbr title="{{ ad.drive_title }}">
-                                            {{ ad.drive }}
-                                        </abbr>
-                                    </div>
-                                    <div class="ad-info-specs-body" title="Body Style">
-                                        {{ ad.body }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ad-info-location" title="Location">
-                                {{ ad.location }}
-                            </div>
-                        </div>
-                        <div class="ad-info-col col-2">
-                            <div class="ad-info-price" title="Price">
-                                {{ ad.price }}
-                            </div>
-                        </div>
-                        <div class="ad-info-col col-3">
-                            <div class="ad-info-year" title="Model Year">
-                                {% if ad.year %} {{ ad.year }} {% endif %}
-                            </div>
-                        </div>
-                        <div class="ad-info-col col-4">
-                            <div class="ad-info-mileage" title="Mileage">
-                                {{ ad.mileage }}
-                            </div>
-                            <div class="ad-info-source" title="Ad Source">
-                                {{ ad.source }}
-                            </div>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
-        {% endfor %}
+    <div class="ads" id="ads">
+        {% include 'search_page_results.html' with ads=ads %}
     </div>
 
     <!-- PAGINATION -->
     <div class="pagination">
-        {% if filters.page != 1%}<a href="/?page={{ filters.page|add:'-1' }}"><</a>{% endif %}
+        {% if filters.page > 2%}
+            <a href="/?page={{ filters.page|add:'-1' }}"><</a>
+        {% elif filters.page == 2 %}
+            <a href="/"><</a>
+        {% endif %}
         <span>{{ filters.page }}</span>
         <a href="/?page={{ filters.page|add:'1' }}">></a>
     </div>
@@ -189,7 +145,71 @@
 <!-- FOOTER -->
 <div class="footer"></div>
 
+<!-- Filters -->
 <script>
+    $(document).ready(() => {
+        $('.filter select').on('change', (e) => {
+            console.log($(e.target).attr('id') + '=' + $(e.target).val());
+            callAjax();
+        });
+    });
+</script>
+
+<!-- Ajax -->
+<script>
+    function readFilters() {
+        data = {};
+        // page = '1'
+        // condition = 'All'
+        make = $('select#make').val()
+        if (make !== 'All') data['make'] = make
+        model = $('select#model').val()
+        if (model !== 'All') data['model'] = model
+        body = $('select#body').val()
+        if (body !== 'All') data['body'] = body
+        transmission = $('select#transmission').val()
+        if (transmission !== 'All') data['transmission'] = transmission
+        drive = $('select#drive').val()
+        if (drive !== 'All') data['drive'] = drive
+        year_min = $('input#year_min').val()
+        if (year_min) data['year_min'] = year_min
+        year_max = $('input#year_max').val()
+        if (year_max) data['year_max'] = year_max
+        mileage_min = $('input#mileage_min').val()
+        if (mileage_min) data['mileage_min'] = mileage_min
+        mileage_max = $('input#mileage_max').val()
+        if (mileage_max) data['mileage_max'] = mileage_max
+        price_min = $('input#price_min').val()
+        if (price_min) data['price_min'] = price_min
+        price_max = $('input#price_max').val()
+        if (price_max) data['price_max'] = price_max
+        console.log(data);
+        return data        
+    };
+
+    function callAjax() {
+        ajaxRequest = $.ajax({
+            type: 'GET',
+            url: '/',
+            data: readFilters(),
+            beforeSend: (jqXHR, settings) => {
+                // Save url
+                url = settings.url;
+                // if (url.slice())
+                window.history.replaceState('object or string', 'All cars for sale', url);
+                // Cancel previous ajax request
+                if (ajaxRequest) {
+                    ajaxRequest.abort();
+                };
+            },
+            success: (rendered_ads, statusText, jqXHR) => {
+                $('#ads').html(rendered_ads);
+            },
+            error: (err) => {
+                if (err.statusText != 'abort') console.log(err);
+            }
+        });
+    };
 </script>
 
 </body>

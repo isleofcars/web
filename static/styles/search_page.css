@@ -21,10 +21,28 @@ abbr {
     .filters-row {
         height: 32px;
         margin-bottom: 15px;
-        display: block;
+        display: flex;
+        position: relative;
     }
+        .filter,
+        .filter label {
+            display: inline-block;
+        }
+        .filter select {
+            display: inline-block;
+            width: 80px;
+        }
+        .filter input {
+            display: inline-block;
+            width: 80px;
+        }
+        .filter:not(:first-child) {
+            margin-left: 10px;
+        }
         .filter-total {
             text-align: right;
+            position: absolute;
+            right: 0px;
         }
 
     /* Toggle buttons */
@@ -42,16 +60,20 @@ abbr {
         }
         .filter .toggle-radio > input + label,
         .filter select {
-            display: inline-block;
-            margin-bottom: 0;
-            padding: 5px 10px;
-            float: left;
-            cursor: pointer;
+            /* display: inline-block; */
+            /* margin-bottom: 0; */
+            /* padding: 5px 10px; */
+            /* float: left; */
+            /* cursor: pointer; */
         }
         .toggle-radio label {
             color: grey;
             border-color: rgba(0,0,0,.12);
             background-color: white;
+            width: 50px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 32px;
         }
         .toggle-radio > input:checked + label {
             color: #000;

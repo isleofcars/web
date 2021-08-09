@@ -1,0 +1,68 @@
+{% load static %}
+{% load custom_filters %}
+
+{% for i, ad in ads.iterrows %}
+<div class="ad">
+    <div class="add inner">
+        <div class="ad-photo">
+            <img {% if ad.photos|as_list_of_str|pop:'0' %}
+                src="{{ ad.photos|as_list_of_str|pop:'0' }}"
+            {% else %}
+                src={% static 'images/no_image.png' %}
+            {% endif %}
+            onerror="this.onerror=null; this.src='{% static 'images/no_image.png' %}'"
+            >
+        </div>
+        <a href="{{ ad.url }}" target="_blank">
+            <div class="ad-info">
+                <div class="ad-info-col col-1">
+                    <div class="ad-info-title">
+                        {% if ad.make %} {{ ad.make }} {{ ad.model }} {% else %} {{ ad.title }} {% endif %}
+                    </div>
+                    <div class="ad-info-specs">
+                        <div class="ad-info-cpecs-col col-1">
+                            <div class="ad-info-specs-power" title="Power">
+                                {{ ad.power }}
+                            </div>
+                            <div class="ad-info-specs-transmission" title="Transmission">
+                                {{ ad.transmission }}
+                            </div>
+                        </div>
+                        <div class="ad-info-cpecs-col col-2">
+                            <div class="ad-info-specs-drive">
+                                <abbr title="{{ ad.drive_title }}">
+                                    {{ ad.drive }}
+                                </abbr>
+                            </div>
+                            <div class="ad-info-specs-body" title="Body Style">
+                                {{ ad.body }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ad-info-location" title="Location">
+                        {{ ad.location }}
+                    </div>
+                </div>
+                <div class="ad-info-col col-2">
+                    <div class="ad-info-price" title="Price">
+                        {{ ad.price }}
+                    </div>
+                </div>
+                <div class="ad-info-col col-3">
+                    <div class="ad-info-year" title="Model Year">
+                        {% if ad.year %} {{ ad.year }} {% endif %}
+                    </div>
+                </div>
+                <div class="ad-info-col col-4">
+                    <div class="ad-info-mileage" title="Mileage">
+                        {{ ad.mileage }}
+                    </div>
+                    <div class="ad-info-source" title="Ad Source">
+                        {{ ad.source }}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endfor %}
