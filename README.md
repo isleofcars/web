@@ -1,29 +1,43 @@
-# Web interface for buyacar.com
+# buyacar.com
 
-Source code of the buyacar.com website.
+## How to Run
 
-Technologies
-============
+### Linux
 
-* Python 3.9
-* Django
+```
+1. First terminal tab
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
 
-Installation
-============
+2. Second terminal tab
+cd frontend
+npm i
+npm run serve
 
-```bash
-
-# 1. Install the project
-git clone https://github.com/sgalich/buyacar_web.git
-cd buyacar.com
-python3 -m venv env
-source env/bin/activate
-python3 -m pip install -r requirements.txt
+Frontend will be available on http://localhost:8080
 ```
 
-Launch
-======
+### Windows
 
-```bash
-./start.sh &>>/logs/starts.log &
+```
+1. First terminal tab
+cd backend
+python -m venv venv
+venv\Scripts\activate.bat
+pip install -r requirements.txt
+python manage.py makemigrations
+python manage.py migrate
+python manage.py runserver
+
+2. Second terminal tab
+cd frontend
+npm i
+npm run serve
+
+Frontend will be available on http://localhost:8080
 ```
