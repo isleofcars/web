@@ -133,6 +133,5 @@ dmypy.json
 backend/ads.csv
 *.DS_Store
 package-lock.json
-package.json
 node_modules/
 yarn.lock
