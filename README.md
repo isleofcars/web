@@ -21,16 +21,3 @@ npm i
 npm run serve
 ```
 The website will be available on http://localhost:8080
-
-## TODO:
-- [ ] **Speed up the db**
-- [ ] **Setup CI/CD**
-- [ ] Make beautiful details design
-- [ ] Fix the essential bugs
-- [ ] Highlight visited ads - ???
-- [ ] Make the default location + Any distance by default (add this point right next to 500 mi)
-- [ ] Add AdSense advertisement
-- [ ] 
-- [ ] 
-- [ ]
-- [x] Create the website
