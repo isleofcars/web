@@ -37,8 +37,8 @@ class CarAdFilter(filters.FilterSet):
     """
     Filter not considering city and distance
     """
-    price_from = filters.NumberFilter(field_name="price", lookup_expr='gte')
-    price_to = filters.NumberFilter(field_name="price", lookup_expr='lte')
+    price_from = filters.NumberFilter(field_name="price", method="price_from_exclude_zero")
+    price_to = filters.NumberFilter(field_name="price", method="price_to_exclude_zero")
     year_from = filters.NumberFilter(field_name="year", lookup_expr='gte')
     year_to = filters.NumberFilter(field_name="year", lookup_expr='lte')
     mileage_from = filters.NumberFilter(field_name="mileage", lookup_expr='gte')
@@ -47,6 +47,14 @@ class CarAdFilter(filters.FilterSet):
     transmission = filters.ChoiceFilter(choices=TRANSMISSION_CHOICES)
     body = filters.MultipleChoiceFilter(choices=BODY_CHOICES)
     only_with_photo = filters.BooleanFilter(field_name="photos", method="has_photos", label="Only with photo")
+
+    def price_from_exclude_zero(self, queryset, name, value):
+        # filters price from the value, excluding zero
+        return queryset.exclude(price=0).filter(price__gte=value)
+
+    def price_to_exclude_zero(self, queryset, name, value):
+        # filters price to the value, excluding zero
+        return queryset.exclude(price=0).filter(price__lte=value)
 
     def has_photos(self, queryset, name, value):
         # Excludes objects without photos for only_with_photos field
@@ -69,7 +77,7 @@ class DistanceOrderingFilter(OrderingFilter):
         request_latitude = request.query_params.get('latitude', None)
         request_longitude = request.query_params.get('longitude', None)
         request_city = request.query_params.get('location', None)
-        distance = request.query_params.get('distance', 200)
+        distance = request.query_params.get('distance', None)
 
         if request_latitude and request_longitude and request_city:
             latitude, longitude, city = request_latitude, request_longitude, request_city.split(',')[0]
@@ -82,6 +90,8 @@ class DistanceOrderingFilter(OrderingFilter):
         if not ordering:
             queryset = queryset.order_by("distance")
         else:
+            if "price" in ordering[0]:  # ordering is a list
+                queryset = queryset.exclude(price=0)
             queryset = super(DistanceOrderingFilter, self).filter_queryset(request, queryset, view)
 
         return queryset

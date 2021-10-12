@@ -1,12 +1,18 @@
 <template>
-    <div class="select-container" v-click-outside="clickOutside">
+    <div
+        class="select-container"
+        :class="{'select-container_highlight': isInputFocused || !!selectedOption}"
+        v-click-outside="clickOutside"
+    >
         <div
             class="select-container__select"
-            :class="[{'select-container__has-chosen-value': !!selectedOption},
-                    {'select-container_disabled': disabled},
+            :class="[{'select-container__has-chosen-value': !!selectedOption,
+                    'select-container_disabled': disabled,
+                    'select-container__select_focused': isInputFocused},
                     `select-container__select_borders-${bordersType}`]"
             @click="showOptions = (disabled) ? false : !showOptions"
             @keyup.esc="resetSelections"
+            @keyup.enter="enterPressed"
         >
             <template v-if="withInput">
                 <input
@@ -19,6 +25,7 @@
                     @input="showOptions = !disabled"
                     @focus="focusInput"
                     @blur="blurInput"
+                    @keypress="isNumber"
                     ref="input"
                 />
 
@@ -32,7 +39,7 @@
             </template>
             <template v-else>
                 <span class="select-container__value">
-                    {{ selectedOption || placeholder }}
+                    {{ `${this.valuePrependText}${this.selectedOption}` || placeholder }}
                 </span>
 
                 <span class="select-container__arrow rotate">
@@ -46,6 +53,7 @@
         <transition name="options-fade">
             <ul class="select-container__options" v-if="showOptions">
                 <li
+                    v-if="!hideResetOption"
                     class="select-container__option"
                     @click="resetSelections"
                 >
@@ -75,6 +83,8 @@
 </template>
 
 <script>
+import eventBus from '@/eventBus';
+
 export default {
     name: 'BaseSelect',
     props: {
@@ -94,6 +104,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        onlyNumbers: {
+            type: Boolean,
+            default: false,
+        },
         disabled: {
             type: Boolean,
             default: false,
@@ -107,6 +121,20 @@ export default {
             default: 'all',
             validator: (value) => value === 'all' || value === 'left' || value === 'right',
         },
+        hideResetOption: {
+            type: Boolean,
+            default: false,
+        },
+        valuePrependText: {
+            type: String,
+            default: '',
+        },
+    },
+    mounted() {
+        eventBus.$on('clear-form', this.resetInput);
+    },
+    destroyed() {
+        eventBus.$off('clear-form');
     },
     data() {
         return {
@@ -116,6 +144,7 @@ export default {
             inputValue: '',
             tempInputValue: '',
             userChoseOption: false,
+            isInputFocused: false,
         };
     },
     computed: {
@@ -156,6 +185,7 @@ export default {
         focusInput() {
             if (this.disabled) return;
 
+            this.isInputFocused = true;
             this.showChevron = false;
             if (this.userChoseOption) {
                 this.tempInputValue = this.inputValue;
@@ -165,6 +195,7 @@ export default {
         blurInput() {
             if (this.disabled) return;
 
+            this.isInputFocused = false;
             this.showChevron = true;
             if (this.userChoseOption) {
                 setTimeout(() => {
@@ -176,10 +207,30 @@ export default {
         clickOutside() {
             this.showOptions = false;
         },
+        enterPressed() {
+            if (!this.filteredOptions.length) return;
+
+            this.selectOption(this.filteredOptions[0]);
+        },
+        resetInput() {
+            this.inputValue = '';
+        },
+        isNumber(e) {
+            if (!this.withInput || !this.onlyNumbers) return;
+
+            const char = String.fromCharCode(e.keyCode);
+            if (!(/\d/.test(char))) e.preventDefault();
+        },
     },
     watch: {
         selectedOption(val) {
             this.selectOption(val);
+        },
+        inputValue(val) {
+            const firstAutoComplete = this.filteredOptions[0];
+            if (val === firstAutoComplete) {
+                this.selectOption(firstAutoComplete);
+            }
         },
     },
 };
@@ -192,6 +243,14 @@ export default {
     position: relative;
     font-size: 15px;
 
+    &:last-child {
+        margin-left: -1px;
+    }
+
+    &:hover, &_highlight {
+        z-index: 100;
+    }
+
     &__select {
         height: 36px;
         background-color: $white;
@@ -201,7 +260,7 @@ export default {
         justify-content: space-between;
         align-items: center;
 
-        &:hover {
+        &:hover, &_focused {
             cursor: pointer;
             border: 1px solid #157ee1;
         }
@@ -226,10 +285,6 @@ export default {
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
-    }
-
-    &__value-counter {
-        margin-right: 4px;
     }
 
     &_disabled {
@@ -301,6 +356,10 @@ export default {
     }
 
     &__label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         &:hover {
             cursor: pointer;
         }
@@ -321,9 +380,14 @@ export default {
     border: transparent;
     margin-right: 8px;
     background-color: inherit;
+    color: #000;
 
     &:disabled::placeholder {
         color: rgba(0, 0, 0, .24);
+    }
+
+    &::placeholder {
+        color: grey;
     }
 }
 

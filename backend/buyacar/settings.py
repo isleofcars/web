@@ -192,7 +192,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = '/opt/wholecars/backend/static'
 STATIC_URL = '/static/'
 
 # Default primary key field type

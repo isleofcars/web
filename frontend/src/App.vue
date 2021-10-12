@@ -12,6 +12,24 @@ import TheFooter from '@/components/TheFooter';
 
 export default {
     components: { TheFooter, TheHeader },
+    data() {
+        return {
+            windowWidth: window.innerWidth,
+        };
+    },
+    mounted() {
+        this.$store.commit('setWindowWidth', this.windowWidth);
+        this.$nextTick(() => window.addEventListener('resize', this.onResize));
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.onResize);
+    },
+    methods: {
+        onResize() {
+            this.windowWidth = window.innerWidth;
+            this.$store.commit('setWindowWidth', this.windowWidth);
+        },
+    },
 };
 </script>
 
@@ -20,6 +38,7 @@ export default {
 
 #app {
     display: flex;
+    flex: 1 0 auto;
     flex-direction: column;
     height: 100%;
 }

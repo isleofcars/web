@@ -1,4 +1,4 @@
-// Large Skyscraper ad template for AdSense (300x600)
+// Mobile Leaderboard ad template for AdSense (320x50)
 <template>
     <div class="ad">
         <p class="ad__text">Your ad here</p>
@@ -7,17 +7,16 @@
 
 <script>
 export default {
-    name: 'AdLargeSkyscraper',
+    name: 'AdMobileLeaderboard',
 };
 </script>
 
 <style lang="scss" scoped>
 .ad {
-    width: 300px;
-    height: 600px;
+    width: 320px;
+    height: 50px;
     position: relative;
     background-color: lightgrey;
-    flex-shrink: 0;
 
     &:hover {
         cursor: pointer;

@@ -9,9 +9,10 @@
                 @changeFilters="changeFilters"
             />
             <div v-if="isLoading || requestsPending > 0">
-                <ContentPlaceholderCard
+                <component
                     v-for="_ in perPage"
                     :key="_"
+                    :is="($store.getters.showMobile) ? 'ContentPlaceholderCardMobile' : 'ContentPlaceholderCard'"
                 />
             </div>
             <div v-else-if="resultsCount !== 0">
@@ -19,7 +20,14 @@
                     class="cars-list"
                     :cars="cars"
                 />
-                <div class="pagination-container">
+                <infinite-loading
+                    v-if="$store.getters.showMobile && cars.length"
+                    @infinite="infiniteHandler"
+                >
+                    <div slot="no-results" class="no-more-records">No more records</div>
+                </infinite-loading>
+
+                <div class="pagination-container" v-else>
                     <paginate
                         :value="page"
                         :pageCount="maxPage"
@@ -54,8 +62,10 @@
 
 <script>
 import qs from 'qs';
+import InfiniteLoading from 'vue-infinite-loading';
 import AppCarsList from '@/components/AppCarsList';
 import ContentPlaceholderCard from '@/components/ContentPlaceholderCard';
+import ContentPlaceholderCardMobile from '@/components/ContentPlaceholderCardMobile';
 import { API } from '@/services/api';
 import Filters from '@/components/Filters';
 import AdLargeSkyscraper from '@/components/Ads/AdLargeSkyscraper';
@@ -66,7 +76,9 @@ export default {
         Filters,
         AppCarsList,
         ContentPlaceholderCard,
+        ContentPlaceholderCardMobile,
         AdLargeSkyscraper,
+        InfiniteLoading,
     },
     props: {
         page: {
@@ -74,7 +86,7 @@ export default {
             default: 1,
         },
     },
-    data() {
+    data(props) {
         return {
             cars: [],
             isLoading: false,
@@ -86,6 +98,7 @@ export default {
             availableModels: [],
             filtersQueryString: 'only_with_photo=true&is_broken=false',
             perPage: 50,
+            currentPage: props.page,
         };
     },
     created() {
@@ -137,7 +150,7 @@ export default {
         },
         pageClicked(newPage) {
             // redirect if we are not on that page already
-            if (parseInt(this.$route.query.page, 10) !== newPage) {
+            if (parseInt(this.$route.query.page || '1', 10) !== newPage) {
                 this.$router.push({
                     name: 'Main Page',
                     query: { page: newPage },
@@ -153,8 +166,24 @@ export default {
             console.log(this.filtersQueryString);
             this.pageClicked(1);
         },
+        infiniteHandler($state) {
+            API.getCars(this.currentPage + 1, this.filtersQueryString)
+                .then((res) => {
+                    this.cars.push(...res.data.results);
+                    $state.loaded();
+                })
+                .catch((err) => {
+                    console.log(err);
+                    $state.complete();
+                });
+            if (this.currentPage + 1 === this.maxPage) {
+                $state.complete();
+            }
+            ++this.currentPage;
+        },
     },
     watch: {
+        // eslint-disable-next-line func-names
         '$route.query': function (val) {
             window.scrollTo({
                 top: 0,
@@ -171,12 +200,14 @@ export default {
 <style lang="scss" scoped>
 main {
     width: 100%;
+    height: fit-content;
     display: flex;
+    flex: 1 0 auto;
 }
 
 section {
     width: 920px;
-    padding: 40px 0 40px 10%;
+    padding: 40px 0 40px 5%;
     box-sizing: content-box;
 }
 
@@ -202,10 +233,29 @@ aside {
     text-align: center;
 }
 
+.no-more-records {
+    font-size: 18px;
+    color: grey;
+    margin: 20px auto;
+    text-align: center;
+}
+
 .cars-list {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
+}
+
+@media screen and (max-width: 1300px) {
+    aside {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .pagination-container {
+        margin-right: 5%;
+    }
 }
 </style>

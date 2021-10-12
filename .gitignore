@@ -130,6 +130,7 @@ dmypy.json
 
 .idea
 
+*logs/
 backend/ads.csv
 *.DS_Store
 package-lock.json

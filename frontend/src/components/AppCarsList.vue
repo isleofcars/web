@@ -3,12 +3,15 @@
         <template
             v-for="(car, index) in cars"
         >
-            <AdLeaderboard v-if="index > 0 && index % 10 === 0" :key="car.id" />
+            <component
+                v-if="index > 0 && index % 10 === 0"
+                :key="`ad-${car.id}`"
+                :is="($store.getters.showMobile) ? 'AdMobileLeaderboard' : 'AdLeaderboard'"
+            />
 
             <AppCarCard
-                v-else
                 :car="car"
-                :key="car.id"
+                :key="`car-${car.id}`"
             />
         </template>
     </div>
@@ -17,12 +20,14 @@
 <script>
 import AppCarCard from '@/components/AppCarCard';
 import AdLeaderboard from '@/components/Ads/AdLeaderboard';
+import AdMobileLeaderboard from '@/components/Ads/AdMobileLeaderboard';
 
 export default {
     name: 'AppCarsList',
     components: {
         AppCarCard,
         AdLeaderboard,
+        AdMobileLeaderboard,
     },
     props: {
         cars: {
