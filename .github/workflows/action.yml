@@ -1,7 +1,8 @@
 name: github-action-deploy
 on: [push]
 jobs:
-  write-to-console:
+  deploy:
+    runs-on: ubuntu-latest
     steps:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
