@@ -76,8 +76,7 @@ IPINFO_SETTINGS = {
 IPINFO_FILTER = lambda request: request.scheme == 'http'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "https://wholecarsmarket.com/api"
+    "http://localhost:8080"
 ]
 
 ROOT_URLCONF = 'buyacar.urls'
