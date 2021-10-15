@@ -12,6 +12,9 @@ RUN pip install -r requirements.txt
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
+RUN mkdir ./logs
+RUN chmod 777 ./logs
+
 COPY . .
 EXPOSE 8000
 
