@@ -12,7 +12,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.PASSWORD }}
-        script: cd /mnt/wholecars-web && git pull origin main && docker-compose up -d --build
+          script: cd /mnt/wholecars-web && git pull origin main && docker-compose up -d --build
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts     
       
