@@ -15,7 +15,5 @@ jobs:
             whoami
             cd /mnt/wholecars-web
             git pull origin main 
-            docker-compose up -d --build
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts     
+            docker-compose up -d --build  
       
