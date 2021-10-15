@@ -15,5 +15,6 @@ jobs:
             whoami
             cd /mnt/wholecars-web
             git pull origin main 
+            docker-compose down
             docker-compose up -d --build  
       
