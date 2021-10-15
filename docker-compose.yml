@@ -9,6 +9,7 @@ services:
       - wcw
     volumes:
       - ./backend:/app
+    restart: always  
   
   frontend:
     build: ./frontend
@@ -21,7 +22,7 @@ services:
        - ./frontend:/app
        - /app/node_modules
     command: /bin/sh -c "yarn serve"   
-
+    restart: always
 
 networks:
     wcw:
