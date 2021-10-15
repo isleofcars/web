@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-//const DEFAULT_API_URL = 'http://localhost:8000';
 const DEFAULT_API_URL = 'https://wholecarsmarket.com/';
 
 class Api {
