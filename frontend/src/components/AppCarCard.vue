@@ -184,7 +184,7 @@ export default {
         },
         mileage() {
             if (!this.car.mileage) {
-                if (this.car.year === 2021 || this.car.year === 2022)) {
+                if (this.car.year === 2021 || this.car.year === 2022) {
                     return 'New';
                 } else return '';
             };
