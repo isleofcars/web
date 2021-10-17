@@ -186,8 +186,9 @@ export default {
             if (!this.car.mileage) {
                 if (this.car.year === 2021 || this.car.year === 2022) {
                     return 'New';
-                } else return '';
-            };
+                }
+                return '';
+            }
             const USFormat = Intl.NumberFormat('en-US');
             return `${USFormat.format(this.car.mileage)} mi`;
         },
