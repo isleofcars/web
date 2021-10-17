@@ -10,7 +10,7 @@ class CarAdvertisement(models.Model):
     location = models.CharField(max_length=128, null=True, blank=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-    photos = models.JSONField(null=True, blank=True, default=[])
+    photos = models.JSONField(null=True, blank=True, default=list)
     title = models.CharField(max_length=128, null=True, blank=True)
     make = models.CharField(max_length=128, null=True, blank=True)
     model = models.CharField(max_length=128, null=True, blank=True)
