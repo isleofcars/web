@@ -33,7 +33,7 @@
                             {{ car.power }}
                         </div>
                         <div v-else class="card__cell">&nbsp;</div>
-                        <div v-if="present(car.transmission)" class="card-m__params-cell">
+                        <div v-if="car.transmission !== 'Unknown'" class="card-m__params-cell">
                             {{ car.transmission }}
                         </div>
                         <div class="card-m__params-cell">
@@ -41,11 +41,11 @@
                         </div>
                     </div>
                     <div class="card-m__params-column">
-                        <div v-if="present(car.drive)" class="card-m__params-cell">
+                        <div v-if="car.drive !== 'Unknown'" class="card-m__params-cell">
                             {{ car.drive }}
                         </div>
                         <div v-else class="card-m__params-cell">&nbsp;</div>
-                        <div v-if="present(car.body)" class="card-m__params-cell">
+                        <div v-if="car.body !== 'Unknown'" class="card-m__params-cell">
                             {{ car.body }}
                         </div>
                     </div>
@@ -170,7 +170,7 @@ export default {
     },
     computed: {
         title() {
-            if (this.present(this.car.make) || this.present(this.car.model)) {
+            if (this.present(this.car.make) && this.present(this.car.model)) {
                 return `${this.car.make} ${this.car.model}`;
             }
             return this.car.title;
@@ -184,8 +184,10 @@ export default {
         },
         mileage() {
             if (!this.car.mileage) {
-                return 'New';
-            }
+                if (this.car.year === 2021 || this.car.year === 2022)) {
+                    return 'New';
+                } else return '';
+            };
             const USFormat = Intl.NumberFormat('en-US');
             return `${USFormat.format(this.car.mileage)} mi`;
         },
