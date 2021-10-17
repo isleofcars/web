@@ -1,62 +1,64 @@
 <template>
     <div class="root" v-if="$store.getters.showMobile">
         <div class="card-m">
-            <div class="card-m__header">
-                <p class="card-m__title">
-                    {{ title }}, {{ car.year }}
-                </p>
-                <h3 class="card-m__price">
-                    {{ price }}
-                </h3>
-            </div>
+            <a :href="car.url" class="card__link" target="_blank" rel="noreferrer">
+                <div class="card-m__header">
+                    <p class="card-m__title">
+                        {{ title }}, {{ car.year }}
+                    </p>
+                    <h3 class="card-m__price">
+                        {{ price }}
+                    </h3>
+                </div>
 
-            <div class="card-m__gallery" v-if="photosLoaded">
-                <img
-                    class="card-m__photo"
-                    v-for="(photo, index) in previewPhotos"
-                    :key="index"
-                    :src="getPhoto(index)"
-                />
-            </div>
-            <div v-else class="card-m__gallery">
-                <content-placeholders :rounded="true">
-                    <content-placeholders-img class="card-m__photo" />
-                    <content-placeholders-img class="card-m__photo" />
-                    <content-placeholders-img class="card-m__photo" />
-                </content-placeholders>
-            </div>
+                <div class="card-m__gallery" v-if="photosLoaded">
+                    <img
+                        class="card-m__photo"
+                        v-for="(photo, index) in previewPhotos"
+                        :key="index"
+                        :src="getPhoto(index)"
+                    />
+                </div>
+                <div v-else class="card-m__gallery">
+                    <content-placeholders :rounded="true">
+                        <content-placeholders-img class="card-m__photo" />
+                        <content-placeholders-img class="card-m__photo" />
+                        <content-placeholders-img class="card-m__photo" />
+                    </content-placeholders>
+                </div>
 
-            <div class="card-m__params">
-                <div class="card-m__params-column">
-                    <div v-if="present(car.power) && car.power !== 0" class="card-m__params-cell">
-                        {{ car.power }}
+                <div class="card-m__params">
+                    <div class="card-m__params-column">
+                        <div v-if="present(car.power) && car.power !== 0" class="card-m__params-cell">
+                            {{ car.power }}
+                        </div>
+                        <div v-else class="card__cell">&nbsp;</div>
+                        <div v-if="present(car.transmission)" class="card-m__params-cell">
+                            {{ car.transmission }}
+                        </div>
+                        <div class="card-m__params-cell">
+                            {{ mileage }}
+                        </div>
                     </div>
-                    <div v-else class="card__cell">&nbsp;</div>
-                    <div v-if="present(car.transmission)" class="card-m__params-cell">
-                        {{ car.transmission }}
-                    </div>
-                    <div class="card-m__params-cell">
-                        {{ mileage }}
+                    <div class="card-m__params-column">
+                        <div v-if="present(car.drive)" class="card-m__params-cell">
+                            {{ car.drive }}
+                        </div>
+                        <div v-else class="card-m__params-cell">&nbsp;</div>
+                        <div v-if="present(car.body)" class="card-m__params-cell">
+                            {{ car.body }}
+                        </div>
                     </div>
                 </div>
-                <div class="card-m__params-column">
-                    <div v-if="present(car.drive)" class="card-m__params-cell">
-                        {{ car.drive }}
+                <div class="card-m__footer">
+                    <div class="card-m__location">
+                        {{ car.location }}
                     </div>
-                    <div v-else class="card-m__params-cell">&nbsp;</div>
-                    <div v-if="present(car.body)" class="card-m__params-cell">
-                        {{ car.body }}
+                    <div class="card-m__source">
+                        {{ car.source }}
                     </div>
                 </div>
-            </div>
-            <div class="card-m__footer">
-                <div class="card-m__location">
-                    {{ car.location }}
-                </div>
-                <div class="card-m__source">
-                    {{ car.source }}
-                </div>
-            </div>
+            </a>
         </div>
     </div>
     <div class="card" v-else>

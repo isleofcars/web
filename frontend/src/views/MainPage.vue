@@ -48,7 +48,7 @@
                 </div>
             </div>
             <p v-else class="no-results">
-                Unfortunately, we could not find any cars for you. Consider trying later or changing the filters.
+                Unfortunately we could not find any cars for you. Please try to change the filters.
             </p>
         </section>
 
