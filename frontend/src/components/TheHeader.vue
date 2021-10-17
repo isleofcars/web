@@ -7,7 +7,7 @@
             </router-link>
         </h1>
         <h2 class="header__motto">
-            All cars in TEST TEST
+            All cars in one place
         </h2>
     </header>
 </template>
