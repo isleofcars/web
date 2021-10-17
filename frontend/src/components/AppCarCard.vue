@@ -170,7 +170,7 @@ export default {
         },
         mileage() {
             if (!this.car.mileage) {
-                let currentYear = new Date().getFullYear();
+                currentYear = new Date().getFullYear();
                 if (this.car.year === currentYear || this.car.year === currentYear + 1) {
                     return 'New';
                 }
