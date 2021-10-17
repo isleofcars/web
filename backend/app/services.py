@@ -120,11 +120,15 @@ def get_locations_nearby_coords(queryset, latitude, longitude, max_distance, cit
     return qs
 
 
-def get_distance_between_coords(lt1, lg1, lt2, lg2):
-    """ Distance
-    Return squared hypotenuse between two coords in degrees,
-    Used only for testing!
-    lt1, lg1 - first point coords
-    lt2, lg2 - second point coords
-    """
-    return (lt1-lt2)**2 + (lg1-lg2)**2
+# def get_distance_between_coords(lt1, lg1, lt2, lg2):
+#     """ Distance
+#     Return squared hypotenuse between two coords in degrees,
+#     Used only for testing!
+#     lt1, lg1 - first point coords
+#     lt2, lg2 - second point coords
+#     """
+#     # coalesce(ACOS(SIN(latitude * 3.14159 / 180) * SIN({latitude} * 3.14159 / 180) + COS(latitude * 3.14159 / 180) * COS(
+#     #     {latitude} * 3.14159 / 180) * COS((longitude - {longitude}) * 3.14159 / 180)), 99999)
+#
+#
+#     return (lt1-lt2)**2 + (lg1-lg2)**2

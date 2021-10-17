@@ -68,20 +68,17 @@
             <div class="card__description">
                 <div class="card__column">
                     <div class="card__column-row">
-                        <h3 class="card__title">
-                            {{ title }}
-                        </h3>
+                        <h3 class="card__title">{{ title }}</h3>
                     </div>
-
                     <div class="card__column-row">
                         <div class="card__tech-summary">
                             <div class="card__tech-summary-column">
-                                <div class="card__cell">{{ power }}</div>
-                                <div class="card__cell">{{ transmission }}</div>
+                                <div class="card__cell" title="Power">{{ power }}</div>
+                                <div class="card__cell" title="Transmission">{{ transmission }}</div>
                             </div>
                             <div class="card__tech-summary-column">
-                                <div class="card__cell">{{ drive }}</div>
-                                <div class="card__cell">{{ body }}</div>
+                                <div class="card__cell" title="Drivetrain">{{ drive }}</div>
+                                <div class="card__cell" title="Body Style">{{ body }}</div>
                             </div>
                         </div>
                     </div>
@@ -95,9 +92,7 @@
 
                 <div class="card__column">
                     <div class="card__column-row">
-                        <div class="card__price">
-                            {{ price }}
-                        </div>
+                        <div class="card__price">{{ price }}</div>
                     </div>
                 </div>
 
@@ -170,25 +165,25 @@ export default {
                 if (this.car.year === currentYear || this.car.year === currentYear + 1) {
                     return 'New';
                 }
-                return '&nbsp;';
+                return '';
             }
             const USFormat = Intl.NumberFormat('en-US');
             return `${USFormat.format(this.car.mileage)} mi`;
         },
         power() {
-            if (!this.car.power) return '&nbsp;';
+            if (!this.car.power) return '';
             return this.car.power;
         },
         transmission() {
-            if (this.car.transmission === 'Unknown') return '&nbsp;';
-            return this.car.body;
+            if (this.car.transmission === 'Unknown') return '';
+            return this.car.transmission;
         },
         drive() {
-            if (this.car.drive === 'Unknown') return '&nbsp;';
-            return this.car.body;
+            if (this.car.drive === 'Unknown') return '';
+            return this.car.drive;
         },
         body() {
-            if (this.car.body === 'Unknown') return '&nbsp;';
+            if (this.car.body === 'Unknown') return '';
             return this.car.body;
         },
         previewPhotos() {
@@ -359,6 +354,7 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
         color: $secondary-text-color;
+        min-height: 1.25em;
     }
 
     &__additional-info {
