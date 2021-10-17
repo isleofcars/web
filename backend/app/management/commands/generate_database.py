@@ -37,7 +37,7 @@ class Command(BaseCommand):
                                                          model=car.model,
                                                          year=car.year,
                                                          body=car.body,
-                                                         vin=car.vin,
+                                                         # vin=car.vin,
                                                          mileage=car.mileage,
                                                          transmission=car.transmission,
                                                          drive=car.drive,

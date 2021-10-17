@@ -16,7 +16,7 @@ class CarAdvertisement(models.Model):
     model = models.CharField(max_length=128, null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
     body = models.CharField(max_length=128, null=True, blank=True)
-    vin = models.CharField(max_length=128, null=True, blank=True)
+    # vin = models.CharField(max_length=128, null=True, blank=True)
     mileage = models.FloatField(null=True, blank=True)
     transmission = models.CharField(max_length=128, null=True, blank=True)
     drive = models.CharField(max_length=128, null=True, blank=True)
