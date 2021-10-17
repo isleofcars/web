@@ -30,13 +30,11 @@
                 <div class="card-m__params">
                     <div class="card-m__params-column">
                         <div class="card-m__params-cell">{{ power }}</div>
-                        <div v-else class="card__cell">&nbsp;</div>
                         <div class="card-m__params-cell">{{ transmission }}</div>
                         <div class="card-m__params-cell">{{ mileage }}</div>
                     </div>
                     <div class="card-m__params-column">
                         <div class="card-m__params-cell">{{ drive }}</div>
-                        <div v-else class="card-m__params-cell">&nbsp;</div>
                         <div class="card-m__params-cell">{{ body }}</div>
                     </div>
                 </div>
@@ -79,12 +77,10 @@
                         <div class="card__tech-summary">
                             <div class="card__tech-summary-column">
                                 <div class="card__cell">{{ power }}</div>
-                                <div v-else class="card__cell">&nbsp;</div>
                                 <div class="card__cell">{{ transmission }}</div>
                             </div>
                             <div class="card__tech-summary-column">
                                 <div class="card__cell">{{ drive }}</div>
-                                <div v-else class="card__cell">&nbsp;</div>
                                 <div class="card__cell">{{ body }}</div>
                             </div>
                         </div>
@@ -170,29 +166,29 @@ export default {
         },
         mileage() {
             if (!this.car.mileage) {
-                currentYear = new Date().getFullYear();
+                const currentYear = new Date().getFullYear();
                 if (this.car.year === currentYear || this.car.year === currentYear + 1) {
                     return 'New';
                 }
-                return '';
+                return '&nbsp;';
             }
             const USFormat = Intl.NumberFormat('en-US');
             return `${USFormat.format(this.car.mileage)} mi`;
         },
         power() {
-            if (!this.car.power) return '';
+            if (!this.car.power) return '&nbsp;';
             return this.car.power;
         },
         transmission() {
-            if (this.car.transmission === 'Unknown') return '';
+            if (this.car.transmission === 'Unknown') return '&nbsp;';
             return this.car.body;
         },
         drive() {
-            if (this.car.drive === 'Unknown') return '';
+            if (this.car.drive === 'Unknown') return '&nbsp;';
             return this.car.body;
         },
         body() {
-            if (this.car.body === 'Unknown') return '';
+            if (this.car.body === 'Unknown') return '&nbsp;';
             return this.car.body;
         },
         previewPhotos() {
