@@ -42,8 +42,8 @@ def get_client_ip(request):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
-    if ip.startswith("192.168.") or ip == "127.0.0.1":
-        return "168.156.54.5"
+    if ip == '127.0.0.1':
+        return '104.52.6.199'
     return ip
 
 

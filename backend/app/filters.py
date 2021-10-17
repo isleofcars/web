@@ -81,9 +81,11 @@ class DistanceOrderingFilter(OrderingFilter):
 
         if request_latitude and request_longitude and request_city:
             latitude, longitude, city = request_latitude, request_longitude, request_city.split(',')[0]
+            logger.info(f'city: {city}. From request')
         else:
             ip_data = get_ip_details(get_client_ip(request))
             latitude, longitude, city = ip_data.latitude, ip_data.longitude, ip_data.city
+            logger.info(f'city: {city}. Found by IP')
 
         logger.info('{} {}'.format(city, request.META['QUERY_STRING']))
         queryset = get_locations_nearby_coords(queryset, latitude, longitude, distance, city)
