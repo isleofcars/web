@@ -29,25 +29,15 @@
 
                 <div class="card-m__params">
                     <div class="card-m__params-column">
-                        <div v-if="present(car.power) && car.power !== 0" class="card-m__params-cell">
-                            {{ car.power }}
-                        </div>
+                        <div class="card-m__params-cell">{{ power }}</div>
                         <div v-else class="card__cell">&nbsp;</div>
-                        <div v-if="car.transmission !== 'Unknown'" class="card-m__params-cell">
-                            {{ car.transmission }}
-                        </div>
-                        <div class="card-m__params-cell">
-                            {{ mileage }}
-                        </div>
+                        <div class="card-m__params-cell">{{ transmission }}</div>
+                        <div class="card-m__params-cell">{{ mileage }}</div>
                     </div>
                     <div class="card-m__params-column">
-                        <div v-if="car.drive !== 'Unknown'" class="card-m__params-cell">
-                            {{ car.drive }}
-                        </div>
+                        <div class="card-m__params-cell">{{ drive }}</div>
                         <div v-else class="card-m__params-cell">&nbsp;</div>
-                        <div v-if="car.body !== 'Unknown'" class="card-m__params-cell">
-                            {{ car.body }}
-                        </div>
+                        <div class="card-m__params-cell">{{ body }}</div>
                     </div>
                 </div>
                 <div class="card-m__footer">
@@ -88,18 +78,14 @@
                     <div class="card__column-row">
                         <div class="card__tech-summary">
                             <div class="card__tech-summary-column">
-                                <div v-if="present(car.power) && car.power !== 0" class="card__cell">
-                                    {{ car.power }}
-                                </div>
+                                <div class="card__cell">{{ power }}</div>
                                 <div v-else class="card__cell">&nbsp;</div>
-                                <div v-if="present(car.transmission)" class="card__cell">
-                                    {{ car.transmission }}
-                                </div>
+                                <div class="card__cell">{{ transmission }}</div>
                             </div>
                             <div class="card__tech-summary-column">
-                                <div v-if="present(car.drive)" class="card__cell">{{ car.drive }}</div>
+                                <div class="card__cell">{{ drive }}</div>
                                 <div v-else class="card__cell">&nbsp;</div>
-                                <div v-if="present(car.body)" class="card__cell">{{ car.body }}</div>
+                                <div class="card__cell">{{ body }}</div>
                             </div>
                         </div>
                     </div>
@@ -184,13 +170,30 @@ export default {
         },
         mileage() {
             if (!this.car.mileage) {
-                if (this.car.year === 2021 || this.car.year === 2022) {
+                let current_year = new Date().getFullYear();
+                if (this.car.year === current_year || this.car.year === current_year + 1) {
                     return 'New';
                 }
                 return '';
             }
             const USFormat = Intl.NumberFormat('en-US');
             return `${USFormat.format(this.car.mileage)} mi`;
+        },
+        power() {
+            if (!this.car.power) return '';
+            return this.car.power;
+        },
+        transmission() {
+            if (this.car.transmission === 'Unknown') return '';
+            return this.car.body;
+        },
+        drive() {
+            if (this.car.drive === 'Unknown') return '';
+            return this.car.body;
+        },
+        body() {
+            if (this.car.body === 'Unknown') return '';
+            return this.car.body;
         },
         previewPhotos() {
             return this.car.photos.slice(0, 5);
