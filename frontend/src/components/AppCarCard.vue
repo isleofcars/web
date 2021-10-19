@@ -462,6 +462,7 @@ export default {
         margin: 4px 0;
         white-space: nowrap;
         text-overflow: ellipsis;
+        min-height: 1.25em;
 
         &:first-child {
             margin-top: 0;
