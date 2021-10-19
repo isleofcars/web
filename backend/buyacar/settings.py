@@ -124,6 +124,9 @@ DATABASES = {
         'TEST': {
             'NAME': 'mytestdatabase',
         },
+        'OPTIONS': {
+            'init_command': 'SET GLOBAL max_connections = 100000',
+        }
     }
 }
 
