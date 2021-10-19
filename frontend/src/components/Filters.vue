@@ -313,10 +313,10 @@ export default {
             ],
             sortByOptions: [
                 'Distance (nearest first)',
-                'Price ↑ (min first)',
-                'Price ↓ (max first)',
-                'Year ↑ (min first)',
-                'Year ↓ (max first)',
+                'Price: low -> high',
+                'Price: high -> low',
+                'Year: low -> high',
+                'Year: high -> low',
             ],
             itemsPerPageOptions: [
                 '25 per page',
@@ -458,10 +458,10 @@ export default {
         sortByForQuery(param) {
             return {
                 'Distance (nearest first)': '',
-                'Price ↑ (min first)': 'price',
-                'Price ↓ (max first)': '-price',
-                'Year ↑ (min first)': 'year',
-                'Year ↓ (max first)': '-year',
+                'Price: low -> high': 'price',
+                'Price: high -> low': '-price',
+                'Year: low -> high': 'year',
+                'Year: high -> low': '-year',
             }[param];
         },
         selectIsNew(option) {
