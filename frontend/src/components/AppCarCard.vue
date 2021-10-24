@@ -147,7 +147,7 @@ export default {
     },
     computed: {
         title() {
-            if (this.present(this.car.make) && this.present(this.car.model)) {
+            if (this.present(this.car.make) !== 'Unknown' && this.present(this.car.model) !== 'Unknown') {
                 return `${this.car.make} ${this.car.model}`;
             }
             return this.car.title;
