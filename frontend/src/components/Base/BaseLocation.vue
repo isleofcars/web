@@ -67,6 +67,7 @@ import { getStatesCities } from '@/utils/cities';
 import { isValidUSZipCode } from '@/utils/zip';
 import { getPlacesForZIP } from '@/services/api';
 import BaseLoader from '@/components/Base/BaseLoader';
+
 export default {
     name: 'BaseLocation',
     components: { BaseLoader },
