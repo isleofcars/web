@@ -237,7 +237,6 @@ import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
-
 const DEFAULT_FILTERS = {
     is_new: null,
     is_broken: false,

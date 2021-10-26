@@ -147,7 +147,7 @@ export default {
     },
     computed: {
         title() {
-            if (this.present(this.car.make) && this.present(this.car.model)) {
+            if (this.car.make !== 'Unknown' && this.present(this.car.model)) {
                 return `${this.car.make} ${this.car.model}`;
             }
             return this.car.title;
@@ -462,6 +462,7 @@ export default {
         margin: 4px 0;
         white-space: nowrap;
         text-overflow: ellipsis;
+        min-height: 1.25em;
 
         &:first-child {
             margin-top: 0;

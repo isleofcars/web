@@ -47,16 +47,15 @@ def get_client_ip(request):
     return ip
 
 
-def get_client_city_region_as_json(request):
-    """
-    Return client's real city and region as json
-    """
+def get_client_location_details(request):
+    """Returns client's real city and region as json."""
     ip_details = get_ip_details(get_client_ip(request))
+    latitude, longitude = ip_details.loc.split(',', 1)
     result = {
         'city': ip_details.city,
         'region': ip_details.region,
-        'latitude': ip_details.loc.split(',')[0],
-        'longitude':  ip_details.loc.split(',')[1],
+        'latitude': latitude,
+        'longitude':  longitude,
         'countryCode': ip_details.country,
     }
     return result
