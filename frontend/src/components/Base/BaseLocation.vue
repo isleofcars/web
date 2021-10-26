@@ -95,6 +95,7 @@ export default {
             tempLocationInput: '',
             userChoseOption: false,
             startSearchingOffset: 3,
+            isLoading: false,
         };
     },
     created() {

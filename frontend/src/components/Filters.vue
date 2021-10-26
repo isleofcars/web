@@ -474,7 +474,7 @@ export default {
         },
         sortByForQuery(param) {
             return {
-                'Distance (nearest first)': '',
+                'Distance (nearest first)': 'distance',
                 'Price: low -> high': 'price',
                 'Price: high -> low': '-price',
                 'Year: low -> high': 'year',
