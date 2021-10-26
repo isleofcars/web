@@ -7,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import CarAdvertisement
 from .serializers import CarAdSerializer, MakesSerializer
 from .filters import CarAdFilter, DistanceOrderingFilter
-from .services import get_models_and_count, get_min_year, get_client_city_region_as_json, get_makes_and_count
+from .services import get_models_and_count, get_min_year, get_client_location_details, get_makes_and_count
 
 
 class CarAdStandardPagination(PageNumberPagination):
@@ -61,7 +61,7 @@ class UserCityView(APIView):
     Return user city for city choice
     """
     def get(self, request, format=None):
-        result = get_client_city_region_as_json(request)
+        result = get_client_location_details(request)
         return Response(result)
 
 

@@ -21,3 +21,11 @@ npm i
 npm run serve
 ```
 The website will be available on http://localhost:8080
+
+## Troubleshooting
+
+If there is no space left on the device run these commands
+```bash
+docker system prune
+docker volume rm $(docker volume ls -qf dangling=true)
+```
