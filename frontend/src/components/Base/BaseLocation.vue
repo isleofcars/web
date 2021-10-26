@@ -71,7 +71,7 @@ import BaseLoader from '@/components/Base/BaseLoader';
 export default {
     name: 'BaseLocation',
     components: {
-        BaseLoader
+        BaseLoader,
     },
     props: {
         userCity: {
