@@ -67,13 +67,11 @@ import { getStatesCities } from '@/utils/cities';
 import { isValidUSZipCode } from '@/utils/zip';
 import { getPlacesForZIP } from '@/services/api';
 import BaseLoader from '@/components/Base/BaseLoader';
-import BaseCheckbox from '@/components/Base/BaseCheckbox';
 
 export default {
     name: 'BaseLocation',
     components: {
-        BaseLoader,
-        BaseCheckbox,
+        BaseLoader
     },
     props: {
         userCity: {
