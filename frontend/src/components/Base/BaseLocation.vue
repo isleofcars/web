@@ -26,21 +26,25 @@
                         ref="location"
                     />
                 </div>
-                <div class="location__reset-location" v-if="location || userCity" @click="resetLocation">
-                    Reset location
-                    <font-awesome-icon class="location__reset-location-icon" :icon="['fas', 'times']"/>
-                </div>
             </div>
 
             <div v-if="showRangeSlider" class="location__range-slider">
                 <span class="location__range-slider-hint">Range of search, mi</span>
-                <vue-slider
-                    v-model="locationOffset"
-                    :data="[0, 100, 200, 300, 400, 500]"
-                    :marks="true"
-                    :tooltipFormatter="(v) => `${v} mi`"
-                    :contained="true"
-                />
+                <div class="location__range-options">
+                    <vue-slider
+                        v-model="locationOffset"
+                        :data="[0, 100, 200, 300, 400, 500]"
+                        :marks="true"
+                        :tooltipFormatter="(v) => `${v} mi`"
+                        :contained="true"
+                    />
+                    <BaseCheckbox
+                        class="filters__item_small filters__item_align-right filters__checkbox"
+                        label="Any"
+                        v-model="locationAny"
+                    />
+                </div>
+
             </div>
 
             <ul class="location__options">
@@ -68,10 +72,13 @@ import { getStatesCities } from '@/utils/cities';
 import { isValidUSZipCode } from '@/utils/zip';
 import { getPlacesForZIP } from '@/services/api';
 import BaseLoader from '@/components/Base/BaseLoader';
-
+import BaseCheckbox from '@/components/Base/BaseCheckbox';
 export default {
     name: 'BaseLocation',
-    components: { BaseLoader },
+    components: {
+        BaseLoader,
+        BaseCheckbox,
+    },
     props: {
         userCity: {
             type: String,
@@ -86,9 +93,10 @@ export default {
         return {
             location: '',
             locationOffset: null,
+            locationAny: true,
             timeout: null,
             showSearchBox: false,
-            showRangeSlider: false,
+            showRangeSlider: true,
             options: [],
             allOptions: [],
             userLocationInput: '',
@@ -96,23 +104,30 @@ export default {
             userChoseOption: false,
             startSearchingOffset: 3,
             isLoading: false,
+            isFirstLoad: true,
         };
     },
     created() {
         this.allOptions = getStatesCities();
+        this.locationOffset = this.distance;
+        this.tempLocationInput = this.userCity;
     },
     computed: {
         text() {
             if (this.location || this.userCity) {
-                return (this.location || this.userCity) + ((this.locationOffset > 0)
-                    ? ` + ${this.locationOffset} mi` : '');
+                if (this.locationAny) {
+                    return `${this.location || this.userCity} + Any`;
+                } if (this.locationOffset > 0) {
+                    return `${this.location || this.userCity} + ${this.locationOffset} mi`;
+                }
+                return this.location || this.userCity;
             }
             return 'Choose location';
         },
     },
     methods: {
         loadOptions() {
-            this.showRangeSlider = false;
+            this.showRangeSlider = !!this.userCity;
             // user can write either a state or city name, or a valid zip code
             if (isValidUSZipCode(this.userLocationInput)) {
                 this.isLoading = true;
@@ -134,12 +149,10 @@ export default {
                     });
                 return;
             }
-
             if (this.userLocationInput.length < this.startSearchingOffset) {
                 this.options = [];
                 return;
             }
-
             this.options = this.allOptions.filter((option) => option.name.toLowerCase()
                 .startsWith(this.userLocationInput.toLowerCase()));
         },
@@ -167,10 +180,6 @@ export default {
         },
         hideSearchBox() {
             this.showSearchBox = false;
-        },
-        resetLocation() {
-            this.resetLocationFields();
-            this.$emit('resetLocation');
         },
         resetLocationFields() {
             this.location = '';
@@ -205,6 +214,8 @@ export default {
         distance(val) {
             if (val === null) {
                 this.locationOffset = null;
+            } else {
+                this.locationOffset = this.distance;
             }
         },
         locationOffset(val) {
@@ -214,6 +225,14 @@ export default {
                     this.$emit('changeLocationOffset', val);
                 }
             }, 500);
+            if (!this.isFirstLoad) {
+                this.locationAny = false;
+            } else {
+                this.isFirstLoad = false;
+            }
+        },
+        locationAny(val) {
+            this.$emit('changeLocationAny', val);
         },
     },
 };
@@ -221,28 +240,23 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/_vars.scss';
-
 .location {
     position: relative;
-
     &__select {
         display: flex;
         align-items: center;
         font-size: 15px;
         height: 44px;
         color: #157ee1;
-
         &:hover {
             cursor: pointer;
         }
     }
-
     &__select-icon {
         width: 24px;
         height: 24px;
         margin-right: 12px;
     }
-
     &__search {
         position: absolute;
         right: 0;
@@ -251,33 +265,11 @@ export default {
         box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
         border-radius: 8px;
         overflow: hidden;
-        z-index: 100;
+        z-index: 101;
     }
-
     &__search-box {
         padding: 20px 15px;
     }
-
-    &__reset-location {
-        color: grey;
-        font-size: 15px;
-        line-height: 24px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: color .3s ease;
-        margin-top: 4px;
-
-        &:hover {
-            color: $accent-color;
-            cursor: pointer;
-        }
-    }
-
-    &__reset-location-icon {
-        margin-left: 8px;
-    }
-
     &__dropdown-input-container {
         position: relative;
         display: flex;
@@ -288,12 +280,10 @@ export default {
         border: 1px solid rgba(0, 0, 0, .12);
         background: #f0f0f0;
         border-radius: 8px;
-
         &:focus-within, &:hover {
             border-color: #157ee1;
         }
     }
-
     &__dropdown-input {
         width: 100%;
         height: 42px;
@@ -303,7 +293,6 @@ export default {
         font: inherit;
         font-size: 15px;
         color: rgba(0, 0, 0, .87);
-
         &::placeholder {
             font-size: 15px;
             overflow: hidden;
@@ -315,7 +304,6 @@ export default {
             transition: font-size .05s ease-out 0s, margin-top .05s ease-out 0s, opacity .1s ease-out 0s;
         }
     }
-
     &__search-icon {
         display: inline-block;
         width: 16px;
@@ -324,20 +312,23 @@ export default {
         color: rgba(0, 0, 0, .54);
         opacity: 0.7;
     }
-
     &__range-slider {
         padding: 16px 24px;
     }
-
     &__range-slider-hint {
         font-size: 15px;
     }
-
+    &__range-options {
+        display: flex;
+        .vue-slider {
+            margin-right: 15px;
+            width: 100% !important;
+        }
+    }
     &__options {
         max-height: 280px;
         overflow-y: auto;
     }
-
     &__option {
         display: flex;
         flex-direction: column;
@@ -347,19 +338,16 @@ export default {
         box-sizing: content-box;
         cursor: pointer;
         border-bottom: 1px solid rgba(0, 0, 0, .1);
-
         &:hover {
             background-color: #eaf4ff;
         }
     }
-
     &__option-region {
         font-size: 15px;
         overflow-x: hidden;
         text-overflow: ellipsis;
         color: #000;
     }
-
     &__option-parent-region {
         font-size: 12px;
         overflow-x: hidden;
@@ -367,11 +355,21 @@ export default {
         color: rgba(0, 0, 0, .6);
     }
 }
-
 @media screen and (max-width: 1000px) {
     .location {
         &__search {
             width: 250px;
+        }
+        &__range-options {
+            flex-direction: column;
+            .vue-slider {
+                margin-right: 0;
+                width: auto !important;
+            }
+            .checkbox-container {
+                justify-content: left;
+                margin-top: 15px;
+            }
         }
     }
 }

@@ -23,7 +23,7 @@
                         :distance="filters.distance"
                         @changeLocation="changeUserLocation"
                         @changeLocationOffset="changeDistance"
-                        @resetLocation="resetLocation"
+                        @changeLocationAny="changeLocationAny"
                     />
                 </div>
             </div>
@@ -236,7 +236,8 @@ import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
 import eventBus from '@/eventBus';
-
+import { API } from '@/services/api';
+import { getStatesCities } from '@/utils/cities';
 const DEFAULT_FILTERS = {
     is_new: null,
     is_broken: false,
@@ -257,9 +258,9 @@ const DEFAULT_FILTERS = {
     ordering: 'Distance (nearest first)',
     items_per_page: '25 per page',
     location: '',
-    distance: '',
+    distance: 200,
+    any: true,
 };
-
 export default {
     name: 'Filters',
     components: {
@@ -413,14 +414,34 @@ export default {
     created() {
         window.addEventListener('scroll', this.onScroll);
     },
-    mounted() {
+    async mounted() {
         eventBus.$on('reset-filters', this.resetFilters);
+        const userCity = await this.getUserCity();
+        console.log(userCity);
+        const allOptions = getStatesCities();
+        const optionOfUserCity = allOptions.filter((option) => option.name.toLowerCase()
+            .startsWith(userCity.city.toLowerCase()))[0];
+        if (optionOfUserCity) {
+            this.filters.location = `${optionOfUserCity.name}, ${optionOfUserCity.stateCode}`;
+            this.filters.longitude = optionOfUserCity.longitude;
+            this.filters.latitude = optionOfUserCity.latitude;
+        } else {
+            console.log('here');
+            this.filters.location = `${userCity.city}`;
+            this.filters.longitude = `${Number(userCity.longitude).toFixed(8)}`;
+            this.filters.latitude = `${Number(userCity.latitude).toFixed(8)}`;
+        }
     },
     destroyed() {
         window.removeEventListener('scroll', this.onScroll);
         eventBus.$off('reset-filters');
     },
     methods: {
+        async getUserCity() {
+            return API.getUserCity()
+                .then((res) => res.data)
+                .catch((err) => console.log(err));
+        },
         scrollToTop() {
             window.scrollTo({
                 top: 0,
@@ -445,11 +466,8 @@ export default {
         changeDistance(distance) {
             this.filters.distance = distance;
         },
-        resetLocation() {
-            this.filters.location = '';
-            this.filters.distance = '';
-            this.filters.longitude = 0;
-            this.filters.latitude = 0;
+        changeLocationAny(value) {
+            this.filters.any = value;
         },
         resetFilters() {
             this.filters = { ...DEFAULT_FILTERS };
@@ -513,64 +531,51 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/_vars.scss';
-
 .filters {
     margin-bottom: 24px;
     padding: 20px;
     border-radius: 8px;
     background: $white;
     box-shadow: 0 3px 14px $card-shadow-color;
-
     &__row {
         display: flex;
         margin: 12px 0;
-
         &_header {
             margin-top: 0;
         }
-
         &_last {
             margin-bottom: 0;
         }
     }
-
     &__column {
         width: 280px;
         display: flex;
         align-items: center;
         margin-left: 20px;
-
         &:first-child {
             margin-left: 0;
         }
-
         &_align-right {
             justify-content: flex-end;
         }
     }
-
     &__item {
         &_large {
             width: 100%;
         }
-
         &_small {
             width: calc(50% - 5px);
-
             &:first-of-type {
                 margin-right: 10px;
             }
         }
-
         &_grouped {
             width: 50%;
         }
-
         &_align-right {
             justify-content: flex-end;
         }
     }
-
     &__reset-filters {
         color: grey;
         font-size: 15px;
@@ -580,24 +585,20 @@ export default {
         align-items: center;
         transition: color .3s ease;
         flex-shrink: 0;
-
         &:hover {
             color: $accent-color;
             cursor: pointer;
         }
     }
-
     &__reset-filters-icon {
         margin-left: 8px;
     }
-
     &__results-count {
         font-size: 15px;
         color: grey;
         margin-left: auto;
         margin-right: 0;
     }
-
     &__hint-top {
         top: 0;
         font-size: 15px;
@@ -614,17 +615,14 @@ export default {
         box-shadow: 0 3px 14px rgb(0 0 0 / 12%);
         transition: top .2s;
     }
-
     &__hint-title {
         line-height: 44px;
         transition: color .3s ease;
-
         &:hover {
             cursor: pointer;
             color: $accent-color;
         }
     }
-
     &__hint-arrow-icon {
         width: 24px;
         height: 24px;
@@ -632,29 +630,24 @@ export default {
         vertical-align: middle;
         transform: rotate(180deg) translateY(2px);
     }
-
     &__hint-results-count {
         line-height: 44px;
         margin: 0 24px 0 auto;
         color: grey;
     }
-
     &__below-selects {
         width: 50%;
         display: flex;
         margin: 0 0 16px auto;
     }
-
     &__available-models {
         padding: 24px 16px 9px;
         margin-bottom: 15px;
     }
-
     &__models-items {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
     }
-
     &__models-item {
         font-size: 15px;
         line-height: 18px;
@@ -665,7 +658,6 @@ export default {
         margin: 0 12px 15px 0;
         white-space: nowrap;
     }
-
     &__models-item-name {
         position: relative;
         z-index: 2;
@@ -676,13 +668,11 @@ export default {
         text-overflow: ellipsis;
         font-size: 15px;
         color: #157ee1;
-
         &:hover {
             cursor: pointer;
             color: $accent-color;
         }
     }
-
     &__models-item-count {
         position: relative;
         z-index: 2;
@@ -690,7 +680,6 @@ export default {
         width: 100%;
         margin-left: auto;
         color: grey;
-
         &::before {
             width: 100%;
             margin-right: 8px;
@@ -700,63 +689,51 @@ export default {
         }
     }
 }
-
 @media screen and (max-width: 1000px) {
     .filters {
         width: auto;
         margin-right: 5%;
-
         &__row {
             width: 100%;
             gap: 10px;
-
             &_header {
                 flex-direction: column;
                 gap: 16px;
                 flex-direction: column-reverse;
             }
-
             &:nth-of-type(3), &:nth-of-type(4) {
                 flex-direction: column;
                 gap: 16px;
             }
         }
-
         &__column {
             width: 100%;
             margin: 0;
         }
-
         &__checkbox {
             justify-content: flex-start;
         }
-
         &__hint-top {
             width: calc(100% - 10%);
         }
-
         &__below-selects {
             width: auto;
             margin-bottom: 16px;
             margin-right: 5%;
         }
-
         &__available-models {
             margin: 0;
             margin-right: 5%;
             padding: 0;
         }
-
         &__models-items {
             grid-template-columns: repeat(2, 1fr);
         }
-
         &__models-item {
             width: auto;
         }
     }
 }
-
 @media screen and (max-width: 360px) {
     .filters {
         &__hint-top {
@@ -764,7 +741,6 @@ export default {
             align-items: flex-start;
             height: auto;
         }
-
         &__hint-results-count {
             margin: 0;
             margin-left: 20px;
