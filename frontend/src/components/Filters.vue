@@ -23,7 +23,6 @@
                         :distance="filters.distance"
                         @changeLocation="changeUserLocation"
                         @changeLocationOffset="changeDistance"
-                        @changeLocationAny="changeLocationAny"
                     />
                 </div>
             </div>
@@ -238,6 +237,7 @@ import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
+
 const DEFAULT_FILTERS = {
     is_new: null,
     is_broken: false,
@@ -258,8 +258,7 @@ const DEFAULT_FILTERS = {
     ordering: 'Distance (nearest first)',
     items_per_page: '25 per page',
     location: '',
-    distance: 200,
-    any: true,
+    distance: 'Any',
 };
 export default {
     name: 'Filters',
@@ -440,7 +439,10 @@ export default {
         async getUserCity() {
             return API.getUserCity()
                 .then((res) => res.data)
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                    console.log('fsdklfjsdkfjklsfjlksdjflsdjfa');
+                    console.log(err);
+                });
         },
         scrollToTop() {
             window.scrollTo({
@@ -465,9 +467,6 @@ export default {
         },
         changeDistance(distance) {
             this.filters.distance = distance;
-        },
-        changeLocationAny(value) {
-            this.filters.any = value;
         },
         resetFilters() {
             this.filters = { ...DEFAULT_FILTERS };

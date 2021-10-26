@@ -78,7 +78,6 @@ class DistanceOrderingFilter(OrderingFilter):
         request_longitude = request.query_params.get('longitude', None)
         request_city = request.query_params.get('location', None)
         distance = request.query_params.get('distance', None)
-        is_any = request.query_params.get('any', None)
 
         if request_latitude and request_longitude and request_city:
             latitude, longitude, city = request_latitude, request_longitude, request_city.split(',')[0]
@@ -90,7 +89,7 @@ class DistanceOrderingFilter(OrderingFilter):
 
         logger.info('{} {}'.format(city, request.META['QUERY_STRING']))
 
-        if is_any == 'true':
+        if distance == 'Any':
             queryset = get_locations_nearby_coords(queryset, latitude, longitude, 100_000, city)
         else:
             queryset = get_locations_nearby_coords(queryset, latitude, longitude, distance, city)

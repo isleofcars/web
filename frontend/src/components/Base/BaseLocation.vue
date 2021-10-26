@@ -33,15 +33,10 @@
                 <div class="location__range-options">
                     <vue-slider
                         v-model="locationOffset"
-                        :data="[0, 100, 200, 300, 400, 500]"
+                        :data="[0, 100, 200, 300, 400, 500, 'Any']"
                         :marks="true"
                         :tooltipFormatter="(v) => `${v} mi`"
                         :contained="true"
-                    />
-                    <BaseCheckbox
-                        class="filters__item_small filters__item_align-right filters__checkbox"
-                        label="Any"
-                        v-model="locationAny"
                     />
                 </div>
 
@@ -72,13 +67,10 @@ import { getStatesCities } from '@/utils/cities';
 import { isValidUSZipCode } from '@/utils/zip';
 import { getPlacesForZIP } from '@/services/api';
 import BaseLoader from '@/components/Base/BaseLoader';
-import BaseCheckbox from '@/components/Base/BaseCheckbox';
+
 export default {
     name: 'BaseLocation',
-    components: {
-        BaseLoader,
-        BaseCheckbox,
-    },
+    components: { BaseLoader },
     props: {
         userCity: {
             type: String,
@@ -103,8 +95,6 @@ export default {
             tempLocationInput: '',
             userChoseOption: false,
             startSearchingOffset: 3,
-            isLoading: false,
-            isFirstLoad: true,
         };
     },
     created() {
@@ -115,12 +105,8 @@ export default {
     computed: {
         text() {
             if (this.location || this.userCity) {
-                if (this.locationAny) {
-                    return `${this.location || this.userCity} + Any`;
-                } if (this.locationOffset > 0) {
-                    return `${this.location || this.userCity} + ${this.locationOffset} mi`;
-                }
-                return this.location || this.userCity;
+                return (this.location || this.userCity) + ((this.locationOffset !== 'Any' && this.locationOffset > 0)
+                    ? ` + ${this.locationOffset} mi` : '');
             }
             return 'Choose location';
         },
@@ -225,14 +211,6 @@ export default {
                     this.$emit('changeLocationOffset', val);
                 }
             }, 500);
-            if (!this.isFirstLoad) {
-                this.locationAny = false;
-            } else {
-                this.isFirstLoad = false;
-            }
-        },
-        locationAny(val) {
-            this.$emit('changeLocationAny', val);
         },
     },
 };
