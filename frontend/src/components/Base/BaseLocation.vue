@@ -67,12 +67,9 @@ import { getStatesCities } from '@/utils/cities';
 import { isValidUSZipCode } from '@/utils/zip';
 import { getPlacesForZIP } from '@/services/api';
 import BaseLoader from '@/components/Base/BaseLoader';
-
 export default {
     name: 'BaseLocation',
-    components: {
-        BaseLoader,
-    },
+    components: { BaseLoader },
     props: {
         userCity: {
             type: String,
@@ -98,7 +95,6 @@ export default {
             userChoseOption: false,
             startSearchingOffset: 3,
             isLoading: false,
-            isFirstLoad: true,
         };
     },
     created() {
@@ -215,14 +211,6 @@ export default {
                     this.$emit('changeLocationOffset', val);
                 }
             }, 500);
-            if (!this.isFirstLoad) {
-                this.locationAny = false;
-            } else {
-                this.isFirstLoad = false;
-            }
-        },
-        locationAny(val) {
-            this.$emit('changeLocationAny', val);
         },
     },
 };
