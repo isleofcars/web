@@ -23,7 +23,7 @@
                         :distance="filters.distance"
                         @changeLocation="changeUserLocation"
                         @changeLocationOffset="changeDistance"
-                        @resetLocation="resetLocation"
+                        @changeLocationAny="changeLocationAny"
                     />
                 </div>
             </div>
@@ -236,6 +236,8 @@ import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
 import eventBus from '@/eventBus';
+import { API } from '@/services/api';
+import { getStatesCities } from '@/utils/cities';
 
 const DEFAULT_FILTERS = {
     is_new: null,
@@ -257,7 +259,8 @@ const DEFAULT_FILTERS = {
     ordering: 'Distance (nearest first)',
     items_per_page: '25 per page',
     location: '',
-    distance: '',
+    distance: 200,
+    any: true,
 };
 
 export default {
@@ -413,14 +416,35 @@ export default {
     created() {
         window.addEventListener('scroll', this.onScroll);
     },
-    mounted() {
+    async mounted() {
         eventBus.$on('reset-filters', this.resetFilters);
+
+        const userCity = await this.getUserCity();
+        console.log(userCity);
+        const allOptions = getStatesCities();
+        const optionOfUserCity = allOptions.filter((option) => option.name.toLowerCase()
+            .startsWith(userCity.city.toLowerCase()))[0];
+        if (optionOfUserCity) {
+            this.filters.location = `${optionOfUserCity.name}, ${optionOfUserCity.stateCode}`;
+            this.filters.longitude = optionOfUserCity.longitude;
+            this.filters.latitude = optionOfUserCity.latitude;
+        } else {
+            console.log('here');
+            this.filters.location = `${userCity.city}`;
+            this.filters.longitude = `${Number(userCity.longitude).toFixed(8)}`;
+            this.filters.latitude = `${Number(userCity.latitude).toFixed(8)}`;
+        }
     },
     destroyed() {
         window.removeEventListener('scroll', this.onScroll);
         eventBus.$off('reset-filters');
     },
     methods: {
+        async getUserCity() {
+            return API.getUserCity()
+                .then((res) => res.data)
+                .catch((err) => console.log(err));
+        },
         scrollToTop() {
             window.scrollTo({
                 top: 0,
@@ -445,11 +469,8 @@ export default {
         changeDistance(distance) {
             this.filters.distance = distance;
         },
-        resetLocation() {
-            this.filters.location = '';
-            this.filters.distance = '';
-            this.filters.longitude = 0;
-            this.filters.latitude = 0;
+        changeLocationAny(value) {
+            this.filters.any = value;
         },
         resetFilters() {
             this.filters = { ...DEFAULT_FILTERS };

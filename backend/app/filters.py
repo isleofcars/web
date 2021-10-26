@@ -78,6 +78,7 @@ class DistanceOrderingFilter(OrderingFilter):
         request_longitude = request.query_params.get('longitude', None)
         request_city = request.query_params.get('location', None)
         distance = request.query_params.get('distance', None)
+        is_any = request.query_params.get('any', None)
 
         if request_latitude and request_longitude and request_city:
             latitude, longitude, city = request_latitude, request_longitude, request_city.split(',')[0]
@@ -88,12 +89,16 @@ class DistanceOrderingFilter(OrderingFilter):
             logger.info(f'city: {city}. Found by IP')
 
         logger.info('{} {}'.format(city, request.META['QUERY_STRING']))
-        queryset = get_locations_nearby_coords(queryset, latitude, longitude, distance, city)
+
+        if is_any == 'true':
+            queryset = get_locations_nearby_coords(queryset, latitude, longitude, 100_000, city)
+        else:
+            queryset = get_locations_nearby_coords(queryset, latitude, longitude, distance, city)
+
         if not ordering:
             queryset = queryset.order_by("distance")
         else:
             if "price" in ordering[0]:  # ordering is a list
                 queryset = queryset.exclude(price=0)
             queryset = super(DistanceOrderingFilter, self).filter_queryset(request, queryset, view)
-
         return queryset
