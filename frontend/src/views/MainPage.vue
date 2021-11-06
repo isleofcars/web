@@ -163,7 +163,7 @@ export default {
         changeFilters(filters) {
             this.perPage = parseInt(filters.items_per_page, 10) || 50;
             this.filtersQueryString = qs.stringify(filters, { indices: false });
-            console.log(this.filtersQueryString);
+            // console.log(this.filtersQueryString);
             this.pageClicked(1);
         },
         infiniteHandler($state) {
