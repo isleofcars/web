@@ -440,7 +440,6 @@ export default {
             return API.getUserCity()
                 .then((res) => res.data)
                 .catch((err) => {
-                    console.log('fsdklfjsdkfjklsfjlksdjflsdjfa');
                     console.log(err);
                 });
         },
