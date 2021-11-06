@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: 'AdLeaderboard'
+    name: 'AdLeaderboard',
 };
 </script>
 
