@@ -9,14 +9,7 @@
             <hr class="footer__section-divider"/>
             <ul class="footer__section">
                 <li>
-                    @ 2021 wholecars.com
-                </li>
-                <li>
-                    info@name.com
-                </li>
-                <li>
-                    <font-awesome-icon class="footer__icon" :icon="['fas', 'phone-alt']" />
-                    <span>+7 495 755-55-77</span>
+                    All rights belong to their respective owners. WholeCarsMarket is not responsible for the content published here.
                 </li>
             </ul>
         </div>
