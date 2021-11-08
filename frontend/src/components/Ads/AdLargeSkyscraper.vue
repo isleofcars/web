@@ -15,7 +15,9 @@ export default {
 .ad {
     width: 300px;
     height: 600px;
-    position: relative;
+    position: sticky;
+    top: 20px;
+    right: 0;
     background-color: lightgrey;
     flex-shrink: 0;
 

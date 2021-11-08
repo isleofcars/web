@@ -54,9 +54,8 @@
 
         <aside>
             <AdLargeSkyscraper />
-            <AdLargeSkyscraper />
-            <AdLargeSkyscraper />
         </aside>
+        <CookiesWarning v-if="userAgreeCookies !== 'true'" />
     </main>
 </template>
 
@@ -66,6 +65,7 @@ import InfiniteLoading from 'vue-infinite-loading';
 import AppCarsList from '@/components/AppCarsList';
 import ContentPlaceholderCard from '@/components/ContentPlaceholderCard';
 import ContentPlaceholderCardMobile from '@/components/ContentPlaceholderCardMobile';
+import CookiesWarning from '@/components/CookiesWarning';
 import { API } from '@/services/api';
 import Filters from '@/components/Filters';
 import AdLargeSkyscraper from '@/components/Ads/AdLargeSkyscraper';
@@ -78,6 +78,7 @@ export default {
         ContentPlaceholderCard,
         ContentPlaceholderCardMobile,
         AdLargeSkyscraper,
+        CookiesWarning,
         InfiniteLoading,
     },
     props: {
@@ -99,6 +100,7 @@ export default {
             filtersQueryString: 'only_with_photo=true&is_broken=false',
             perPage: 50,
             currentPage: props.page,
+            userAgreeCookies: localStorage.getItem('userAgreeCookies'),
         };
     },
     created() {
