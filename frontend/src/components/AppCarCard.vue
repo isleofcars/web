@@ -249,9 +249,10 @@ export default {
     position: relative;
     padding: 16px;
     background-color: $white;
+    z-index: 1;
 
     &:hover {
-        z-index: 1;
+        z-index: 2;
         border-radius: 8px;
         background-color: #fff;
         box-shadow: 0 5px 20px 0 $card-shadow-color;
