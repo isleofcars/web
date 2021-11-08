@@ -247,7 +247,7 @@ export default {
         margin-left: -1px;
     }
 
-    &:hover, &_highlight {
+    &:hover {
         z-index: 100;
     }
 
