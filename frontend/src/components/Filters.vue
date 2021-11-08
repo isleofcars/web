@@ -126,6 +126,7 @@
                         placeholder="Mileage from, mi"
                         v-model="filters.mileage_from"
                         bordersType="left"
+                        showUnits="mi"
                     />
 
                     <BaseInput
@@ -133,6 +134,7 @@
                         placeholder="to"
                         v-model="filters.mileage_to"
                         bordersType="right"
+                        showUnits="mi"
                     />
                 </div>
 
@@ -142,6 +144,7 @@
                         placeholder="Price from, $"
                         v-model="filters.price_from"
                         bordersType="left"
+                        showUnits="$"
                     />
 
                     <BaseInput
@@ -149,6 +152,7 @@
                         placeholder="to"
                         v-model="filters.price_to"
                         bordersType="right"
+                        showUnits="$"
                     />
                 </div>
             </div>

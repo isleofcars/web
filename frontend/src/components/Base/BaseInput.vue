@@ -23,6 +23,10 @@
 export default {
     name: 'BaseInput',
     props: {
+        showUnits: {
+            type: String,
+            default: '',
+        },
         placeholder: {
             type: String,
             default: '',
@@ -47,9 +51,32 @@ export default {
         };
     },
     watch: {
+        isInputFocused(val) {
+            if (this.showUnits === '') {
+                return;
+            }
+
+            // Clear previous units
+            this.tempValue = this.tempValue
+                .replaceAll(this.showUnits, '')
+                .replaceAll(' ', '');
+            if (!val) {
+                // Because it doesn't work otherwise.
+                setTimeout(() => {
+                    if (this.tempValue !== '') {
+                        this.tempValue += ` ${this.showUnits}`;
+                    }
+                }, 100);
+            }
+        },
         tempValue(val) {
             // we don't update the value immediately to not send http request every time user types a letter
             // instead, we update the value 500ms after the user typed the last symbol
+            if (!this.isInputFocused) {
+                // For add unit
+                return;
+            }
+
             this.finishedTyping = false;
             clearTimeout(this.timeout);
             const onlyDigits = val.replace(/\D/g, '');
@@ -62,13 +89,17 @@ export default {
             this.timeout = setTimeout(() => {
                 if (!this.tempValue) return;
                 this.finishedTyping = true;
-            }, 500);
+            }, 700);
         },
         finishedTyping(val) {
             this.isValueSelected = !!val;
             if (val) {
                 this.$refs.input.blur();
-                this.$emit('input', this.tempValue.replaceAll(',', ''));
+                const sendValue = this.tempValue
+                    .replaceAll(',', '')
+                    .replaceAll(' ', '')
+                    .replaceAll(this.showUnits, '');
+                this.$emit('input', sendValue);
             }
         },
         value(val) {

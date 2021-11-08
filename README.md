@@ -4,17 +4,27 @@
 
 Supposed to work on the *nix machine.
 
-1. Run these commands:
+
+
+###### 1. Run these commands for build back-end:
 ```bash
 cd backend
 python3 -m venv env
 source env/bin/activate
-pip install -r requirements.txt
-python manage.py makemigrations
+pip install -r requirements.txt  # 1 note
+python manage.py makemigrations  # 2 note
 python manage.py migrate
 python manage.py runserver
 ```
-2. In another session run these commands:
+> Notes:
+> 1. If you are using linux, you need to install several packages for `mysqlclient` before running this command.
+> ```bash
+> sudo apt install python3-dev build-essential libssl1.1 libssl1.1=1.1.1f-1ubuntu2 libssl-dev libmysqlclient-dev
+> ```
+> 2. Before creating migrations(_or just before starting the project_) , make sure you have a `logs` folder in the `backend`
+
+
+###### 2. In another session run these commands for build front-end:
 ```bash
 cd frontend
 npm i
