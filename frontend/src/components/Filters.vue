@@ -420,7 +420,6 @@ export default {
     async mounted() {
         eventBus.$on('reset-filters', this.resetFilters);
         const userCity = await this.getUserCity();
-        // console.log(userCity);
         const allOptions = getStatesCities();
         const optionOfUserCity = allOptions.filter((option) => option.name.toLowerCase()
             .startsWith(userCity.city.toLowerCase()))[0];
@@ -444,7 +443,6 @@ export default {
             return API.getUserCity()
                 .then((res) => res.data)
                 .catch((err) => {
-                    console.log('fsdklfjsdkfjklsfjlksdjflsdjfa');
                     console.log(err);
                 });
         },
