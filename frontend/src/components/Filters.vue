@@ -435,7 +435,6 @@ export default {
             this.filters.longitude = optionOfUserCity.longitude;
             this.filters.latitude = optionOfUserCity.latitude;
         } else {
-            console.log('here');
             this.filters.location = `${userCity.city}`;
             this.filters.longitude = `${Number(userCity.longitude).toFixed(8)}`;
             this.filters.latitude = `${Number(userCity.latitude).toFixed(8)}`;
