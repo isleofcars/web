@@ -107,8 +107,7 @@ export default {
         this.isLoading = true;
         this.getMinYear();
         this.getAvailableMakes();
-
-        this.getCars(this.page, this.filtersQueryString);
+        // We get cars from: getCars() <- changeFilters() <- Filters: @changeFilters="changeFilters" <- watch.filters.emit <- mounted
     },
     methods: {
         getCars(page = 1, filters = '') {
