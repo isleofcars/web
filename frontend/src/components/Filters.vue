@@ -196,7 +196,7 @@
 
         <div class="filters__below-selects">
             <BaseSelect
-                v-visible="!$store.getters.showMobile"
+                v-show="!$store.getters.showMobile"
                 class="filters__item_small"
                 placeholder="25 per page"
                 :options="itemsPerPageOptions"
@@ -206,7 +206,7 @@
             />
 
             <BaseSelect
-                :class="($store.getters.showMobile) ? 'filters__item_small' : 'filters__item_large'"
+                :class="['filters__sort-by', $store.getters.showMobile ? 'filters__item_small' : 'filters__item_large']"
                 placeholder="Sort by Distance"
                 :options="sortByOptions"
                 :selectedOption="filters.ordering"
@@ -689,6 +689,9 @@ export default {
             border-bottom: 1px solid #e0e0e0
         }
     }
+    &__sort-by {
+        min-width: 245px;
+    }
 }
 @media screen and (max-width: 1000px) {
     .filters {
@@ -721,6 +724,7 @@ export default {
             width: auto;
             margin-bottom: 16px;
             margin-right: 5%;
+            justify-content: end;
         }
         &__available-models {
             margin: 0;
