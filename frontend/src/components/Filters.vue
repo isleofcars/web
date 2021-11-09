@@ -159,12 +159,13 @@
 
             <div class="filters__row filters__row_last">
                 <div class="filters__column">
+                    <BaseColour />
+                </div>
+                <div class="filters__column">
                     <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
                         Reset filters
                         <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
                     </div>
-                </div>
-                <div class="filters__column">
                 </div>
                 <div class="filters__column">
                     <div class="filters__results-count" v-if="resultsCount > 0">
@@ -238,6 +239,7 @@ import BaseCheckbox from '@/components/Base/BaseCheckbox';
 import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
+import BaseColour from '@/components/Base/BaseColour';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
@@ -272,6 +274,7 @@ export default {
         BaseCheckbox,
         BaseSelect,
         BaseRadioButtonGroup,
+        BaseColour,
     },
     props: {
         minAvailableYear: {
