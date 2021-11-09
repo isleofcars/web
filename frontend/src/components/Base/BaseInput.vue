@@ -86,6 +86,7 @@ export default {
             const onlyDigits = val.replace(/\D/g, '');
             if (!onlyDigits) {
                 this.tempValue = '';
+                this.finishedTyping = true; // we clean the filter
                 return;
             }
 
