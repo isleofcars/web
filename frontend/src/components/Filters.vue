@@ -384,6 +384,8 @@ export default {
         appliedFiltersInfo() {
             const appliedFiltersInfo = [];
             let appliedFiltersCount = 0;
+            // That is, if we display all cars to the user
+            if (!('is_broken' in this.appliedFilters)) appliedFiltersCount += 1;
             Object.entries(this.appliedFilters)
                 .forEach(([key, value]) => {
                     switch (key) {
@@ -391,13 +393,18 @@ export default {
                     case 'model':
                         appliedFiltersInfo.push(value);
                         break;
-                    case 'withPhotos':
                     case 'location':
                     case 'distance':
                     case 'longitude':
                     case 'latitude':
+                    case 'ordering':
+                    case 'items_per_page':
                         break;
                     default:
+                        if (key === 'is_broken' && value === false) break;
+                        if (key === 'only_with_photo' && value === true) break;
+                        // if (key === 'ordering' && value === 'distance') break;
+                        // if (key === 'items_per_page' && value === '25 per page') break;
                         appliedFiltersCount += 1;
                         break;
                     }

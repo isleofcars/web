@@ -308,6 +308,7 @@ export default {
         font-size: 17px;
         font-weight: 700;
         transition: color 0.3s ease;
+        max-width: 260px;
     }
 
     &__price {
