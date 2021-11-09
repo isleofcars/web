@@ -33,8 +33,14 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .pagination {
-  display: flex;
-  list-style-type: none;
+    display: flex;
+    list-style-type: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
 }
 
 .page-item {
@@ -58,6 +64,7 @@ input::-webkit-calendar-picker-indicator {
   align-items: center;
   font-size: 13px;
   cursor: inherit !important;
+  outline: none;
 }
 
 .page-item-prev {

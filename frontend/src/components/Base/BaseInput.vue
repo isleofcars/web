@@ -64,7 +64,11 @@ export default {
                 // Because it doesn't work otherwise.
                 setTimeout(() => {
                     if (this.tempValue !== '') {
-                        this.tempValue += ` ${this.showUnits}`;
+                        if (this.showUnits === '$') {
+                            this.tempValue = `${this.showUnits}${this.tempValue}`;
+                        } else {
+                            this.tempValue += ` ${this.showUnits}`;
+                        }
                     }
                 }, 100);
             }

@@ -4,7 +4,7 @@
             This website uses cookies to personalize content and analyse
             traffic in order to offer you a better experience.
         </p>
-        <button @click="closeWarning()">I accept and close</button>
+        <button @click="closeWarning()">Accept</button>
     </div>
 </template>
 
@@ -65,9 +65,6 @@ export default {
         animation: hide_to_bottom .7s ease-in-out;
         animation-fill-mode: forwards, backwards;
     }
-    p {
-        text-shadow: 0 0 5px rgba(0,0,0,.2)
-    }
     button {
         color: #DB3727;
         border: none;
@@ -79,12 +76,8 @@ export default {
         display: block;
         transition: all .2s;
         cursor: pointer;
-        min-width: 140px;
         margin-left: 20px;
-
-        &:hover {
-            transform: scale(1.06);
-        }
+        margin-right: 10px;
     }
 }
 
