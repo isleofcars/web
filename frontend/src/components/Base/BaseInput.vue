@@ -12,8 +12,8 @@
             :placeholder="placeholder"
             v-model="tempValue"
             @focus="isInputFocused = true"
-            @blur="isInputFocused = false"
-            @keyup.enter="finishedTyping = true"
+            @blur="isInputFocused = false; finishedTyping = true"
+            @keyup.enter="finishedTyping = true; isInputFocused = false; "
             ref="input"
         />
     </div>
@@ -86,25 +86,27 @@ export default {
             const onlyDigits = val.replace(/\D/g, '');
             if (!onlyDigits) {
                 this.tempValue = '';
-                this.finishedTyping = true; // we clean the filter
+                this.finishedTyping = false; // we clean the filter
                 return;
             }
 
             this.tempValue = new Intl.NumberFormat('en-US').format(onlyDigits);
             this.timeout = setTimeout(() => {
                 if (!this.tempValue) return;
-                this.finishedTyping = true;
+                this.finishedTyping = false;
             }, 700);
         },
         finishedTyping(val) {
-            this.isValueSelected = !!val;
-            if (val) {
-                this.$refs.input.blur();
-                const sendValue = this.tempValue
-                    .replaceAll(',', '')
-                    .replaceAll(' ', '')
-                    .replaceAll(this.showUnits, '');
-                this.$emit('input', sendValue);
+            if (this.finishedTyping) {
+                this.isValueSelected = !!val;
+                if (val) {
+                    this.$refs.input.blur();
+                    const sendValue = this.tempValue
+                        .replaceAll(',', '')
+                        .replaceAll(' ', '')
+                        .replaceAll(this.showUnits, '');
+                    this.$emit('input', sendValue);
+                }
             }
         },
         value(val) {
