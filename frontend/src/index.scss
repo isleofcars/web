@@ -40,27 +40,23 @@ input::-webkit-calendar-picker-indicator {
   padding-left: 20px;
   padding-right: 20px;
   justify-content: space-between;
-
-  &-sm {
-    display: block;
-  }
 }
 
 .pagination {
-    display: flex;
-    list-style-type: none;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none;
+  display: flex;
+  list-style-type: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none;
 }
 
 .page-item {
   width: 37px;
   height: 32px;
-  border: 1px solid rgba(0,0,0,.12);
+  border: 1px solid rgba(0, 0, 0, .12);
   border-right: none;
 
   &:hover {
@@ -129,5 +125,14 @@ input::-webkit-calendar-picker-indicator {
 }
 
 input, select, textarea, button {
-  font-family:inherit;
+  font-family: inherit;
+}
+
+@media screen and (max-width: 1300px) {
+  .container {
+
+    &-sm {
+      display: block;
+    }
+  }
 }
