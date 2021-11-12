@@ -33,12 +33,8 @@ export default {
 .header {
     background-color: $accent-color;
     color: $white;
-    display: flex;
-    align-items: center;
-    padding: 24px;
     font-family: $logo-font;
-    height: 98px;
-    flex: 1 0 auto;
+    padding: 24px 0;
 
     &__logo {
         font-size: 32px;
