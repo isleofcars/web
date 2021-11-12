@@ -355,7 +355,7 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         modelsList() {
-            return this.availableModels.map((item) => item.model);
+            return this.availableModels.map((item) => item.model).filter((item) => item.length > 0);
         },
         isNewSelectedOption() {
             return {
