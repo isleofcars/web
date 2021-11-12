@@ -1,14 +1,16 @@
 <template>
     <header class="header">
-        <h1 class="header__logo" @click="clickLogo">
-            <router-link :to="{ name: 'Main Page', query: { page: 1 } }" class="header__logo-link">
-                <img class="header__logo-img" src="@/assets/logo.svg" alt="logo"/>
-                <span class="header__logo-name">WHOLE CARS</span>
-            </router-link>
-        </h1>
-        <h2 class="header__motto">
-            All cars in one place
-        </h2>
+        <div class="container">
+            <h1 class="header__logo" @click="clickLogo">
+                <router-link :to="{ name: 'Main Page', query: { page: 1 } }" class="header__logo-link">
+                    <img class="header__logo-img" src="@/assets/logo.svg" alt="logo"/>
+                    <span class="header__logo-name">WHOLE CARS</span>
+                </router-link>
+            </h1>
+            <h2 class="header__motto">
+                All cars in one place
+            </h2>
+        </div>
     </header>
 </template>
 
@@ -33,14 +35,13 @@ export default {
     color: $white;
     display: flex;
     align-items: center;
-    padding: 24px 5%;
+    padding: 24px;
     font-family: $logo-font;
     height: 98px;
     flex: 1 0 auto;
 
     &__logo {
         font-size: 32px;
-        width: 920px;
         margin-right: 12px;
     }
 
