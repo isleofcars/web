@@ -139,7 +139,6 @@ export default {
     &_selected {
         border: 1px solid rgba(21, 126, 225, .5) !important;
         background-color: #eef4fa;
-        z-index: 100;
     }
 
     &_borders-all {
