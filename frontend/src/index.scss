@@ -128,6 +128,11 @@ input, select, textarea, button {
   font-family: inherit;
 }
 
+.vue-content-placeholders-text {
+  will-change: transform;
+  overflow: hidden;
+}
+
 @media screen and (max-width: 1300px) {
   .container {
 
