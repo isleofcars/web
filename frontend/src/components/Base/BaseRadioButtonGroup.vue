@@ -65,6 +65,10 @@ export default {
             &:hover {
                 cursor: default;
             }
+
+            & + input + label {
+                border-left: 0;
+            }
         }
     }
 

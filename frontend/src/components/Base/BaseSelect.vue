@@ -1,7 +1,8 @@
 <template>
     <div
         class="select-container"
-        :class="{'select-container_highlight': isInputFocused || !!selectedOption}"
+        :class="[{'select-container_highlight': isInputFocused || !!selectedOption,
+                'select-container__selected': !!selectedOption }]"
         v-click-outside="clickOutside"
     >
         <div
@@ -259,6 +260,10 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        &ed {
+            z-index: 1;
+        }
 
         &:hover, &_focused {
             cursor: pointer;
