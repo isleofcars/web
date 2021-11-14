@@ -4,7 +4,7 @@
             <a :href="car.url" class="card__link" target="_blank" rel="noreferrer">
                 <div class="card-m__header">
                     <p class="card-m__title">
-                        {{ title }}, {{ car.year }}
+                        {{ title }} <span v-if="car !== 0">, {{ car.year }}</span><span v-else>-</span>
                     </p>
                     <h3 class="card-m__price">
                         {{ price }}
@@ -99,7 +99,8 @@
                 <div class="card__column">
                     <div class="card__column-row">
                         <div v-if="present(car.year)" class="card__year">
-                            {{ car.year }}
+                            <span v-if="car.year !== 0">{{ car.year }}</span>
+                            <span v-else>-</span>
                         </div>
                     </div>
                 </div>
