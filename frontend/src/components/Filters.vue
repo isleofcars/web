@@ -51,6 +51,10 @@
                         withInput
                     />
                 </div>
+
+                <div class="filters__column filters__column_colours-laptop">
+                    <BaseColour />
+                </div>
             </div>
             <div class="filters__row">
                 <div class="filters__column">
@@ -87,6 +91,24 @@
                         class="filters__item_small filters__item_align-right filters__checkbox"
                         label="With photos"
                         v-model="filters.only_with_photo"
+                    />
+                </div>
+
+                <div class="filters__column">
+                    <BaseInput
+                        class="filters__item_grouped"
+                        placeholder="Power from, hp"
+                        v-model="filters.power_from"
+                        bordersType="left"
+                        showUnits="hp"
+                    />
+
+                    <BaseInput
+                        class="filters__item_grouped"
+                        placeholder="to"
+                        v-model="filters.power_to"
+                        bordersType="right"
+                        showUnits="hp"
                     />
                 </div>
             </div>
@@ -157,16 +179,20 @@
                 </div>
             </div>
 
-            <div class="filters__row filters__row_last">
+            <div class="filters__row filters__row_colours-phone">
                 <div class="filters__column">
                     <BaseColour />
                 </div>
+            </div>
+
+            <div class="filters__row filters__row_last">
                 <div class="filters__column">
                     <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
                         Reset filters
                         <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
                     </div>
                 </div>
+                <div class="filters__column"></div>
                 <div class="filters__column">
                     <div class="filters__results-count" v-if="resultsCount > 0">
                         {{ resultsCountFormatted }} results
@@ -259,6 +285,8 @@ const DEFAULT_FILTERS = {
     mileage_to: '',
     price_from: '',
     price_to: '',
+    power_from: '',
+    power_to: '',
     longitude: 0,
     latitude: 0,
     ordering: 'Distance (nearest first)',
@@ -556,6 +584,9 @@ export default {
         &_last {
             margin-bottom: 0;
         }
+        &_colours-phone {
+            display: none;
+        }
     }
     &__column {
         width: 280px;
@@ -745,6 +776,17 @@ export default {
         }
         &__models-item {
             width: auto;
+        }
+    }
+}
+
+@media screen and (max-width: 880px) {
+    .filters {
+        &__row_colours-phone {
+            display: flex;
+        }
+        &__column_colours-laptop {
+            display: none;
         }
     }
 }

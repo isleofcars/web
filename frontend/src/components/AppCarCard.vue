@@ -73,7 +73,7 @@
                     <div class="card__column-row">
                         <div class="card__tech-summary">
                             <div class="card__tech-summary-column">
-                                <div class="card__cell" title="Power">{{ power }}</div>
+                                <div class="card__cell" title="Power">{{ power ? `${power} hp` : '' }}</div>
                                 <div class="card__cell" title="Transmission">{{ transmission }}</div>
                             </div>
                             <div class="card__tech-summary-column">
