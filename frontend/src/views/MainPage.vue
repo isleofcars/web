@@ -100,7 +100,7 @@ export default {
             availableMakes: [],
             availableModels: [],
             filtersQueryString: 'only_with_photo=true&is_broken=false',
-            perPage: 50,
+            perPage: 25,
             currentPage: props.page,
             userAgreeCookies: localStorage.getItem('userAgreeCookies'),
         };
