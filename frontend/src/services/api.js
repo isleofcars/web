@@ -11,10 +11,15 @@ class Api {
                 'Content-Type': 'application/json',
             },
         });
+
+        this.getCarsRequest = axios.CancelToken.source();
     }
 
     getCars(page = 1, filtersQuery = '') {
-        return this.apiClient.get(`/api/v1/cars?page=${page}&${filtersQuery}`);
+        this.getCarsRequest = axios.CancelToken.source();
+        return this.apiClient.get(`/api/v1/cars?page=${page}&${filtersQuery}`, {
+            cancelToken: this.getCarsRequest.token,
+        });
     }
 
     getMinYear() {
@@ -27,6 +32,16 @@ class Api {
 
     getMakes() {
         return this.apiClient.get('/api/v1/makes');
+    }
+
+    cancelRequest() {
+        if (this.getCarsRequest !== null) {
+            try {
+                this.getCarsRequest.cancel();
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 }
 
