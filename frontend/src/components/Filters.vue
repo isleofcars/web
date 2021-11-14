@@ -748,6 +748,26 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: 630px) {
+    .filters {
+        &__column {
+            margin-bottom: 20px;
+        }
+        &__row {
+            display: initial;
+            &_header {
+                display: flex;
+                .filters {
+                    &__column {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 360px) {
     .filters {
         &__hint-top {
