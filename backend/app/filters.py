@@ -43,6 +43,8 @@ class CarAdFilter(filters.FilterSet):
     year_to = filters.NumberFilter(field_name="year", lookup_expr='lte')
     mileage_from = filters.NumberFilter(field_name="mileage", lookup_expr='gte')
     mileage_to = filters.NumberFilter(field_name="mileage", lookup_expr='lte')
+    power_from = filters.NumberFilter(field_name="power", lookup_expr='gte')
+    power_to = filters.NumberFilter(field_name="power", lookup_expr='lte')
     drive = filters.MultipleChoiceFilter(choices=DRIVE_CHOICES)
     transmission = filters.ChoiceFilter(choices=TRANSMISSION_CHOICES)
     body = filters.MultipleChoiceFilter(choices=BODY_CHOICES)

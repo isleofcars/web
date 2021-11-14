@@ -1,32 +1,17 @@
 <template>
     <div class="filter__colours">
         <div class="colours">
-            <div class="main-colours">
-                <div
-                    :class="['colour', colour, checkedColours.includes(colour) ? 'selected' : '']"
-                    @click="choiceColour(colour)"
-                    v-for="colour in mainColours"
-                    :key="colour"
-                ></div>
-            </div>
-
             <div
-                class="main-colours"
-                v-show="showAdditionalColours"
-            >
-                <div
-                    v-for="colour in additionalColours"
-                    :key="colour"
-                    :class="['colour', colour, checkedColours.includes(colour) ? 'selected' : '']"
-                    @click="choiceColour(colour)"
-                ></div>
-            </div>
+                :class="['colour', colour, checkedColours.includes(colour) ? 'selected' : '']"
+                @click="choiceColour(colour)"
+                v-for="colour in mainColours"
+                :key="colour"
+            ></div>
         </div>
-        <div class="open-hidden-button">
+        <div class="filter__colours-reset" v-if="checkedColours.length > 0">
             <button
-                @click="showAdditionalColours = !showAdditionalColours"
-                :class="showAdditionalColours ? 'active' : ''"
-            ><font-awesome-icon :icon="['fas', 'chevron-down']"/>
+                @click="checkedColours = []"
+            ><font-awesome-icon :icon="['fas', 'times']"/>
             </button>
         </div>
     </div>
@@ -39,14 +24,7 @@ export default {
         return {
             showAdditionalColours: false,
             checkedColours: [],
-            mainColours: [
-                'black', 'silver-light', 'white', 'silver', 'blue',
-                'orange-dark', 'green', 'brown', 'orange-light',
-            ],
-            additionalColours: [
-                'blue-light', 'gold', 'red', 'purple',
-                'yellow', 'coral', 'pink',
-            ],
+            mainColours: ['black', 'white', 'silver', 'blue', 'red', 'green', 'yellow', 'orange'],
         };
     },
     methods: {
@@ -58,6 +36,9 @@ export default {
             } else {
                 this.checkedColours.push(colour);
             }
+        },
+        resetFilter() {
+            this.checkedColours = [];
         },
     },
     watch: {
@@ -84,7 +65,6 @@ export default {
         border-radius: 50%;
         cursor: pointer;
         margin-right: 8px;
-        margin-bottom: 6px;
         position: relative;
 
         &.selected::after {
@@ -110,26 +90,19 @@ export default {
         height: 20px;
         width: 20px;
         cursor: pointer;
-        transform: rotate(0);
-        transition: all .3s;
-
-        &.active {
-            transform: rotate(180deg);
-        }
-        .svg-inline--fa.fa-w-14 {
-            width: 0.75em;
-        }
-        .svg-inline--fa {
-            height: 1.6em;
-        }
+        font-size: 12px;
+        line-height: 10px;
     }
 }
+
+@media screen and (max-width: 1000px) {
+    .filter__colours {
+        width: 100%;
+    }
+}
+
 .black {
     background: #000000;
-}
-.silver-light {
-    background-color: $silver-light;
-    background-image: linear-gradient(rgb(240, 240, 240), rgb(193, 193, 193));
 }
 .white {
     background: #ffffff;
@@ -141,38 +114,16 @@ export default {
 .blue {
     background-color: $blue;
 }
-.orange-dark {
-    background-color: $orange-dark;
+.orange {
+    background-color: $orange;
 }
 .green {
     background-color: $green;
 }
-.brown {
-    background-color: $brown;
-}
-.orange-light {
-    background-color: $orange-light;
-}
-.blue-light {
-    background-color: $blue-light;
-}
-.gold {
-    background-color: $gold;
-    background-image: linear-gradient(rgb(255, 237, 2), rgb(253, 156, 0));
-}
 .red {
     background-color: $red;
 }
-.purple {
-    background-color: $purple;
-}
 .yellow {
     background-color: $yellow;
-}
-.coral {
-    background-color: $coral;
-}
-.pink {
-    background-color: $pink;
 }
 </style>
