@@ -61,6 +61,7 @@
 
 <script>
 import qs from 'qs';
+import { isCancel } from 'axios';
 import InfiniteLoading from 'vue-infinite-loading';
 import AppCarsList from '@/components/AppCarsList';
 import ContentPlaceholderCard from '@/components/ContentPlaceholderCard';
@@ -129,7 +130,13 @@ export default {
                     this.maxPage = totalPages;
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
-                .catch((err) => console.log(err))
+                .catch((err) => {
+                    if (isCancel(err)) {
+                        console.log('Request canceled', err.message);
+                    } else {
+                        console.log(err);
+                    }
+                })
                 .finally(() => {
                     --this.requestsPending;
                     this.isLoading = false;
@@ -150,6 +157,7 @@ export default {
                 .catch((err) => console.log(err));
         },
         pageClicked(newPage) {
+            API.cancelRequest();
             // redirect if we are not on that page already
             if (parseInt(this.$route.query.page || '1', 10) !== newPage) {
                 this.$router.push({
