@@ -259,6 +259,10 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        z-index: 2;
+        &ed {
+            z-index: 1;
+        }
 
         &:hover, &_focused {
             cursor: pointer;
