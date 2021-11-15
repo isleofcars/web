@@ -2,7 +2,8 @@
     <div :class="[
                     'input-container',
                     { 'input-container_focused': isInputFocused,
-                      'input-container_selected': isValueSelected },
+                      'input-container_selected': isValueSelected,
+                      'input-container_error': isError },
                     `input-container_borders-${bordersType}`,
                 ]"
     >
@@ -23,6 +24,10 @@
 export default {
     name: 'BaseInput',
     props: {
+        fromValue: {
+            type: String,
+            default: '0',
+        },
         showUnits: {
             type: String,
             default: '',
@@ -48,9 +53,18 @@ export default {
             tempValue: props.value,
             isInputFocused: false,
             isValueSelected: false,
+            isError: false,
         };
     },
     watch: {
+        fromValue(val) {
+            // console.log('change another: ', val);
+            const currentValue = Number(this.tempValue
+                .replaceAll(',', '')
+                .replaceAll(' ', '')
+                .replaceAll(this.showUnits, ''));
+            this.isError = currentValue < Number(val) && currentValue > 0;
+        },
         isInputFocused(val) {
             if (this.showUnits === '') {
                 return;
@@ -74,6 +88,12 @@ export default {
             }
         },
         tempValue(val) {
+            // console.log(`val: ${val}, number Error: ${this.fromValue}`);
+            const currentValue = Number(val
+                .replaceAll(',', '')
+                .replaceAll(' ', '')
+                .replaceAll(this.showUnits, ''));
+            this.isError = currentValue < Number(this.fromValue) && currentValue > 0;
             // we don't update the value immediately to not send http request every time user types a letter
             // instead, we update the value 500ms after the user typed the last symbol
             if (!this.isInputFocused) {
@@ -97,14 +117,16 @@ export default {
             }, 700);
         },
         finishedTyping(val) {
-            this.isValueSelected = !!val;
-            if (val) {
-                this.$refs.input.blur();
+            if (this.finishedTyping) {
+                this.isValueSelected = !!val;
                 const sendValue = this.tempValue
                     .replaceAll(',', '')
                     .replaceAll(' ', '')
                     .replaceAll(this.showUnits, '');
-                this.$emit('input', sendValue);
+                if (val && !this.isError) {
+                    this.$refs.input.blur();
+                    this.$emit('input', sendValue);
+                }
             }
         },
         value(val) {
@@ -140,6 +162,12 @@ export default {
         border: 1px solid rgba(21, 126, 225, .5) !important;
         background-color: #eef4fa;
         z-index: 100;
+    }
+
+    &_error {
+        border: 1px solid rgba(225, 21, 75, 0.5) !important;
+        background-color: #ffdddd;
+        z-index: 1;
     }
 
     &_borders-all {

@@ -14,7 +14,7 @@ jobs:
           script: | 
             whoami
             cd /mnt/wholecars-web
-            git pull origin main 
+            git pull origin main
+            docker volume rm $(docker volume ls -qf dangling=true)
             docker-compose down
             docker-compose up -d --build  
-      

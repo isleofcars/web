@@ -73,7 +73,7 @@
                     <div class="card__column-row">
                         <div class="card__tech-summary">
                             <div class="card__tech-summary-column">
-                                <div class="card__cell" title="Power">{{ power }}</div>
+                                <div class="card__cell" title="Power">{{ power ? `${power} hp` : power }}</div>
                                 <div class="card__cell" title="Transmission">{{ transmission }}</div>
                             </div>
                             <div class="card__tech-summary-column">
@@ -98,9 +98,7 @@
 
                 <div class="card__column">
                     <div class="card__column-row">
-                        <div v-if="present(car.year)" class="card__year">
-                            {{ car.year }}
-                        </div>
+                        <div class="card__year">{{ year }}</div>
                     </div>
                 </div>
 
@@ -154,10 +152,16 @@ export default {
         },
         price() {
             if (!this.car.price) {
-                return 'Priceless';
+                return 'No price';
             }
             const USFormat = Intl.NumberFormat('en-US');
             return `$${USFormat.format(this.car.price)}`;
+        },
+        year() {
+            if (this.car.year !== 0) {
+                return this.car.year;
+            }
+            return '';
         },
         mileage() {
             if (!this.car.mileage) {
@@ -308,6 +312,7 @@ export default {
         font-size: 17px;
         font-weight: 700;
         transition: color 0.3s ease;
+        max-width: 260px;
     }
 
     &__price {

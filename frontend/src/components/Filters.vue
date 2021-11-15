@@ -51,6 +51,10 @@
                         withInput
                     />
                 </div>
+
+                <div class="filters__column filters__column_colours-laptop">
+                    <BaseColour />
+                </div>
             </div>
             <div class="filters__row">
                 <div class="filters__column">
@@ -87,6 +91,25 @@
                         class="filters__item_small filters__item_align-right filters__checkbox"
                         label="With photos"
                         v-model="filters.only_with_photo"
+                    />
+                </div>
+
+                <div class="filters__column">
+                    <BaseInput
+                        class="filters__item_grouped"
+                        placeholder="Power from, hp"
+                        v-model="filters.power_from"
+                        bordersType="left"
+                        showUnits="hp"
+                    />
+
+                    <BaseInput
+                        class="filters__item_grouped"
+                        placeholder="to"
+                        v-model="filters.power_to"
+                        bordersType="right"
+                        showUnits="hp"
+                        :from-value="filters.power_from"
                     />
                 </div>
             </div>
@@ -135,6 +158,7 @@
                         v-model="filters.mileage_to"
                         bordersType="right"
                         showUnits="mi"
+                        :from-value="filters.mileage_from"
                     />
                 </div>
 
@@ -153,7 +177,14 @@
                         v-model="filters.price_to"
                         bordersType="right"
                         showUnits="$"
+                        :fromValue="filters.price_from"
                     />
+                </div>
+            </div>
+
+            <div class="filters__row filters__row_colours-phone">
+                <div class="filters__column">
+                    <BaseColour />
                 </div>
             </div>
 
@@ -164,8 +195,7 @@
                         <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
                     </div>
                 </div>
-                <div class="filters__column">
-                </div>
+                <div class="filters__column"></div>
                 <div class="filters__column">
                     <div class="filters__results-count" v-if="resultsCount > 0">
                         {{ resultsCountFormatted }} results
@@ -196,7 +226,7 @@
 
         <div class="filters__below-selects">
             <BaseSelect
-                v-visible="!$store.getters.showMobile"
+                v-show="!$store.getters.showMobile"
                 class="filters__item_small"
                 placeholder="25 per page"
                 :options="itemsPerPageOptions"
@@ -206,7 +236,7 @@
             />
 
             <BaseSelect
-                :class="($store.getters.showMobile) ? 'filters__item_small' : 'filters__item_large'"
+                :class="['filters__sort-by', $store.getters.showMobile ? 'filters__item_small' : 'filters__item_large']"
                 placeholder="Sort by Distance"
                 :options="sortByOptions"
                 :selectedOption="filters.ordering"
@@ -238,6 +268,7 @@ import BaseCheckbox from '@/components/Base/BaseCheckbox';
 import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
+import BaseColour from '@/components/Base/BaseColour';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
@@ -257,6 +288,8 @@ const DEFAULT_FILTERS = {
     mileage_to: '',
     price_from: '',
     price_to: '',
+    power_from: '',
+    power_to: '',
     longitude: 0,
     latitude: 0,
     ordering: 'Distance (nearest first)',
@@ -272,6 +305,7 @@ export default {
         BaseCheckbox,
         BaseSelect,
         BaseRadioButtonGroup,
+        BaseColour,
     },
     props: {
         minAvailableYear: {
@@ -352,7 +386,7 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         modelsList() {
-            return this.availableModels.map((item) => item.model);
+            return this.availableModels.map((item) => item.model).filter((item) => item.length > 0);
         },
         isNewSelectedOption() {
             return {
@@ -384,6 +418,8 @@ export default {
         appliedFiltersInfo() {
             const appliedFiltersInfo = [];
             let appliedFiltersCount = 0;
+            // That is, if we display all cars to the user
+            if (!('is_broken' in this.appliedFilters)) appliedFiltersCount += 1;
             Object.entries(this.appliedFilters)
                 .forEach(([key, value]) => {
                     switch (key) {
@@ -391,13 +427,18 @@ export default {
                     case 'model':
                         appliedFiltersInfo.push(value);
                         break;
-                    case 'withPhotos':
                     case 'location':
                     case 'distance':
                     case 'longitude':
                     case 'latitude':
+                    case 'ordering':
+                    case 'items_per_page':
                         break;
                     default:
+                        if (key === 'is_broken' && value === false) break;
+                        if (key === 'only_with_photo' && value === true) break;
+                        // if (key === 'ordering' && value === 'distance') break;
+                        // if (key === 'items_per_page' && value === '25 per page') break;
                         appliedFiltersCount += 1;
                         break;
                     }
@@ -428,7 +469,6 @@ export default {
             this.filters.longitude = optionOfUserCity.longitude;
             this.filters.latitude = optionOfUserCity.latitude;
         } else {
-            console.log('here');
             this.filters.location = `${userCity.city}`;
             this.filters.longitude = `${Number(userCity.longitude).toFixed(8)}`;
             this.filters.latitude = `${Number(userCity.latitude).toFixed(8)}`;
@@ -546,6 +586,9 @@ export default {
         }
         &_last {
             margin-bottom: 0;
+        }
+        &_colours-phone {
+            display: none;
         }
     }
     &__column {
@@ -689,6 +732,9 @@ export default {
             border-bottom: 1px solid #e0e0e0
         }
     }
+    &__sort-by {
+        min-width: 245px;
+    }
 }
 @media screen and (max-width: 1000px) {
     .filters {
@@ -721,6 +767,7 @@ export default {
             width: auto;
             margin-bottom: 16px;
             margin-right: 5%;
+            justify-content: end;
         }
         &__available-models {
             margin: 0;
@@ -735,6 +782,37 @@ export default {
         }
     }
 }
+
+@media screen and (max-width: 880px) {
+    .filters {
+        &__row_colours-phone {
+            display: flex;
+        }
+        &__column_colours-laptop {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 630px) {
+    .filters {
+        &__column {
+            margin-bottom: 20px;
+        }
+        &__row {
+            display: initial;
+            &_header {
+                display: flex;
+                .filters {
+                    &__column {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 360px) {
     .filters {
         &__hint-top {

@@ -67,12 +67,12 @@
                     @mousedown.prevent="selectOption(option)"
                 >
                     <font-awesome-icon
+                        v-if="option.length > 0"
                         class="select-container__icon"
                         :icon="['fas', 'check']"
                         v-visible="selectedOption === filteredOptions[index]"
                     />
-
-                    <label class="select-container__label">
+                    <label class="select-container__label" v-if="option.length > 0">
                         <input type="checkbox" :value="option"/>
                         {{ option }}
                     </label>
@@ -259,6 +259,10 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        z-index: 2;
+        &ed {
+            z-index: 1;
+        }
 
         &:hover, &_focused {
             cursor: pointer;
