@@ -109,6 +109,7 @@
                         v-model="filters.power_to"
                         bordersType="right"
                         showUnits="hp"
+                        :from-value="filters.power_from"
                     />
                 </div>
             </div>
@@ -157,6 +158,7 @@
                         v-model="filters.mileage_to"
                         bordersType="right"
                         showUnits="mi"
+                        :from-value="filters.mileage_from"
                     />
                 </div>
 
@@ -175,6 +177,7 @@
                         v-model="filters.price_to"
                         bordersType="right"
                         showUnits="$"
+                        :fromValue="filters.price_from"
                     />
                 </div>
             </div>
