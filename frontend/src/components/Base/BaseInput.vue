@@ -170,6 +170,12 @@ export default {
         z-index: 1;
     }
 
+    &_error {
+        border: 1px solid rgba(225, 21, 75, 0.5) !important;
+        background-color: #ffdddd;
+        z-index: 1;
+    }
+
     &_borders-all {
         border-radius: 8px;
     }
