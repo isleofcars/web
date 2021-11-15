@@ -94,6 +94,7 @@ export default {
         }
 
         &__motto {
+            margin-top: 10px;
             font-size: 14px;
         }
     }
