@@ -98,9 +98,7 @@
 
                 <div class="card__column">
                     <div class="card__column-row">
-                        <div v-if="present(car.year)" class="card__year">
-                            {{ car.year }}
-                        </div>
+                        <div class="card__year">{{ year }}</div>
                     </div>
                 </div>
 
@@ -154,10 +152,16 @@ export default {
         },
         price() {
             if (!this.car.price) {
-                return 'Priceless';
+                return 'No price';
             }
             const USFormat = Intl.NumberFormat('en-US');
             return `$${USFormat.format(this.car.price)}`;
+        },
+        year() {
+            if (this.car.year !== 0) {
+                return this.car.year;
+            }
+            return '';
         },
         mileage() {
             if (!this.car.mileage) {
