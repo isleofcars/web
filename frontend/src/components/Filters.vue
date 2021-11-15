@@ -739,7 +739,6 @@ export default {
 @media screen and (max-width: 1000px) {
     .filters {
         width: auto;
-        margin-right: 5%;
         &__row {
             width: 100%;
             gap: 10px;
@@ -815,6 +814,7 @@ export default {
 
 @media screen and (max-width: 360px) {
     .filters {
+        padding: 20px 11px;
         &__hint-top {
             flex-direction: column;
             align-items: flex-start;
