@@ -275,13 +275,13 @@ import { getStatesCities } from '@/utils/cities';
 
 const DEFAULT_FILTERS = {
     is_new: null,
-    is_broken: null,
+    is_broken: false,
     make: '',
     model: '',
     drive: '',
     transmission: '',
     body: '',
-    only_with_photo: false,
+    only_with_photo: true,
     year_from: '',
     year_to: '',
     mileage_from: '',
