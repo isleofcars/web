@@ -2,7 +2,9 @@
     <div
         class="select-container"
         :class="[{'select-container_highlight': isInputFocused || !!selectedOption,
-                'select-container__selected': !!selectedOption }]"
+                'select-container__focused': isInputFocused,
+                'select-container__selected': !!selectedOption ,
+        }]"
         v-click-outside="clickOutside"
     >
         <div
@@ -242,7 +244,8 @@ export default {
     &:last-child {
         margin-left: -1px;
     }
-    &:hover {
+    &:hover,
+    &__focused {
         z-index: 100;
     }
     &__select {
