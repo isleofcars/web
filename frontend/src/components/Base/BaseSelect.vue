@@ -260,9 +260,11 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 2;
+        z-index: 10;
+
+        &:hover, &_focused,
         &ed {
-            z-index: 1;
+            z-index: 5;
         }
 
         &:hover, &_focused {
