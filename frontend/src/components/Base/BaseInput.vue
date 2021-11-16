@@ -13,8 +13,8 @@
             :placeholder="placeholder"
             v-model="tempValue"
             @focus="isInputFocused = true"
-            @blur="isInputFocused = false; finishedTyping = true"
-            @keyup.enter="finishedTyping = true; isInputFocused = false; "
+            @blur="onBlur()"
+            @keyup.enter="onBlur()"
             ref="input"
         />
     </div>
@@ -135,6 +135,19 @@ export default {
             }
             if (!val) {
                 this.isValueSelected = false;
+            }
+        },
+    },
+    methods: {
+        onBlur() {
+            const { tempValue } = this;
+            this.isInputFocused = false;
+            if (tempValue !== null && tempValue.length > 0) {
+                this.isValueSelected = true;
+                this.finishedTyping = true;
+            } else {
+                this.isValueSelected = false;
+                this.finishedTyping = false;
             }
         },
     },

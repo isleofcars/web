@@ -133,9 +133,7 @@ export default {
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
                 .catch((err) => {
-                    if (!isCancel(err)) {
-                        console.log('Request canceled', err.message);
-                    } else {
+                    if (isCancel(err)) {
                         console.log(err);
                     }
                 })
