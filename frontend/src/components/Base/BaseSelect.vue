@@ -11,7 +11,7 @@
     >
         <div
             class="select-container__select"
-            :class="[{'select-container__has-chosen-value': !!selectedOption,
+            :class="[{'select-container__has-chosen-value': userChoseOption,
                     'select-container_disabled': disabled,
                     'select-container__select_focused': isInputFocused},
                     `select-container__select_borders-${bordersType}`]"
@@ -173,6 +173,9 @@ export default {
         selectOption(option) {
             this.userChoseOption = true;
             this.showOptions = false;
+            if (option.length === 0) {
+                this.userChoseOption = false;
+            }
             this.$emit('selectOption', option);
             if (this.withInput) {
                 // if user typed sth and then selected item from dropdown, set his selected to that value
@@ -186,6 +189,7 @@ export default {
             this.userChoseOption = false;
             this.showOptions = false;
             this.inputValue = '';
+            this.tempInputValue = '';
             this.$emit('resetSelectedOptions');
         },
         focusInput() {

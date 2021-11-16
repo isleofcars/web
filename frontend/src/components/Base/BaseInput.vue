@@ -118,8 +118,11 @@ export default {
         },
         finishedTyping(val) {
             if (this.finishedTyping) {
-                this.isValueSelected = !!val;
-                const sendValue = this.tempValue
+                const temp = this.tempValue;
+                if (temp !== null && temp.length > 0) {
+                    this.isValueSelected = !!val;
+                }
+                const sendValue = temp
                     .replaceAll(',', '')
                     .replaceAll(' ', '')
                     .replaceAll(this.showUnits, '');
@@ -147,7 +150,7 @@ export default {
                 this.finishedTyping = true;
             } else {
                 this.isValueSelected = false;
-                this.finishedTyping = false;
+                this.finishedTyping = true;
             }
         },
     },
