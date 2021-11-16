@@ -1,15 +1,17 @@
 <template>
     <header class="header">
         <div class="container">
-            <h1 class="header__logo" @click="clickLogo">
-                <router-link :to="{ name: 'Main Page', query: { page: 1 } }" class="header__logo-link">
-                    <img class="header__logo-img" src="@/assets/logo.svg" alt="logo"/>
-                    <span class="header__logo-name">WHOLE CARS</span>
-                </router-link>
-            </h1>
-            <h2 class="header__motto">
-                All cars in one place
-            </h2>
+            <div class="header__container">
+                <h1 class="header__logo" @click="clickLogo">
+                    <router-link :to="{ name: 'Main Page', query: { page: 1 } }" class="header__logo-link">
+                        <img class="header__logo-img" src="@/assets/logo.svg" alt="logo"/>
+                        <span class="header__logo-name">WHOLE CARS</span>
+                    </router-link>
+                </h1>
+                <h2 class="header__motto">
+                    All cars in one place
+                </h2>
+            </div>
         </div>
     </header>
 </template>
@@ -35,6 +37,13 @@ export default {
     color: $white;
     font-family: $logo-font;
     padding: 24px 0;
+
+    &__container {
+        max-width: 920px;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
 
     &__logo {
         font-size: 32px;
@@ -76,6 +85,8 @@ export default {
 
         &__motto {
             font-size: 20px;
+            margin: 0;
+            transform: none;
         }
     }
 }

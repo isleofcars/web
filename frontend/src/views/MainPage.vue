@@ -216,6 +216,7 @@ main {
 }
 
 section {
+    max-width: 920px;
     padding: 40px 0;
     box-sizing: content-box;
 }
