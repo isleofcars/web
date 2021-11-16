@@ -129,7 +129,7 @@ export default {
                     } = res.data;
                     this.resultsCount = count;
                     this.cars = results;
-                    this.maxPage = totalPages;
+                    this.maxPage = (totalPages > 99) ? 99 : totalPages;
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
                 .catch((err) => {
