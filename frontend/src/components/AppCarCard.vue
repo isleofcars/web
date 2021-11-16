@@ -1,6 +1,6 @@
 <template>
     <div class="root" v-if="$store.getters.showMobile">
-        <div v-if="totalPhotos > 0" class="card-m">
+        <div class="card-m">
             <a :href="car.url" class="card__link" target="_blank" rel="noreferrer">
                 <div class="card-m__header">
                     <p class="card-m__title">
@@ -14,7 +14,7 @@
                 <div class="card-m__gallery" v-if="photosLoaded">
                     <img
                         class="card-m__photo"
-                        v-for="(_, index) in previewPhotos"
+                        v-for="(photo, index) in previewPhotos"
                         :key="index"
                         :src="getPhoto(index)"
                     />

@@ -3,8 +3,10 @@
         class="select-container"
         :class="[{'select-container_highlight': isInputFocused || !!selectedOption,
                 'select-container__focused': isInputFocused,
+                'select-container__opened': showOptions,
                 'select-container__selected': !!selectedOption ,
         }]"
+        :style="showOptions ? `z-index:101;`: ''"
         v-click-outside="clickOutside"
     >
         <div
@@ -245,6 +247,7 @@ export default {
         margin-left: -1px;
     }
     &:hover,
+    &__opened,
     &__focused {
         z-index: 100;
     }
