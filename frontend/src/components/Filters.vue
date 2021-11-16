@@ -386,7 +386,8 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         modelsList() {
-            return this.availableModels.map((item) => item.model).filter((item) => item.length > 0);
+            const map = this.availableModels.map((item) => item.model);
+            return map.filter((item) => ((item !== null) ? item.length > 0 : false));
         },
         isNewSelectedOption() {
             return {
@@ -765,12 +766,10 @@ export default {
         &__below-selects {
             width: auto;
             margin-bottom: 16px;
-            margin-right: 5%;
             justify-content: end;
         }
         &__available-models {
             margin: 0;
-            margin-right: 5%;
             padding: 0;
         }
         &__models-items {
