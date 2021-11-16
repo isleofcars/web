@@ -84,6 +84,7 @@
 </template>
 
 <script>
+
 import eventBus from '@/eventBus';
 
 export default {
@@ -185,7 +186,6 @@ export default {
         },
         focusInput() {
             if (this.disabled) return;
-
             this.isInputFocused = true;
             this.showChevron = false;
             if (this.userChoseOption) {
@@ -195,7 +195,6 @@ export default {
         },
         blurInput() {
             if (this.disabled) return;
-
             this.isInputFocused = false;
             this.showChevron = true;
             if (this.userChoseOption) {
@@ -210,7 +209,6 @@ export default {
         },
         enterPressed() {
             if (!this.filteredOptions.length) return;
-
             this.selectOption(this.filteredOptions[0]);
         },
         resetInput() {
@@ -218,7 +216,6 @@ export default {
         },
         isNumber(e) {
             if (!this.withInput || !this.onlyNumbers) return;
-
             const char = String.fromCharCode(e.keyCode);
             if (!(/\d/.test(char))) e.preventDefault();
         },
@@ -239,19 +236,15 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/_vars.scss';
-
 .select-container {
     position: relative;
     font-size: 15px;
-
     &:last-child {
         margin-left: -1px;
     }
-
     &:hover {
         z-index: 100;
     }
-
     &__select {
         height: 36px;
         background-color: $white;
@@ -260,67 +253,56 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 2;
+        z-index: 10;
+        &:hover, &_focused,
         &ed {
-            z-index: 1;
+            z-index: 5;
         }
-
         &:hover, &_focused {
             cursor: pointer;
             border: 1px solid #157ee1;
         }
-
         &_borders-all {
             border-radius: 8px;
         }
-
         &_borders-left {
             border-top-left-radius: 8px;
             border-bottom-left-radius: 8px;
         }
-
         &_borders-right {
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
         }
     }
-
     &__value {
         color: grey;
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
     }
-
     &_disabled {
         border-color: rgba(0, 0, 0, .08);
-
         &:hover {
             cursor: default;
             border: 1px solid rgba(0, 0, 0, .08);
         }
     }
-
     &__has-chosen-value {
         border: 1px solid rgba(21, 126, 225, .5);
         background-color: #eef4fa;
-
         .select-container__value {
             color: $text-color;
         }
     }
-
     &__arrow {
         height: 100%;
         line-height: 36px;
         padding-right: 8px;
         opacity: .543;
-
         &_disabled {
             opacity: .2;
         }
     }
-
     &__options {
         position: absolute;
         width: 100%;
@@ -332,7 +314,6 @@ export default {
         max-height: 200px;
         overflow: auto;
     }
-
     &__option {
         display: flex;
         align-items: center;
@@ -341,40 +322,33 @@ export default {
         list-style-type: none;
         color: $text-color;
         padding-left: 8px;
-
         &:hover {
             cursor: pointer;
             color: $white;
             background-color: #157ee1;
         }
-
         &:hover * {
             opacity: 1;
         }
     }
-
     &__icon {
         width: 15px;
         height: 15px;
         margin-right: 10px;
         opacity: .543;
     }
-
     &__label {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-
         &:hover {
             cursor: pointer;
         }
     }
-
     &__option input {
         display: none;
     }
 }
-
 .input {
     outline: none;
     display: block;
@@ -386,22 +360,18 @@ export default {
     margin-right: 8px;
     background-color: inherit;
     color: #000;
-
     &:disabled::placeholder {
         color: rgba(0, 0, 0, .24);
     }
-
     &::placeholder {
         color: grey;
     }
 }
-
 .rotate {
     -moz-transition: all 0.1s linear;
     -webkit-transition: all 0.1s linear;
     transition: all 0.1s linear;
 }
-
 .rotate-up {
     transform-origin: center center;
     -ms-transform: rotate(-180deg);
@@ -409,11 +379,9 @@ export default {
     -webkit-transform: rotate(-180deg);
     transform: rotate(-180deg);
 }
-
 .options-fade-enter-active, .options-fade-leave-active {
     transition: opacity .5s;
 }
-
 .options-fade-enter, .options-fade-leave-to {
     opacity: 0;
 }
