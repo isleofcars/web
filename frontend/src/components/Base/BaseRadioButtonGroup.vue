@@ -61,26 +61,26 @@ export default {
             background-color: #eef4fa;
             border: 1px solid rgba(21, 126, 225, .5);
             color: $text-color;
+            z-index: 15;
 
             &:hover {
                 cursor: default;
-            }
-
-            & + input + label {
-                border-left: 0;
             }
         }
     }
 
     &__label {
+        position: relative;
         display: inline-block;
         width: calc(280px / 3);
+        margin-left: -1px;
         padding: 10px 20px;
         font-size: 15px;
         border: 1px solid rgba(0, 0, 0, .12);
         background-color: $white;
         color: grey;
         text-align: center;
+        z-index: 9;
 
         &_disabled {
             border-color: rgba(0, 0, 0, .08);
@@ -91,22 +91,25 @@ export default {
             }
         }
 
-        &_enabled:hover {
-            color: $white;
-            background-color: #157ee1;
-            cursor: pointer;
+        &_enabled {
+            z-index: 10;
+
+            &:hover {
+                color: $white;
+                background-color: #157ee1;
+                cursor: pointer;
+                z-index: 20;
+            }
         }
 
         &:first-of-type {
             border-top-left-radius: 8px;
             border-bottom-left-radius: 8px;
-            border-right: none;
         }
 
         &:last-of-type {
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
-            border-left: none;
         }
     }
 }
