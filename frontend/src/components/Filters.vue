@@ -788,7 +788,7 @@ export default {
     }
 }
 
-@media screen and (max-width: 880px) {
+@media screen and (max-width: 920px) {
     .filters {
         &__row_colours-phone {
             display: flex;
@@ -799,7 +799,7 @@ export default {
     }
 }
 
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 660px) {
     .filters {
         &__column {
             margin-bottom: 20px;

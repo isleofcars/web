@@ -352,6 +352,7 @@ export default {
         opacity: .543;
     }
     &__label {
+        width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
