@@ -118,8 +118,21 @@ export default {
             ++this.requestsPending;
             const oldModels = this.availableModels;
             const shouldUpdateModelsList = !this.filtersQueryString.includes('model');
-            this.availableModels = [];
-            API.getCars(page, filters)
+            const isModelReset = this.filtersQueryString.indexOf('isModelReset=true');
+
+            if (isModelReset === -1) {
+                this.availableModels = [];
+            }
+
+            let filtersQueryString = filters;
+            const number = this.filtersQueryString.indexOf('&isModelReset=');
+            if (number !== -1) {
+                filtersQueryString = filters.substring(0, number);
+            } else {
+                filtersQueryString = filters;
+            }
+
+            API.getCars(page, filtersQueryString)
                 .then((res) => {
                     const {
                         count,
@@ -129,13 +142,11 @@ export default {
                     } = res.data;
                     this.resultsCount = count;
                     this.cars = results;
-                    this.maxPage = totalPages;
+                    this.maxPage = (totalPages > 99) ? 99 : totalPages;
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
                 .catch((err) => {
                     if (!isCancel(err)) {
-                        console.log('Request canceled', err.message);
-                    } else {
                         console.log(err);
                     }
                 })
@@ -216,6 +227,8 @@ main {
 }
 
 section {
+    margin-right: 20px;
+    width: 100%;
     padding: 40px 0;
     box-sizing: content-box;
 }
@@ -257,6 +270,10 @@ aside {
 }
 
 @media screen and (max-width: 1300px) {
+    section {
+        margin-right: 0;
+    }
+
     aside {
         display: none;
     }
