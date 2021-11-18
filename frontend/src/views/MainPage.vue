@@ -1,61 +1,63 @@
 <template>
     <main>
-        <section>
-            <Filters
-                :minAvailableYear="minYear"
-                :availableMakes="availableMakes"
-                :availableModels="availableModels"
-                :resultsCount="resultsCount"
-                @changeFilters="changeFilters"
-            />
-            <div v-if="isLoading || requestsPending > 0">
-                <component
-                    v-for="_ in perPage"
-                    :key="_"
-                    :is="($store.getters.showMobile) ? 'ContentPlaceholderCardMobile' : 'ContentPlaceholderCard'"
+        <div class="container container-sm">
+            <section>
+                <Filters
+                    :minAvailableYear="minYear"
+                    :availableMakes="availableMakes"
+                    :availableModels="availableModels"
+                    :resultsCount="resultsCount"
+                    @changeFilters="changeFilters"
                 />
-            </div>
-            <div v-else-if="resultsCount !== 0">
-                <AppCarsList
-                    class="cars-list"
-                    :cars="cars"
-                />
-                <infinite-loading
-                    v-if="$store.getters.showMobile && cars.length"
-                    @infinite="infiniteHandler"
-                >
-                    <div slot="no-results" class="no-more-records">No more records</div>
-                </infinite-loading>
-
-                <div class="pagination-container" v-else>
-                    <paginate
-                        :value="page"
-                        :pageCount="maxPage"
-                        :clickHandler="pageClicked"
-                        :pageRange="7"
-                        :prevText="'←'"
-                        :nextText="'→'"
-                        :containerClass="'pagination'"
-                        :pageClass="'page-item'"
-                        :pageLinkClass="'page-item-link'"
-                        :activeClass="'page-item-active'"
-                        :disabledClass="'page-item-disabled'"
-                        :prevClass="'page-item-prev'"
-                        :nextClass="'page-item-next'"
-                        :prevLinkClass="'page-item-link'"
-                        :nextLinkClass="'page-item-link'"
+                <div v-if="isLoading || requestsPending > 0">
+                    <component
+                        v-for="_ in perPage"
+                        :key="_"
+                        :is="($store.getters.showMobile) ? 'ContentPlaceholderCardMobile' : 'ContentPlaceholderCard'"
                     />
                 </div>
-            </div>
-            <p v-else class="no-results">
-                Unfortunately we could not find any cars for you. Please try to change the filters.
-            </p>
-        </section>
+                <div v-else-if="resultsCount !== 0">
+                    <AppCarsList
+                        class="cars-list"
+                        :cars="cars"
+                    />
+                    <infinite-loading
+                        v-if="$store.getters.showMobile && cars.length"
+                        @infinite="infiniteHandler"
+                    >
+                        <div slot="no-results" class="no-more-records">No more records</div>
+                    </infinite-loading>
 
-        <aside>
-            <AdLargeSkyscraper />
-        </aside>
-        <CookiesWarning v-if="userAgreeCookies !== 'true'" />
+                    <div class="pagination-container" v-else>
+                        <paginate
+                            :value="page"
+                            :pageCount="maxPage"
+                            :clickHandler="pageClicked"
+                            :pageRange="7"
+                            :prevText="'←'"
+                            :nextText="'→'"
+                            :containerClass="'pagination'"
+                            :pageClass="'page-item'"
+                            :pageLinkClass="'page-item-link'"
+                            :activeClass="'page-item-active'"
+                            :disabledClass="'page-item-disabled'"
+                            :prevClass="'page-item-prev'"
+                            :nextClass="'page-item-next'"
+                            :prevLinkClass="'page-item-link'"
+                            :nextLinkClass="'page-item-link'"
+                        />
+                    </div>
+                </div>
+                <p v-else class="no-results">
+                    Unfortunately we could not find any cars for you. Please try to change the filters.
+                </p>
+            </section>
+
+            <aside>
+                <AdLargeSkyscraper />
+            </aside>
+            <CookiesWarning v-if="userAgreeCookies !== 'true'" />
+        </div>
     </main>
 </template>
 
@@ -116,8 +118,21 @@ export default {
             ++this.requestsPending;
             const oldModels = this.availableModels;
             const shouldUpdateModelsList = !this.filtersQueryString.includes('model');
-            this.availableModels = [];
-            API.getCars(page, filters)
+            const isModelReset = this.filtersQueryString.indexOf('isModelReset=true');
+
+            if (isModelReset === -1) {
+                this.availableModels = [];
+            }
+
+            let filtersQueryString = filters;
+            const number = this.filtersQueryString.indexOf('&isModelReset=');
+            if (number !== -1) {
+                filtersQueryString = filters.substring(0, number);
+            } else {
+                filtersQueryString = filters;
+            }
+
+            API.getCars(page, filtersQueryString)
                 .then((res) => {
                     const {
                         count,
@@ -127,13 +142,11 @@ export default {
                     } = res.data;
                     this.resultsCount = count;
                     this.cars = results;
-                    this.maxPage = totalPages;
+                    this.maxPage = (totalPages > 99) ? 99 : totalPages;
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
                 .catch((err) => {
                     if (!isCancel(err)) {
-                        console.log('Request canceled', err.message);
-                    } else {
                         console.log(err);
                     }
                 })
@@ -214,8 +227,9 @@ main {
 }
 
 section {
-    width: 920px;
-    padding: 40px 0 40px 5%;
+    margin-right: 20px;
+    width: 100%;
+    padding: 40px 0;
     box-sizing: content-box;
 }
 
@@ -223,7 +237,7 @@ aside {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 40px auto 0 auto;
+    margin: 40px 0;
     padding-bottom: 40px;
 }
 
@@ -256,6 +270,10 @@ aside {
 }
 
 @media screen and (max-width: 1300px) {
+    section {
+        margin-right: 0;
+    }
+
     aside {
         display: none;
     }
@@ -266,4 +284,5 @@ aside {
         margin-right: 5%;
     }
 }
+
 </style>

@@ -48,4 +48,10 @@ body {
     touch-action: pan-x pan-y;
 }
 
+.vue-content-placeholders {
+    &-img,
+    &-text__line {
+        -webkit-mask-image: -webkit-radial-gradient(white, black) !important;
+    }
+}
 </style>

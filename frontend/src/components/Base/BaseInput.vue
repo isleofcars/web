@@ -13,8 +13,8 @@
             :placeholder="placeholder"
             v-model="tempValue"
             @focus="isInputFocused = true"
-            @blur="isInputFocused = false"
-            @keyup.enter="finishedTyping = true"
+            @blur="onBlur()"
+            @keyup.enter="onBlur()"
             ref="input"
         />
     </div>
@@ -106,20 +106,23 @@ export default {
             const onlyDigits = val.replace(/\D/g, '');
             if (!onlyDigits) {
                 this.tempValue = '';
-                this.finishedTyping = true; // we clean the filter
+                this.finishedTyping = false; // we clean the filter
                 return;
             }
 
             this.tempValue = new Intl.NumberFormat('en-US').format(onlyDigits);
             this.timeout = setTimeout(() => {
                 if (!this.tempValue) return;
-                this.finishedTyping = true;
+                this.finishedTyping = false;
             }, 700);
         },
         finishedTyping(val) {
             if (this.finishedTyping) {
-                this.isValueSelected = !!val;
-                const sendValue = this.tempValue
+                const temp = this.tempValue;
+                if (temp !== null && temp.length > 0) {
+                    this.isValueSelected = !!val;
+                }
+                const sendValue = temp
                     .replaceAll(',', '')
                     .replaceAll(' ', '')
                     .replaceAll(this.showUnits, '');
@@ -138,6 +141,19 @@ export default {
             }
         },
     },
+    methods: {
+        onBlur() {
+            const { tempValue } = this;
+            this.isInputFocused = false;
+            if (tempValue !== null && tempValue.length > 0) {
+                this.isValueSelected = true;
+                this.finishedTyping = true;
+            } else {
+                this.isValueSelected = false;
+                this.finishedTyping = true;
+            }
+        },
+    },
 };
 </script>
 
@@ -151,40 +167,34 @@ export default {
     background-color: $white;
     border: 1px solid rgba(0, 0, 0, .12);
     padding: 0 8px;
-
-    &:hover, &_focused {
-        cursor: text;
-        border: 1px solid #157ee1;
-        z-index: 100;
-    }
-
     &_selected {
         border: 1px solid rgba(21, 126, 225, .5) !important;
         background-color: #eef4fa;
+        z-index: 2;
+    }
+    &:hover,
+    &_focused {
+        cursor: text;
+        border: 1px solid #157ee1 !important;
         z-index: 100;
     }
-
     &_error {
         border: 1px solid rgba(225, 21, 75, 0.5) !important;
         background-color: #ffdddd;
-        z-index: 1;
+        z-index: 2;
     }
-
     &_borders-all {
         border-radius: 8px;
     }
-
     &_borders-left {
         border-top-left-radius: 8px;
         border-bottom-left-radius: 8px;
     }
-
     &_borders-right {
         border-top-right-radius: 8px;
         border-bottom-right-radius: 8px;
         margin-left: -1px;
     }
-
     &__input {
         outline: none;
         display: block;
