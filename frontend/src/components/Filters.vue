@@ -600,7 +600,7 @@ export default {
         }
     }
     &__column {
-        width: 280px;
+        width: 33.34%;
         display: flex;
         align-items: center;
         margin-left: 20px;

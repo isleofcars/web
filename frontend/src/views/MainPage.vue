@@ -227,7 +227,8 @@ main {
 }
 
 section {
-    max-width: 920px;
+    margin-right: 20px;
+    width: 100%;
     padding: 40px 0;
     box-sizing: content-box;
 }
@@ -269,6 +270,10 @@ aside {
 }
 
 @media screen and (max-width: 1300px) {
+    section {
+        margin-right: 0;
+    }
+
     aside {
         display: none;
     }

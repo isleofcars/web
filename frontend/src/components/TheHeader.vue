@@ -39,7 +39,7 @@ export default {
     padding: 24px 0;
 
     &__container {
-        max-width: 920px;
+        margin-right: 310px;
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -65,6 +65,14 @@ export default {
     &__motto {
         font-size: 22px;
         flex-shrink: 0;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .header {
+        &__container {
+            margin-right: 0;
+        }
     }
 }
 
