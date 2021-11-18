@@ -810,7 +810,7 @@ export default {
                 display: flex;
                 .filters {
                     &__column {
-                        margin-bottom: 0;
+                        margin-bottom: 10px;
                     }
                 }
             }

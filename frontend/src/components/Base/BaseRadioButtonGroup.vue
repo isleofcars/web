@@ -51,6 +51,7 @@ export default {
 @import '@/_vars.scss';
 
 .radio-toolbar {
+    width: 100%;
 
     &__radio {
         opacity: 0;
@@ -71,9 +72,10 @@ export default {
 
     &__label {
         position: relative;
+        left: -1px;
         display: inline-block;
-        width: calc(280px / 3);
-        margin-left: -1px;
+        width: 33.34%;
+        margin-right: -2px;
         padding: 10px 20px;
         font-size: 15px;
         border: 1px solid rgba(0, 0, 0, .12);
@@ -81,6 +83,11 @@ export default {
         color: grey;
         text-align: center;
         z-index: 9;
+        margin-left: -1px;
+
+        &:first-of-type {
+            margin-left: 0;
+        }
 
         &_disabled {
             border-color: rgba(0, 0, 0, .08);
@@ -117,10 +124,6 @@ export default {
 @media screen and (max-width: 1000px) {
     .radio-toolbar {
         width: 100%;
-
-        &__label {
-            width: calc(100% / 3);
-        }
     }
 }
 
@@ -129,7 +132,7 @@ export default {
         text-align: center;
 
         &__label {
-            width: auto;
+            padding: 10px 10px;
         }
     }
 }
