@@ -247,6 +247,9 @@ export default {
 .select-container {
     position: relative;
     font-size: 15px;
+    &:first-child {
+        margin-right: -1px;
+    }
     &:last-child {
         margin-left: -1px;
     }
@@ -271,6 +274,7 @@ export default {
         &:hover, &_focused {
             cursor: pointer;
             border: 1px solid #157ee1;
+            z-index: 10;
         }
         &_borders-all {
             border-radius: 8px;

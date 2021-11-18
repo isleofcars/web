@@ -39,7 +39,7 @@ export default {
     padding: 24px 0;
 
     &__container {
-        margin-right: 310px;
+        margin-right: 320px;
         width: 100%;
         display: flex;
         justify-content: space-between;
