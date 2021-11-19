@@ -70,7 +70,7 @@ class CarAdFilter(filters.FilterSet):
         # filters price to the value, excluding zero
         return queryset.exclude(price=0).filter(price__lte=value)
 
-    def power_from_exclude_empty(self, queryset, name, value):
+    def power_from_exclude_zero(self, queryset, name, value):
         # filters price from the value, excluding zero
         return queryset.exclude(power=0).filter(power__gte=value)
 
