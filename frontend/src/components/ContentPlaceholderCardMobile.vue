@@ -67,7 +67,7 @@ export default {
     padding: 20px;
     border-radius: 8px;
     background: $white;
-    margin: 8px 5% 8px 0;
+    margin: 8px 0;
     box-shadow: 0 3px 14px $card-shadow-color;
 
     &__header {

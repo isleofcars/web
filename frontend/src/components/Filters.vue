@@ -34,7 +34,7 @@
                         :options="availableMakes.map((item) => item.make)"
                         :selectedOption="filters.make"
                         @selectOption="(option) => {filters.model = ''; filters.make = option;}"
-                        @resetSelectedOptions="filters.make = ''"
+                        @resetSelectedOptions="filters.make = ''; isModelReset = false;"
                         withInput
                     />
                 </div>
@@ -42,12 +42,12 @@
                 <div class="filters__column">
                     <BaseSelect
                         class="filters__item_large"
-                        placeholder="Model"
+                        :placeholder="'Model'"
                         :options="modelsList"
                         :selectedOption="filters.model"
-                        @selectOption="(option) => filters.model = option"
-                        @resetSelectedOptions="filters.model = ''"
-                        :disabled="!modelsList.length"
+                        @selectOption="(option) => {this.isModelReset = false;return filters.model = option;   } "
+                        @resetSelectedOptions="onResetSelectedOptions()"
+                        :disabled="!this.modelsList.length"
                         withInput
                     />
                 </div>
@@ -64,7 +64,7 @@
                         :options="bodyOptions"
                         :selectedOption="filters.body"
                         @selectOption="(option) => filters.body = option"
-                        @resetSelectedOptions="filters.body = ''"
+                        @resetSelectedOptions="filters.body = ''; isModelReset = false;"
                     />
 
                     <BaseSelect
@@ -73,7 +73,7 @@
                         :options="transmissionOptions"
                         :selectedOption="filters.transmission"
                         @selectOption="(option) => filters.transmission = option"
-                        @resetSelectedOptions="filters.transmission = ''"
+                        @resetSelectedOptions="filters.transmission = ''; isModelReset = false;"
                     />
                 </div>
 
@@ -84,7 +84,7 @@
                         :options="driveOptions"
                         :selectedOption="filters.drive"
                         @selectOption="(option) => filters.drive = option"
-                        @resetSelectedOptions="filters.drive = ''"
+                        @resetSelectedOptions="filters.drive = ''; isModelReset = false;"
                     />
 
                     <BaseCheckbox
@@ -115,14 +115,14 @@
             </div>
 
             <div class="filters__row">
-                <div class="filters__column">
+                <div class="filters__column filters__column-top">
                     <BaseSelect
                         class="filters__item_grouped"
                         placeholder="Year from"
                         :options="yearFromOptions"
                         :selectedOption="filters.year_from"
                         @selectOption="(option) => filters.year_from = option"
-                        @resetSelectedOptions="filters.year_from = ''"
+                        @resetSelectedOptions="filters.year_from = ''; isModelReset = false;"
                         resetText="Reset"
                         bordersType="left"
                         withInput
@@ -135,7 +135,7 @@
                         :options="yearToOptions"
                         :selectedOption="filters.year_to"
                         @selectOption="(option) => filters.year_to = option"
-                        @resetSelectedOptions="filters.year_to = ''"
+                        @resetSelectedOptions="filters.year_to = ''; isModelReset = false;"
                         resetText="Reset"
                         bordersType="right"
                         withInput
@@ -292,13 +292,13 @@ import { getStatesCities } from '@/utils/cities';
 
 const DEFAULT_FILTERS = {
     is_new: null,
-    is_broken: null,
+    is_broken: false,
     make: '',
     model: '',
     drive: '',
     transmission: '',
     body: '',
-    only_with_photo: false,
+    only_with_photo: true,
     year_from: '',
     year_to: '',
     mileage_from: '',
@@ -346,6 +346,7 @@ export default {
     data() {
         // snake case is used to provide valid querystring for backend
         return {
+            isModelReset: false,
             filters: { ...DEFAULT_FILTERS },
             driveOptions: [
                 'AWD',
@@ -425,7 +426,7 @@ export default {
         },
         appliedFilters() {
             // select not empty values from filters object
-            return Object.keys(this.filters)
+            const reduce = Object.keys(this.filters)
                 .reduce((acc, key) => {
                     const value = this.filters[key];
                     // Either a boolean or a 'truthy' value
@@ -435,6 +436,8 @@ export default {
                     }
                     return acc;
                 }, {});
+            reduce.isModelReset = this.isModelReset;
+            return reduce;
         },
         appliedFiltersInfo() {
             const appliedFiltersInfo = [];
@@ -521,6 +524,10 @@ export default {
                 top: 0,
                 behavior: 'smooth',
             });
+        },
+        onResetSelectedOptions() {
+            this.filters.model = '';
+            this.isModelReset = true;
         },
         onScroll() {
             const { filtersBlock } = this.$refs;
@@ -625,7 +632,7 @@ export default {
         }
     }
     &__column {
-        width: 280px;
+        width: 33.34%;
         display: flex;
         align-items: center;
         margin-left: 20px;
@@ -634,6 +641,9 @@ export default {
         }
         &_align-right {
             justify-content: flex-end;
+        }
+        &-top {
+            z-index: 100;
         }
     }
     &__item {
@@ -798,12 +808,10 @@ export default {
         &__below-selects {
             width: auto;
             margin-bottom: 16px;
-            margin-right: 5%;
             justify-content: end;
         }
         &__available-models {
             margin: 0;
-            margin-right: 5%;
             padding: 0;
         }
         &__models-items {
@@ -815,7 +823,7 @@ export default {
     }
 }
 
-@media screen and (max-width: 880px) {
+@media screen and (max-width: 920px) {
     .filters {
         &__row_colors-phone {
             display: flex;
@@ -826,7 +834,7 @@ export default {
     }
 }
 
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 660px) {
     .filters {
         &__column {
             margin-bottom: 20px;
@@ -837,7 +845,7 @@ export default {
                 display: flex;
                 .filters {
                     &__column {
-                        margin-bottom: 0;
+                        margin-bottom: 10px;
                     }
                 }
             }
