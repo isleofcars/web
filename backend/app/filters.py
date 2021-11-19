@@ -71,11 +71,11 @@ class CarAdFilter(filters.FilterSet):
         return queryset.exclude(price=0).filter(price__lte=value)
 
     def power_from_exclude_zero(self, queryset, name, value):
-        # filters price from the value, excluding zero
+        # filters power from the value, excluding zero
         return queryset.exclude(power=0).filter(power__gte=value)
 
     def power_to_exclude_zero(self, queryset, name, value):
-        # filters price to the value, excluding zero
+        # filters power to the value, excluding zero
         return queryset.exclude(power=0).filter(power__lte=value)
 
     def has_photos(self, queryset, name, value):
