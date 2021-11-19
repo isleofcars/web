@@ -1,5 +1,4 @@
 from django.conf import settings
-from collections import Counter
 import ipinfo
 from django.db.models.expressions import RawSQL
 
@@ -72,22 +71,34 @@ def get_models_and_count(queryset, request):
     return []
 
 
-def get_makes_and_count(request):
+def get_makes_and_count(queryset, request):
+    """
+    Return json of models of given make and their counts ordered by count
+    queryset - all car advertisements
+    """
+    # if make is chosen, it has to show the models and their count
+    # if request.query_params.get("make", None):
+    return queryset.values('make').annotate(count=Count('make')).order_by('-count')
+    # return []
+
+
+def get_makes_and_count_sql(request):
     """
     Return the 50 most popular makes in alphabet order
     """
     query = """
-        SELECT 1 as id, make 
-        FROM ( 
-            SELECT make, count(*) counter 
-            FROM ads
-            WHERE make <> '' 
-            GROUP BY make 
-            ORDER BY counter 
-            desc LIMIT 50 
-            ) m 
-        ORDER BY make asc
-    """
+            SELECT 1 as id, make, counter as count
+            FROM ( 
+                SELECT make, count(*) counter 
+                FROM ads
+                WHERE make <> '' 
+                GROUP BY make 
+                ORDER BY counter 
+                desc LIMIT 50 
+                ) m 
+            ORDER BY make asc
+        """
+
     return CarAdvertisement.objects.raw(query)
 
 
