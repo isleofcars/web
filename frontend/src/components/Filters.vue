@@ -115,7 +115,7 @@
             </div>
 
             <div class="filters__row">
-                <div class="filters__column">
+                <div class="filters__column filters__column-top">
                     <BaseSelect
                         class="filters__item_grouped"
                         placeholder="Year from"
@@ -609,6 +609,9 @@ export default {
         }
         &_align-right {
             justify-content: flex-end;
+        }
+        &-top {
+            z-index: 100;
         }
     }
     &__item {

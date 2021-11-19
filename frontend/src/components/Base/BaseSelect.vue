@@ -3,21 +3,24 @@
         class="select-container"
         :class="[{'select-container_highlight': isInputFocused || !!selectedOption,
                 'select-container__focused': isInputFocused,
-                'select-container__opened': showOptions,
+                 'select-container__opened': showOptions,
+                 'select-container__input_hover': isInputHover,
                 'select-container__selected': !!selectedOption ,
         }]"
-        :style="showOptions ? `z-index:101;`: ''"
         v-click-outside="clickOutside"
     >
         <div
             class="select-container__select"
             :class="[{'select-container__has-chosen-value': userChoseOption,
                     'select-container_disabled': disabled,
+                     'select-container__select_opened': showOptions,
                     'select-container__select_focused': isInputFocused},
                     `select-container__select_borders-${bordersType}`]"
-            @click="showOptions = (disabled) ? false : !showOptions"
+            @click="onFocused()"
             @keyup.esc="resetSelections"
             @keyup.enter="enterPressed"
+            @mouseover="isInputHover = true"
+            @mouseout="isInputHover = false"
         >
             <template v-if="withInput">
                 <input
@@ -56,7 +59,10 @@
             </template>
         </div>
         <transition name="options-fade">
-            <ul class="select-container__options" v-if="showOptions">
+            <ul class="select-container__options"
+                v-if="showOptions"
+                @mouseover="onHoverSelectList"
+            >
                 <li
                     v-if="!hideResetOption"
                     class="select-container__option"
@@ -144,6 +150,8 @@ export default {
     },
     data() {
         return {
+            isInputHover: false,
+            isHoveredSelectList: false,
             showOptions: false,
             showChevron: true,
             id: Math.random(),
@@ -176,6 +184,7 @@ export default {
             if (option.length === 0) {
                 this.userChoseOption = false;
             }
+            this.clearHovered();
             this.$emit('selectOption', option);
             if (this.withInput) {
                 // if user typed sth and then selected item from dropdown, set his selected to that value
@@ -185,7 +194,76 @@ export default {
                 this.$refs.input.blur();
             }
         },
+        getRoot(e) {
+            const current = e.target;
+            let target;
+            switch (current.tagName.toLowerCase()) {
+            case 'span': {
+                target = current.parentElement.parentElement;
+                break;
+            }
+            case 'svg': {
+                target = current.parentElement.parentElement;
+                break;
+            }
+            case 'li': {
+                target = current.parentElement;
+                break;
+            }
+            case 'ul': {
+                target = current;
+                break;
+            }
+            case 'label': {
+                target = current.parentElement.parentElement;
+                break;
+            }
+            default:
+                return undefined;
+            }
+            return target.parentElement;
+        },
+        onHoverSelectList(e) {
+            const target = this.getRoot(e);
+            const ADD = 'select-container__hovered';
+            const toggle = 'select-container__opened';
+            if (target !== undefined && target.classList.contains(toggle)) {
+                const { nextSibling } = target;
+                if (nextSibling !== null && !nextSibling.classList.contains(ADD)
+                    && nextSibling.classList.contains('select-container__selected')) {
+                    nextSibling.classList.add(ADD);
+                }
+                const { previousSibling } = target;
+                if (previousSibling !== null && !previousSibling.classList.contains(ADD)
+                    && previousSibling.classList.contains('select-container__selected')) {
+                    previousSibling.classList.add(ADD);
+                }
+            }
+        },
+        onMouseOut(e) {
+            const target = this.getRoot(e);
+            const included = 'select-container__hovered';
+            const toggle = 'select-container__opened';
+
+            if (target !== undefined && target.classList.contains(toggle)) {
+                const { nextSibling } = target;
+                if (nextSibling !== null && nextSibling.classList.contains(included)) {
+                    nextSibling.classList.remove(included);
+                }
+                const { previousSibling } = target;
+                if (previousSibling !== null && previousSibling.classList.contains(included)) {
+                    previousSibling.classList.remove(included);
+                }
+            }
+        },
+        onFocused() {
+            this.showOptions = (this.disabled) ? false : !this.showOptions;
+            if (!this.disabled) {
+                this.clearHovered();
+            }
+        },
         resetSelections() {
+            this.clearHovered();
             this.userChoseOption = false;
             this.showOptions = false;
             this.inputValue = '';
@@ -194,6 +272,7 @@ export default {
         },
         focusInput() {
             if (this.disabled) return;
+            this.clearHovered();
             this.isInputFocused = true;
             this.showChevron = false;
             if (this.userChoseOption) {
@@ -203,6 +282,7 @@ export default {
         },
         blurInput() {
             if (this.disabled) return;
+            this.clearHovered();
             this.isInputFocused = false;
             this.showChevron = true;
             if (this.userChoseOption) {
@@ -213,7 +293,14 @@ export default {
             }
         },
         clickOutside() {
+            this.clearHovered();
             this.showOptions = false;
+        },
+        clearHovered() {
+            const element = document.querySelector('.select-container__hovered');
+            if (element !== null) {
+                element.classList.remove('select-container__hovered');
+            }
         },
         enterPressed() {
             if (!this.filteredOptions.length) return;
@@ -247,16 +334,17 @@ export default {
 .select-container {
     position: relative;
     font-size: 15px;
-    &:first-child {
-        margin-right: -1px;
-    }
     &:last-child {
         margin-left: -1px;
     }
-    &:hover,
-    &__opened,
+    &:hover {
+        z-index: 120;
+    }
     &__focused {
-        z-index: 100;
+        z-index: 110;
+        &:hover {
+            z-index: 115;
+        }
     }
     &__select {
         height: 36px;
@@ -266,15 +354,20 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 10;
-        &:hover, &_focused,
-        &ed {
-            z-index: 5;
+        z-index: 110;
+        &:hover {
+            z-index: 15;
         }
-        &:hover, &_focused {
-            cursor: pointer;
+        &__opened:hover {
+            z-index: 110;
+        }
+        &:hover {
             border: 1px solid #157ee1;
-            z-index: 10;
+            cursor: pointer;
+            z-index: 110;
+        }
+        &ed {
+            z-index: 112;
         }
         &_borders-all {
             border-radius: 8px;
@@ -287,6 +380,21 @@ export default {
             border-top-right-radius: 8px;
             border-bottom-right-radius: 8px;
         }
+    }
+    &__selected {
+        z-index: 113;
+    }
+    &__opened {
+        z-index: 114;
+        &:hover {
+            z-index: 115;
+        }
+    }
+    &__hovered {
+        z-index: 115;
+    }
+    &__input_hover {
+        z-index: 120 !important;
     }
     &__value {
         color: grey;
@@ -327,6 +435,12 @@ export default {
         box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
         max-height: 200px;
         overflow: auto;
+
+        &:hover {
+            .select-container {
+                z-index: 1 !important;
+            }
+        }
     }
     &__option {
         display: flex;
@@ -344,6 +458,10 @@ export default {
         &:hover * {
             opacity: 1;
         }
+
+        input {
+            display: none;
+        }
     }
     &__icon {
         width: 15px;
@@ -359,9 +477,6 @@ export default {
         &:hover {
             cursor: pointer;
         }
-    }
-    &__option input {
-        display: none;
     }
 }
 .input {
