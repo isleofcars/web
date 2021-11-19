@@ -227,6 +227,7 @@ main {
 }
 
 section {
+    max-width: 920px;
     margin-right: 20px;
     width: 100%;
     padding: 40px 0;
