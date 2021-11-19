@@ -125,11 +125,13 @@ export default {
                         count,
                         totalPages,
                         results,
+                        makes,
                         models,
                     } = res.data;
                     this.resultsCount = count;
                     this.cars = results;
                     this.maxPage = totalPages;
+                    this.availableMakes = makes;
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
                 .catch((err) => {
@@ -154,7 +156,7 @@ export default {
         getAvailableMakes() {
             API.getMakes()
                 .then((res) => {
-                    this.availableMakes = res.data.map((item) => item.make);
+                    this.availableMakes = res.data;
                 })
                 .catch((err) => console.log(err));
         },

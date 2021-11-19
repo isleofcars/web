@@ -31,7 +31,7 @@
                     <BaseSelect
                         class="filters__item_large"
                         placeholder="Make"
-                        :options="availableMakes"
+                        :options="availableMakes.map((item) => item.make)"
                         :selectedOption="filters.make"
                         @selectOption="(option) => {filters.model = ''; filters.make = option;}"
                         @resetSelectedOptions="filters.make = ''"
@@ -224,6 +224,23 @@
             </div>
         </div>
 
+        <div class="filters__available-models" v-if="makesList.length && !filters.make ">
+            <div class="filters__models-items">
+                <div
+                    class="filters__models-item"
+                    v-for="make in mostPopularMakes"
+                    :key="make.make"
+                >
+                    <div class="filters__models-item-name" @click="filters.make = make.make">
+                        {{ make.make }}
+                    </div>
+                    <div class="filters__models-item-count">
+                        {{ make.count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="filters__below-selects">
             <BaseSelect
                 v-show="!$store.getters.showMobile"
@@ -387,7 +404,10 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         modelsList() {
-            return this.availableModels.map((item) => item.model).filter((item) => item.length > 0);
+            return this.availableModels.map((item) => item.model).filter((item) => item !== null && item.length > 0);
+        },
+        makesList() {
+            return this.availableMakes.map((item) => item.make).filter((item) => item.length > 0);
         },
         isNewSelectedOption() {
             return {
@@ -454,6 +474,15 @@ export default {
         },
         appliedFiltersCount() {
             return this.appliedFiltersInfo[1];
+        },
+        mostPopularMakes() {
+            const tempMakes = this.availableMakes;
+            for (let i = 0; i < tempMakes.length; i++) {
+                if (tempMakes[i].make === 'Unknown') {
+                    tempMakes.splice(i, 1);
+                }
+            }
+            return tempMakes.sort((first, second) => second.count - first.count).slice(1, 17);
         },
     },
     created() {

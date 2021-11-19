@@ -8,7 +8,7 @@
                 :key="color"
             ></div>
         </div>
-        <div class="filter__colors-reset" v-if="checkedColors.length > 0">
+        <div class="filter__colors-reset" v-visible="checkedColors.length > 0">
             <button
                 @click="checkedColors = []"
             ><font-awesome-icon :icon="['fas', 'times']"/>
@@ -29,7 +29,6 @@ export default {
     },
     methods: {
         choiceColor(color) {
-            console.log(color);
             if (this.checkedColors.includes(color)) {
                 const indexColor = this.checkedColors.indexOf(color);
                 this.checkedColors.splice(indexColor, 1);

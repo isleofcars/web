@@ -60,7 +60,7 @@ class CarAdFilter(filters.FilterSet):
     transmission = filters.ChoiceFilter(choices=TRANSMISSION_CHOICES)
     body = filters.MultipleChoiceFilter(choices=BODY_CHOICES)
     only_with_photo = filters.BooleanFilter(field_name="photos", method="has_photos", label="Only with photo")
-    color = filters.MultipleChoiceFilter(choices=COLOR_CHOICES)
+    color = filters.MultipleChoiceFilter(choices=COLOR_CHOICES, lookup_expr='icontains')
 
     def price_from_exclude_zero(self, queryset, name, value):
         # filters price from the value, excluding zero
