@@ -338,12 +338,12 @@ export default {
         margin-left: -1px;
     }
     &:hover {
-        z-index: 20;
+        z-index: 120;
     }
     &__focused {
-        z-index: 10;
+        z-index: 110;
         &:hover {
-            z-index: 15;
+            z-index: 115;
         }
     }
     &__select {
@@ -354,20 +354,20 @@ export default {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 10;
+        z-index: 110;
         &:hover {
-            z-index: 5;
+            z-index: 15;
         }
         &__opened:hover {
-            z-index: 10;
+            z-index: 110;
         }
         &:hover {
             border: 1px solid #157ee1;
             cursor: pointer;
-            z-index: 10;
+            z-index: 110;
         }
         &ed {
-            z-index: 12;
+            z-index: 112;
         }
         &_borders-all {
             border-radius: 8px;
@@ -382,19 +382,19 @@ export default {
         }
     }
     &__selected {
-        z-index: 13;
+        z-index: 113;
     }
     &__opened {
-        z-index: 14;
+        z-index: 114;
         &:hover {
-            z-index: 15;
+            z-index: 115;
         }
     }
     &__hovered {
-        z-index: 15;
+        z-index: 115;
     }
     &__input_hover {
-        z-index: 20 !important;
+        z-index: 120 !important;
     }
     &__value {
         color: grey;
