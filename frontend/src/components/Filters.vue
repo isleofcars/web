@@ -52,8 +52,8 @@
                     />
                 </div>
 
-                <div class="filters__column filters__column_colours-laptop">
-                    <BaseColour />
+                <div class="filters__column filters__column_colors-laptop">
+                    <BaseColor @changeColors="changeColors"/>
                 </div>
             </div>
             <div class="filters__row">
@@ -182,9 +182,9 @@
                 </div>
             </div>
 
-            <div class="filters__row filters__row_colours-phone">
+            <div class="filters__row filters__row_colors-phone">
                 <div class="filters__column">
-                    <BaseColour />
+                    <BaseColor />
                 </div>
             </div>
 
@@ -268,7 +268,7 @@ import BaseCheckbox from '@/components/Base/BaseCheckbox';
 import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
-import BaseColour from '@/components/Base/BaseColour';
+import BaseColor from '@/components/Base/BaseColor';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
@@ -296,6 +296,7 @@ const DEFAULT_FILTERS = {
     items_per_page: '25 per page',
     location: '',
     distance: 'Any',
+    color: [],
 };
 export default {
     name: 'Filters',
@@ -305,7 +306,7 @@ export default {
         BaseCheckbox,
         BaseSelect,
         BaseRadioButtonGroup,
-        BaseColour,
+        BaseColor,
     },
     props: {
         minAvailableYear: {
@@ -510,6 +511,9 @@ export default {
         changeDistance(distance) {
             this.filters.distance = distance;
         },
+        changeColors(colors) {
+            this.filters.color = colors;
+        },
         resetFilters() {
             this.filters = { ...DEFAULT_FILTERS };
             eventBus.$emit('clear-form');
@@ -587,7 +591,7 @@ export default {
         &_last {
             margin-bottom: 0;
         }
-        &_colours-phone {
+        &_colors-phone {
             display: none;
         }
     }
@@ -784,10 +788,10 @@ export default {
 
 @media screen and (max-width: 880px) {
     .filters {
-        &__row_colours-phone {
+        &__row_colors-phone {
             display: flex;
         }
-        &__column_colours-laptop {
+        &__column_colors-laptop {
             display: none;
         }
     }

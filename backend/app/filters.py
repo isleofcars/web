@@ -32,6 +32,17 @@ BODY_CHOICES = (
     ("Wagon", "Wagon"),
 )
 
+COLOR_CHOICES = (
+    ('black', 'black'),
+    ('white', 'white'),
+    ('gray', 'gray'),
+    ('blue', 'blue'),
+    ('red', 'red'),
+    ('green', 'green'),
+    ('yellow', 'yellow'),
+    ('orange', 'orange'),
+)
+
 
 class CarAdFilter(filters.FilterSet):
     """
@@ -49,6 +60,7 @@ class CarAdFilter(filters.FilterSet):
     transmission = filters.ChoiceFilter(choices=TRANSMISSION_CHOICES)
     body = filters.MultipleChoiceFilter(choices=BODY_CHOICES)
     only_with_photo = filters.BooleanFilter(field_name="photos", method="has_photos", label="Only with photo")
+    color = filters.MultipleChoiceFilter(choices=COLOR_CHOICES)
 
     def price_from_exclude_zero(self, queryset, name, value):
         # filters price from the value, excluding zero
