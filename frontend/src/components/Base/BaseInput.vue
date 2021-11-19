@@ -176,7 +176,7 @@ export default {
     &_focused {
         cursor: text;
         border: 1px solid #157ee1 !important;
-        z-index: 100;
+        z-index: 10;
     }
     &_error {
         border: 1px solid rgba(225, 21, 75, 0.5) !important;
