@@ -424,7 +424,7 @@ export default {
     }
 
     &__gallery {
-        height: 65vw;
+        max-height: 65vw;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
@@ -439,11 +439,10 @@ export default {
     &__photo {
         overflow: hidden;
         scroll-snap-align: start;
-        flex-shrink: 0;
         border-radius: 8px;
         margin-right: 2px;
-        width: 280px;
-        height: 65vw;
+        max-width: 100%;
+        height: 100%;
         object-fit: contain;
     }
 
@@ -486,19 +485,6 @@ export default {
     &__location, &__source {
         font-size: 12px;
         color: grey;
-    }
-}
-
-@media screen and (orientation: landscape) {
-    .card-m {
-        &__gallery {
-            height: 65vh;
-        }
-
-        &__photo {
-            width: 250px;
-            height: 65vh;
-        }
     }
 }
 </style>

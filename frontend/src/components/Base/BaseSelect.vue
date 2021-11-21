@@ -170,8 +170,7 @@ export default {
                 return this.options;
             }
             // if user entered sth, we should autocomplete and suggest filtered options
-            return this.options.filter((option) => option.toLowerCase()
-                .indexOf(this.inputValue.toLowerCase()) !== -1);
+            return this.options.filter((option) => option.toLowerCase().startsWith(this.inputValue.toLowerCase()));
         },
         inputPlaceholder() {
             return this.tempInputValue || this.placeholder;
