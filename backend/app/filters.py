@@ -41,6 +41,7 @@ COLOR_CHOICES = (
     ('green', 'green'),
     ('yellow', 'yellow'),
     ('orange', 'orange'),
+    ('brown', 'brown'),
 )
 
 

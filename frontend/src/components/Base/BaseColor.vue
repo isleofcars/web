@@ -24,7 +24,7 @@ export default {
         return {
             showAdditionalColors: false,
             checkedColors: [],
-            colors: ['black', 'white', 'gray', 'blue', 'red', 'green', 'yellow', 'orange'],
+            colors: ['black', 'white', 'gray', 'blue', 'red', 'green', 'yellow', 'orange', 'brown'],
         };
     },
     methods: {
@@ -123,5 +123,8 @@ export default {
 }
 .yellow {
     background-color: $yellow;
+}
+.brown {
+    background-color: $brown;
 }
 </style>
