@@ -334,6 +334,10 @@ export default {
             type: Array,
             default: () => [],
         },
+        popularMakes: {
+            type: Array,
+            default: () => [],
+        },
         availableModels: {
             type: Array,
             default: () => [],
@@ -408,7 +412,7 @@ export default {
             return this.availableModels.map((item) => item.model).filter((item) => item !== null && item.length > 0);
         },
         makesList() {
-            return this.availableMakes.map((item) => item.make).filter((item) => item.length > 0);
+            return this.popularMakes.map((item) => item.make).filter((item) => item.length > 0);
         },
         isNewSelectedOption() {
             return {
@@ -479,7 +483,7 @@ export default {
             return this.appliedFiltersInfo[1];
         },
         mostPopularMakes() {
-            const tempMakes = this.availableMakes;
+            const tempMakes = this.popularMakes;
             for (let i = 0; i < tempMakes.length; i++) {
                 if (tempMakes[i].make === 'Unknown') {
                     tempMakes.splice(i, 1);
