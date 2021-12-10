@@ -13,7 +13,7 @@ jobs:
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
           script: | 
             whoami
-            cd /mnt/wholecars-web
+            cd ~/wholecars-web
             git pull origin main
             docker volume rm $(docker volume ls -qf dangling=true)
             docker-compose down
