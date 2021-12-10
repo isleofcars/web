@@ -116,11 +116,11 @@ WSGI_APPLICATION = 'buyacar.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'web',
-        'USER': 'admin',
-        'PASSWORD': env('DATABASE_PASSWORD'),
-        'HOST': env('DATABASE_HOST'),
-        'PORT': 3306,
+        'NAME': env('DB_WEB_NAME'),
+        'USER': env('DB_WEB_USERNAME'),
+        'PASSWORD': env('DB_WEB_PASSWORD'),
+        'HOST': env('DB_WEB_HOST'),
+        'PORT': env('DB_WEB_PORT'),
         'TEST': {
             'NAME': 'mytestdatabase',
         },
