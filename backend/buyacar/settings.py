@@ -124,11 +124,9 @@ DATABASES = {
         'TEST': {
             'NAME': 'mytestdatabase',
         },
-        # TODO: Fix this on the AWS RDS
-        # django.db.utils.OperationalError: (1227, 'Access denied; you need (at least one of) the SUPER or SYSTEM_VARIABLES_ADMIN privilege(s) for this operation')
-        # 'OPTIONS': {
-        #     'init_command': 'SET GLOBAL max_connections = 100000',
-        # }
+        'OPTIONS': {
+            'auth_plugin': 'mysql_native_password'
+        }
     }
 }
 
