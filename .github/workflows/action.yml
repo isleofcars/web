@@ -7,7 +7,7 @@ jobs:
       - name: Install SSH Key
         uses: appleboy/ssh-action@master
         with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }} 
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
@@ -17,4 +17,4 @@ jobs:
             git pull origin main
             docker volume rm $(docker volume ls -qf dangling=true)
             docker-compose down
-            docker-compose up -d --build  
+            docker-compose up -d --build
