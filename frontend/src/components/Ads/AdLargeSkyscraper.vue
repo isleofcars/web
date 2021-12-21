@@ -13,8 +13,8 @@ export default {
 
 <style lang="scss" scoped>
 .ad {
-    width: 300px;
-    height: 600px;
+    width: 0px;
+    height: 0px;
     position: sticky;
     top: 20px;
     right: 0;

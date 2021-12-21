@@ -52,6 +52,10 @@
                     Unfortunately we could not find any cars for you. Please try to change the filters.
                 </p>
             </section>
+
+            <aside>
+                <AdLargeSkyscraper />
+            </aside>
             <CookiesWarning v-if="userAgreeCookies !== 'true'" />
         </div>
     </main>
