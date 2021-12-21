@@ -91,11 +91,15 @@ def get_makes_and_count(request):
     return CarAdvertisement.objects.raw(query)
 
 
-def get_min_year():
-    """
-    Return the minimum year of all cars not considering 0 year
-    """
-    return int(CarAdvertisement.objects.exclude(year=0.0).order_by('year')[0].year)
+def get_min_year() -> int:
+    """Returns a minimum possible year."""
+    DEFAULT_MIN_YEAR = 1885
+    min_year = CarAdvertisement.objects.exclude(year=0.0).order_by('year')[0].year
+    try:
+        min_year = int(min_year)
+    except:
+        min_year = DEFAULT_MIN_YEAR
+    return min_year
 
 
 def get_locations_nearby_coords(queryset, latitude, longitude, max_distance, city):
