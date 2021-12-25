@@ -1,7 +1,7 @@
 // Large Skyscraper ad template for AdSense (300x600)
 <template>
     <div class="ad">
-        <p class="ad__text">Your ad here</p>
+        <p class="ad__text"></p>
     </div>
 </template>
 
