@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="HandheldFriendly" content="true">
+    <link rel="icon" href="<{% static 'images/favicon.ico' %}">
+    <title>Whole Cars Market</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}?{% now 'U' %}"/>
+    <link rel="stylesheet" href="{% static 'styles/filters.css' %}?{% now 'U' %}"/>
+    <link rel="stylesheet" href="{% static 'styles/ads.css' %}?{% now 'U' %}"/>
+    
+    <!-- Scripts -->
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VWRSHRKYFM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-VWRSHRKYFM');
+    </script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static 'library/bootstrap-5.0.2-dist/css/bootstrap.min.css' %}"/>
+    <script src="{% static 'library/bootstrap-5.0.2-dist/js/bootstrap.min.js' %}"></script>
+    
+</head>
+<body>
+    <noscript>
+        <strong>We're sorry, our website doesn't work properly without JavaScript enabled. Please enable JavaScript in your browser to continue.</strong>
+    </noscript>
+    <div id="app">
+        {% include 'search/filters.html' with filters=filters%}
+    </div>
+    <div class="ads">
+        hello
+        {{ ads }}
+        {% include 'search/ads.html' with ad=ads %}
+    </div>
+</body>
+</html>
