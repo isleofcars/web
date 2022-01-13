@@ -1,13 +1,12 @@
-# from rest_framework import viewsets, generics
-# from rest_framework.views import APIView
-# from rest_framework.pagination import PageNumberPagination
-# from rest_framework.response import Response
-# from django_filters.rest_framework import DjangoFilterBackend
+import json
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
+import pandas as pd
+from django.db import connection
 
-from .filters import FormFilters
+from . import forms
+from wholecarsmarket import utils
 
 
 # from .models import CarAdvertisement
@@ -19,15 +18,74 @@ from .filters import FormFilters
 def render_home(request: HttpRequest) -> HttpResponse:
     """Renders the main page."""
     print(request.GET)
-    filters = FormFilters()
-    print(filters)
+    makes_all = pd.read_sql_query("""select distinct make from web.ads where make <> '' order by make desc""", connection)
+    makes_all = makes_all.make.to_list()
+    query = """
+        SELECT make 
+        FROM ( 
+            SELECT make, count(*) counter 
+            FROM ads
+            WHERE make <> '' 
+            GROUP BY make 
+            ORDER BY counter 
+            desc LIMIT 50 
+        ) m 
+        ORDER BY make asc
+    """
+    makes_popular = pd.read_sql_query(query, connection)
+    makes_popular = makes_popular.make.to_list()
+    location_default = utils.get_user_location(request)
+    print('location_default', location_default)
+    is_new = request.GET.get('is_new', forms.CHOICES_IS_NEW[0])
+    is_broken = request.GET.get('is_broken', forms.CHOICES_IS_BROKEN[1])
+    location = request.GET.get('location', location_default)
+    make = request.GET.get('make')
+    model = request.GET.get('model')
+    color = request.GET.get('color')
+    body = request.GET.get('body')
+    transmission = request.GET.get('transmission')
+    drive = request.GET.get('drive')
+    with_photos = request.GET.get('with_photos', True)
+    power_from = request.GET.get('power_from')
+    power_to = request.GET.get('power_to')
+    year_from = request.GET.get('year_from')
+    year_to = request.GET.get('year_to')
+    mileage_from = request.GET.get('mileage_from')
+    mileage_to = request.GET.get('mileage_to')
+    price_from = request.GET.get('price_from')
+    price_to = request.GET.get('price_to')
+    initial = dict(
+        is_new=is_new,
+        is_broken=is_broken,
+        location=location,
+        make=make,
+        model=model,
+        color=color,
+        body=body,
+        transmission=transmission,
+        drive=drive,
+        with_photos=with_photos,
+        power_from=power_from,
+        power_to=power_to,
+        year_from=year_from,
+        year_to=year_to,
+        mileage_from=mileage_from,
+        mileage_to=mileage_to,
+        price_from=price_from,
+        price_to=price_to
+    )
+    form = forms.FormFilters(initial=initial)
+    print('initials', initial)
+    # filters = FormFilters(request.GET)
     return render(
         request=request,
         template_name='search/home.html',
-        context={
-            'filters': filters,
-            'ads': 'Hello, world!'
-        }
+        context=dict(
+            form=form,
+            ads='Hello, world!',
+            makes_all=json.dumps(makes_all),
+            makes_popular=json.dumps(makes_popular)
+        )
     )
 
 #

@@ -1,264 +1,114 @@
+
+<!-- Activate Filters -->
+<script>
+    $(document).ready(() => {
+        autocomplete($('#input-make')[0], makesAll);
+        // autocomplete($('#input-model')[0], makesAll);
+        // $('.selectpicker').selectpicker({
+        //     // style: 'btn-default',
+        //     // size: false
+        //     style: 'btn-info',
+        //     size: 4
+        // });
+    });
+</script>
+
 <div>
-
     <!-- Filters Main Window -->
-    <div class="filters">
-        <div class="filters_row filters_row_header">
-            <div class="filters_column">
-                <div class="btn-group filter-is-new" role="group" aria-label="is_new" data-toggle="buttons" id="filter-is-new">
-                    {% for option in filters.is_new.field.choices %}
-                    <input type="radio" class="btn-check" name="is_new" id="btnradio-{{ option.0|cut:' ' }}" autocomplete="off"{% if option.0 == filters.is_new.value.0%} checked{% endif %}>
-                    <label class="btn btn-outline-primary" for="btnradio-{{ option.0|cut:' ' }}">{{ option.0 }}</label>
+    <div class="filters-container">
+        <div class="row">
+            <div class="col">
+                <div class="btn-group filter-is-new filters-is_new my-input" role="group" aria-label="is_new" data-toggle="buttons" id="filter-is-new">
+                    {% for option in form.is_new.field.choices %}
+                    <input type="radio" class="btn-check" name="is_new" id="is_new-{{ option.0|cut:' ' }}" autocomplete="off"{% if option.0 == form.is_new.value.0%} checked{% endif %}>
+                    <label class="btn btn-outline-primary btn-block" for="is_new-{{ option.0|cut:' ' }}">{{ option.1 }}</label>
                     {% endfor %}
                 </div>
             </div>
-            <div class="filters_column">
-                <div class="btn-group filter-is-broken" role="group" aria-label="is_broken" data-toggle="buttons" id="filter-is-broken">
-                    {% for option in filters.is_broken.field.choices %}
-                    <input type="radio" class="btn-check" name="is_broken" id="btnradio-{{ option.0|cut:' ' }}" autocomplete="off"{% if option.0 == filters.is_broken.value.0%} checked{% endif %}>
-                    <label class="btn btn-outline-primary" for="btnradio-{{ option.0|cut:' ' }}">{{ option.0 }}</label>
+            <div class="col">
+                <div class="btn-group filter-is-broken filters-is_broken my-input" role="group" aria-label="is_broken" data-toggle="buttons" id="filter-is-broken">
+                    {% for option in form.is_broken.field.choices %}
+                    <input type="radio" class="btn-check" name="is_broken" id="is_broken-{{ option.0|cut:' ' }}" autocomplete="off"{% if option.0 == form.is_broken.value.0%} checked{% endif %}>
+                    <label class="btn btn-outline-primary btn-block" for="is_broken-{{ option.0|cut:' ' }}">{{ option.1 }}</label>
                     {% endfor %}
                 </div>
             </div>
-            <div class="filters_column filters_column_align-right">
-                <BaseLocation
-                    :userCity="filters.location"
-                    :distance="filters.distance"
-                    @changeLocation="changeUserLocation"
-                    @changeLocationOffset="changeDistance"
-                />
+            <div class="col">
+                <input class="my-input" id="input-make" placeholder="Location" autocomplete="off" value="{{ form.location.value }}"/>
             </div>
         </div>
-        <div class="filters_row">
-            <div class="filters_column">
-                <BaseSelect
-                    class="filters__item_large"
-                    placeholder="Make"
-                    :options="availableMakes"
-                    :selectedOption="filters.make"
-                    @selectOption="(option) => {filters.model = ''; filters.make = option;}"
-                    @resetSelectedOptions="filters.make = ''; isModelReset = false;"
-                    withInput
-                />
-            </div>
-
-            <div class="filters_column">
-                <BaseSelect
-                    class="filters__item_large"
-                    :placeholder="'Model'"
-                    :options="modelsList"
-                    :selectedOption="filters.model"
-                    @selectOption="(option) => {this.isModelReset = false;return filters.model = option;   } "
-                    @resetSelectedOptions="onResetSelectedOptions()"
-                    :disabled="!this.modelsList.length"
-                    withInput
-                />
-            </div>
-
-            <div class="filters_column filters_column_colours-laptop">
-                <BaseColour />
-            </div>
-        </div>
-        <div class="filters_row">
-            <div class="filters_column">
-                <BaseSelect
-                    class="filters__item_small"
-                    placeholder="Body"
-                    :options="bodyOptions"
-                    :selectedOption="filters.body"
-                    @selectOption="(option) => filters.body = option"
-                    @resetSelectedOptions="filters.body = ''; isModelReset = false;"
-                />
-
-                <BaseSelect
-                    class="filters__item_small"
-                    placeholder="Transmission"
-                    :options="transmissionOptions"
-                    :selectedOption="filters.transmission"
-                    @selectOption="(option) => filters.transmission = option"
-                    @resetSelectedOptions="filters.transmission = ''; isModelReset = false;"
-                />
-            </div>
-
-            <div class="filters_column">
-                <BaseSelect
-                    class="filters__item_small"
-                    placeholder="Drive"
-                    :options="driveOptions"
-                    :selectedOption="filters.drive"
-                    @selectOption="(option) => filters.drive = option"
-                    @resetSelectedOptions="filters.drive = ''; isModelReset = false;"
-                />
-
-                <BaseCheckbox
-                    class="filters__item_small filters__item_align-right filters__checkbox"
-                    label="With photos"
-                    v-model="filters.only_with_photo"
-                />
-            </div>
-
-            <div class="filters_column">
-                <BaseInput
-                    class="filters__item_grouped"
-                    placeholder="Power from, hp"
-                    v-model="filters.power_from"
-                    bordersType="left"
-                    showUnits="hp"
-                />
-
-                <BaseInput
-                    class="filters__item_grouped"
-                    placeholder="to"
-                    v-model="filters.power_to"
-                    bordersType="right"
-                    showUnits="hp"
-                    :from-value="filters.power_from"
-                />
-            </div>
-        </div>
-
-        <div class="filters_row">
-            <div class="filters_column filters_column-top">
-                <BaseSelect
-                    class="filters__item_grouped"
-                    placeholder="Year from"
-                    :options="yearFromOptions"
-                    :selectedOption="filters.year_from"
-                    @selectOption="(option) => filters.year_from = option"
-                    @resetSelectedOptions="filters.year_from = ''; isModelReset = false;"
-                    resetText="Reset"
-                    bordersType="left"
-                    withInput
-                    onlyNumbers
-                />
-
-                <BaseSelect
-                    class="filters__item_grouped"
-                    placeholder="to"
-                    :options="yearToOptions"
-                    :selectedOption="filters.year_to"
-                    @selectOption="(option) => filters.year_to = option"
-                    @resetSelectedOptions="filters.year_to = ''; isModelReset = false;"
-                    resetText="Reset"
-                    bordersType="right"
-                    withInput
-                    onlyNumbers
-                />
-            </div>
-
-            <div class="filters_column">
-                <BaseInput
-                    class="filters__item_grouped"
-                    placeholder="Mileage from, mi"
-                    v-model="filters.mileage_from"
-                    bordersType="left"
-                    showUnits="mi"
-                />
-
-                <BaseInput
-                    class="filters__item_grouped"
-                    placeholder="to"
-                    v-model="filters.mileage_to"
-                    bordersType="right"
-                    showUnits="mi"
-                    :from-value="filters.mileage_from"
-                />
-            </div>
-
-            <div class="filters_column">
-                <BaseInput
-                    class="filters__item_grouped"
-                    placeholder="Price from, $"
-                    v-model="filters.price_from"
-                    bordersType="left"
-                    showUnits="$"
-                />
-
-                <BaseInput
-                    class="filters__item_grouped"
-                    placeholder="to"
-                    v-model="filters.price_to"
-                    bordersType="right"
-                    showUnits="$"
-                    :fromValue="filters.price_from"
-                />
-            </div>
-        </div>
-
-        <div class="filters_row filters_row_colours-phone">
-            <div class="filters_column">
-                <BaseColour />
-            </div>
-        </div>
-
-        <div class="filters_row filters__row_last">
-            <div class="filters_column">
-                <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
-                    Reset filters
-                    <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
+        <div class="row">
+            <div class="col">
+                <div class="autocomplete">
+                    <input class="my-input" id="input-make" placeholder="Make" autocomplete="off"/>
                 </div>
             </div>
-            <div class="filters_column"></div>
-            <div class="filters_column">
-                <div class="filters__results-count" v-if="resultsCount > 0">
-                    {{ resultsCountFormatted }} results
+            <div class="col">
+                <div class="autocomplete">
+                    <input class="my-input" id="input-model" placeholder="Model" autocomplete="off"/>
                 </div>
-                <div class="filters__results-count" v-else-if="resultsCount === 0">
-                    No results
+            </div>
+            <div class="col">
+                {% for option in form.color.field.choices %}
+                <div class="color {{ option.0 }}"></div>
+                {% endfor %}
+                <i class="far fa-times-circle"></i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <!-- <select class="selectpicker body" title="Body"> -->
+                <select class="body" title="Body">
+                    {% for option in form.body.field.choices %}
+                    <option>{{ option.0 }}</option>
+                    {% endfor %}
+                </select>
+                <select class="transmission" title="Transmission">
+                    {% for option in form.transmission.field.choices %}
+                    <option>{{ option.0 }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <select class="drive" title="Drive">
+                    {% for option in form.drive.field.choices %}
+                    <option>{{ option.0 }}</option>
+                    {% endfor %}
+                </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"{% if form.with_photos.value %} checked{% endif %}>
+                    <label class="form-check-label" for="flexCheckDefault">With Photos Only</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="my-input">
+                    <input class="w-25" type="number" placeholder="Power from, hp" id="power_from" autocomplete="off" value="{{ form.power_from.value }}"/>
+                    <input class="w-25" type="number" placeholder="to" id="power_to" autocomplete="off" value="{{ form.power_to.value }}"/>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="filters__available-models" v-if="modelsList.length && filters.make && !filters.model">
-        <div class="filters__models-items">
-            <div
-                class="filters__models-item"
-                v-for="model in availableModels.slice(0, 12)"
-                :key="model.model"
-            >
-                <div class="filters__models-item-name" @click="filters.model = model.model">
-                    {{ model.model }}
+        <div class="row">
+            <div class="col">
+                <div class="my-input">
+                    <input class="w-25" type="text" placeholder="Year from" id="year_from" autocomplete="off" value="{{ form.year_from.value }}"/>
+                    <input class="w-25" type="number" placeholder="to" id="year_to" autocomplete="off" value="{{ form.year_to.value }}"/>
                 </div>
-                <div class="filters__models-item-count">
-                    {{ model.count }}
+            </div>
+            <div class="col">
+                <div class="my-input">
+                    <input class="w-25" type="number" placeholder="Mileage from, mi" id="mileage_from" autocomplete="off" value="{{ form.mileage_from.value }}"/>
+                    <input class="w-25" type="number" placeholder="to" id="mileage_to" autocomplete="off" value="{{ form.mileage_to.value }}"/>
+                </div>
+            </div>
+            <div class="col">
+                <div class="my-input">
+                    <input class="w-25" type="number" placeholder="Price from, $" id="price_from"_from" autocomplete="off" value="{{ form.price_from.value }}"/>
+                    <input class="w-25" type="number" placeholder="to" id="price_to" autocomplete="off" value="{{ form.price_to.value }}"/>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="filters__below-selects">
-        <BaseSelect
-            v-show="!$store.getters.showMobile"
-            class="filters__item_small"
-            placeholder="25 per page"
-            :options="itemsPerPageOptions"
-            :selectedOption="filters.items_per_page"
-            @selectOption="(option) => filters.items_per_page = option"
-            hideResetOption
-        />
-
-        <BaseSelect
-            :class="['filters__sort-by', $store.getters.showMobile ? 'filters__item_small' : 'filters__item_large']"
-            placeholder="Sort by Distance"
-            :options="sortByOptions"
-            :selectedOption="filters.ordering"
-            @selectOption="(option) => filters.ordering = option"
-            hideResetOption
-            valuePrependText="Sort by "
-        />
-    </div>
-
-    <div class="filters__hint-top" v-if="showHintTop">
-        <div class="filters__hint-title" @click="scrollToTop">
-            <svg class="filters__hint-arrow-icon" viewBox="0 0 24 24" id="arrow-rounded">
-                <path fill-rule="evenodd" fill="currentColor"
-                        d="M15.483 9.297l-3.9 3.9-3.9-3.9a.99.99 0 00-1.4
-                1.4l4.593 4.593a1 1 0 001.414 0l4.593-4.593a.99.99 0 10-1.4-1.4z"></path>
-            </svg>
-            {{ appliedFiltersMessage }}
-        </div>
-        <div class="filters__hint-results-count" v-if="resultsCount">
-            {{ resultsCountFormatted }} results
+        <div class="row">
+            <span>Shown 1 - 100 from 123,456 ads</span>
         </div>
     </div>
 </div>

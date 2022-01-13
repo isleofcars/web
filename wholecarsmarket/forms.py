@@ -18,17 +18,49 @@ CHOICES_IS_NEW = [(x, x) for x in (
 CHOICES_IS_BROKEN = [(x, x) for x in (
     'All', 'Working', 'Broken'
 )]
+CHOICES_COLOR = [(x, x) for x in (
+    'black', 'white', 'grey',
+    'red', 'blue', 'brown',
+    'green', 'orange', 'yellow'
+)]
+CHOICES_BODY = [(x, x) for x in (
+    'Hatchback',
+    'Coupe',
+    'Convertible',
+    'Sedan',
+    'SUV',
+    'Pickup',
+    'Commercial',
+    'Minivan',
+    'Wagon'
+)]
+CHOICES_TRANSMISSION = [(x, x) for x in (
+    'Manual', 'Automatic'
+)]
+CHOICES_DRIVE = [(x, x) for x in (
+    'AWD', 'RWD', 'FWD'
+)]
 
 
 class FormFilters(forms.Form):
-    is_new = forms.ChoiceField(
-        choices=CHOICES_IS_NEW,
-        initial=CHOICES_IS_NEW[0]
-    )
-    is_broken = forms.ChoiceField(
-        choices=CHOICES_IS_BROKEN,
-        initial=CHOICES_IS_BROKEN[1]
-    )
+    is_new = forms.ChoiceField(choices=CHOICES_IS_NEW)
+    is_broken = forms.ChoiceField(choices=CHOICES_IS_BROKEN)
+    location = forms.CharField()
+    make = forms.CharField()
+    model = forms.CharField()
+    color = forms.ChoiceField(choices=CHOICES_COLOR)
+    body = forms.ChoiceField(choices=CHOICES_BODY)
+    transmission = forms.ChoiceField(choices=CHOICES_TRANSMISSION)
+    drive = forms.ChoiceField(choices=CHOICES_DRIVE)
+    with_photos = forms.BooleanField()
+    power_from = forms.IntegerField()
+    power_to = forms.IntegerField()
+    year_from = forms.IntegerField()
+    year_to = forms.IntegerField()
+    mileage_from = forms.IntegerField()
+    mileage_to = forms.IntegerField()
+    price_from = forms.IntegerField()
+    price_to = forms.IntegerField()
 
 
 #
