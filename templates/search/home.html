@@ -37,7 +37,7 @@
     <script src="{% static 'library/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Popper -->
-    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <!-- <script src="https://unpkg.com/@popperjs/core@2"></script> -->
     
 
     <!-- Select2 -->
@@ -57,6 +57,60 @@
     <script>
         var makesAll = {{ makes_all|safe }};
         var makesPopular = {{ makes_popular|safe }};
+        var ajaxRequest;
+    </script>
+
+    <script>
+        function readAllFilters() {
+            let filters = {
+                is_new: $('#filter-is-new input:checked').attr('value'),
+                is_broken: $('#filter-is-broken input:checked').attr('value'),
+                location: $('#filter-location').val(),
+                make: $('#filter-make').val(),
+                model: $('#filter-model').val(),
+                color: $('#filter-color input:checked').attr('value'),
+                body: $('#filter-body option:selected').attr('value'),
+                transmission: $('#filter-transmission option:selected').attr('value'),
+                drive: $('#filter-drive option:selected').attr('value'),
+                with_photos: $('filter-with_photos').prop('checked'),
+                power_from: $('#filter-power_from').val(),
+                power_to: $('#filter-power_to').val(),
+                year_from: $('#filter-year_from').val(),
+                year_to: $('#filter-year_to').val(),
+                mileage_from: $('#filter-mileage_from').val(),
+                mileage_to: $('#filter-mileage_to').val(),
+                price_from: $('#filter-price_from').val(),
+                price_to: $('#filter-price_to').val()
+            };
+            return filters;
+        };
+
+        function callAjax() {
+            let data = readAllFilters();
+            ajaxRequest = $.ajax({
+                type: 'GET',
+                url: '/',
+                data: data,
+                beforeSend: (jqXHR, settings) => {
+                    console.log('data', data);
+                    url = settings.url;
+                    console.log('settings.url', settings.url);
+                    if (url.slice(-1) === '?') url = url.slice(0, -1);
+                    window.history.replaceState('', document.title, url);
+                    if (ajaxRequest) ajaxRequest.abort();
+                },
+                success: (ads, statusText, jqHXR) => {
+                    console.log('Success');
+                    $('#ads-container').html(ads);
+                },
+                error: (err) => {
+                    console.log('Error');
+                },
+                complete: () => {
+
+                }
+            });
+        };
     </script>
 </head>
 <body>
@@ -84,7 +138,7 @@
             <div class="row">
                 {% include 'search/filters.html' with filters=filters%}
             </div>
-            <div class="row">
+            <div class="row" id="ads-container">
                 {% include 'search/ads.html' with ad=ads %}
             </div>
         </div>

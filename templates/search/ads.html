@@ -1,5 +1,100 @@
 <div>
-    Inside block
+    {% for ad in ads.itertuples %}
+    <div class="ad">
+        <a :href="car.url" class="ad-link" target="_blank" rel="noreferrer" id="ad-{{ ad.index }}">
+            <div class="ad-thumb">
+                <div class="gallery-hover">
+                    <div class="gallery-hover__cover-container">
+                        <script>
+                            photos = {{ ad.photos|safe }};
+                            // console.log(photos);
+                            for (photo of photos) {
+                                $('#ad-{{ ad.index }} .gallery-hover__cover-container').append(
+                                    `<img class="gallery-hover__cover" src="${photo}">`
+                                );
+                                break;
+                            };
+                        </script>
+                        <div class="gallery-hover__cover-more-photos" v-if="showMorePhotos">
+                            <div class="gallery-hover__cover-wrapper">
+                                <div class="gallery-hover__wrapper-icon"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="gallery-hover__button-container"
+                        v-if="photos.length > 1"
+                        @mouseleave="mouseLeave"
+                    >
+                        <div
+                            class="gallery-hover__button"
+                            v-for="(photo, index) in photos"
+                            :key="index"
+                            @mouseover="mouseOver(photo, index)"
+                        >
+                        </div>
+                    </div>
+                </div>
+                <content-placeholders v-else :rounded="true">
+                    <content-placeholders-img class="ad-img" />
+                </content-placeholders>
+            </div>
+            <div class="ad-clicker"></div>
+        </a>
+        <div class="ad-description">
+            <div class="ad-column">
+                <div class="ad-column-row">
+                    <h3 class="ad-title">{{ ad.title }}</h3>
+                </div>
+                <div class="ad-column-row">
+                    <div class="ad-tech-summary">
+                        <div class="ad-tech-summary-column">
+                            <div class="ad-cell" title="Power">{{ ad.power }}{% if ad.power %} hp{% endif %}</div>
+                            <div class="ad-cell" title="Transmission">{{ ad.transmission }}</div>
+                        </div>
+                        <div class="ad-tech-summary-column">
+                            <div class="ad-cell" title="Drivetrain">{{ ad.drive }}</div>
+                            <div class="ad-cell" title="Body Style">{{ ad.body }}</div>
+                        </div>
+                    </div>
+                </div>
 
-    {{ ads }}
+                <div class="ad-column-row">
+                    <div v-if="present(car.location)" class="ad-additional-info">
+                        {{ ad.location }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="ad-column">
+                <div class="ad-column-row">
+                    <div class="ad-price">{{ ad.price }}</div>
+                </div>
+            </div>
+
+            <div class="ad-column">
+                <div class="ad-column-row">
+                    <div class="ad-year">{{ ad.year }}</div>
+                </div>
+            </div>
+
+            <div class="ad-column">
+                <div class="ad-column-row">
+                    <div v-if="present(car.mileage)" class="ad-mileage">
+                        {{ ad.mileage }}
+                    </div>
+                </div>
+
+                <div class="ad-column-row">
+                    <div
+                        v-if="present(car.source)"
+                        class="ad-additional-info ad-additional-info_align_right"
+                    >
+                        {{ ad.source }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>

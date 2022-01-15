@@ -7,6 +7,7 @@ from django.db import connection
 
 from . import forms
 from wholecarsmarket import utils
+from wholecarsmarket import sql_queries as sql
 
 
 # from .models import CarAdvertisement
@@ -17,27 +18,21 @@ from wholecarsmarket import utils
 
 def render_home(request: HttpRequest) -> HttpResponse:
     """Renders the main page."""
+
+    def fetch_ads() -> pd.DataFrame:
+        query = """select * from web.ads limit 25"""
+        ads = pd.read_sql_query(query, connection)
+        return ads
+
     print(request.GET)
-    makes_all = pd.read_sql_query("""select distinct make from web.ads where make <> '' order by make desc""", connection)
+    makes_all = pd.read_sql_query(sql.get_all_makes, connection)
     makes_all = makes_all.make.to_list()
-    query = """
-        SELECT make 
-        FROM ( 
-            SELECT make, count(*) counter 
-            FROM ads
-            WHERE make <> '' 
-            GROUP BY make 
-            ORDER BY counter 
-            desc LIMIT 50 
-        ) m 
-        ORDER BY make asc
-    """
-    makes_popular = pd.read_sql_query(query, connection)
+    makes_popular = pd.read_sql_query(sql.get_popular_makes, connection)
     makes_popular = makes_popular.make.to_list()
     location_default = utils.get_user_location(request)
     print('location_default', location_default)
-    is_new = request.GET.get('is_new', forms.CHOICES_IS_NEW[0])
-    is_broken = request.GET.get('is_broken', forms.CHOICES_IS_BROKEN[1])
+    is_new = request.GET.get('is_new', forms.CHOICES_IS_NEW[0][0])
+    is_broken = request.GET.get('is_broken', forms.CHOICES_IS_BROKEN[1][0])
     location = request.GET.get('location', location_default)
     make = request.GET.get('make')
     model = request.GET.get('model')
@@ -74,15 +69,32 @@ def render_home(request: HttpRequest) -> HttpResponse:
         price_from=price_from,
         price_to=price_to
     )
+    initial = {x: y for x, y in initial.items() if y or y == 0 or y is False}
     form = forms.FormFilters(initial=initial)
     print('initials', initial)
+    ads = fetch_ads()
+    ads = ads.reset_index()
+    # ads['photos'] = ads.photos.astype(list)
+    # print(ads)
     # filters = FormFilters(request.GET)
+    # if request.is_ajax():
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        return render(
+            request=request,
+            template_name='search/ads.html',
+            context=dict(
+                form=form,
+                ads=ads,
+                makes_all=json.dumps(makes_all),
+                makes_popular=json.dumps(makes_popular)
+            )
+        )
     return render(
         request=request,
         template_name='search/home.html',
         context=dict(
             form=form,
-            ads='Hello, world!',
+            ads=ads,
             makes_all=json.dumps(makes_all),
             makes_popular=json.dumps(makes_popular)
         )
