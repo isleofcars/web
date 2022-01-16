@@ -41,12 +41,12 @@ export default {
             this.checkedColors = [];
         },
     },
-    // watch: {
-    //     checkedColors(val) {
-    //         // console.log(val);
-    //         // and emmit to main in future...
-    //     },
-    // },
+    watch: {
+        // checkedColors(val) {
+        //     // console.log(val);
+        //     // and emmit to main in future...
+        // },
+    },
 };
 </script>
 
