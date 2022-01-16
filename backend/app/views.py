@@ -7,7 +7,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import CarAdvertisement
 from .serializers import CarAdSerializer, MakesSerializer
 from .filters import CarAdFilter, DistanceOrderingFilter
-from .services import get_models_and_count, get_min_year, get_client_location_details, get_makes_and_count
+from .utils import get_models_and_count, get_min_year, get_client_location_details
+from . import utils
 
 
 class CarAdStandardPagination(PageNumberPagination):
@@ -66,12 +67,10 @@ class UserCityView(APIView):
 
 
 class CarMakesView(generics.ListCreateAPIView):
-    """
-    Return top 50 car makes by alphabet order for make filter
-    """
+    """All car makes by alphabet order for make filter."""
     serializer_class = MakesSerializer
 
     def list(self, request, format=None):
-        self.queryset = get_makes_and_count(request)
+        self.queryset = utils.get_makes_and_count(request)
         serializer = MakesSerializer(self.queryset, many=True)
         return Response(serializer.data)

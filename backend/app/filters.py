@@ -3,7 +3,7 @@ from rest_framework.filters import OrderingFilter
 from django.db.models import FloatField, Value
 
 from .models import CarAdvertisement
-from .services import get_ip_details, get_client_ip, get_locations_nearby_coords
+from .utils import get_ip_details, get_client_ip, get_locations_nearby_coords
 
 import logging
 logger = logging.getLogger(__name__)

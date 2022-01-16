@@ -433,7 +433,7 @@ export default {
         border-radius: 8px;
         background-color: $white;
         box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
-        max-height: 200px;
+        max-height: 250px;
         overflow: auto;
 
         &:hover {
