@@ -52,7 +52,7 @@ export default {
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     transform: translate(-50%, 150%);
-    z-index: 99;
+    z-index: 121;
     padding: 30px;
     animation: show_from_bottom .5s 3s ease-in-out;
     animation-fill-mode: forwards, backwards;
