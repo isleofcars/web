@@ -22,31 +22,31 @@ export default {
     name: 'BaseColor',
     data() {
         return {
-            showAdditionalColours: false,
-            checkedColours: [],
-            mainColours: ['black', 'white', 'silver', 'blue', 'red', 'green', 'yellow', 'orange'],
+            showAdditionalColors: false,
+            checkedColors: [],
+            mainColors: ['black', 'white', 'silver', 'blue', 'red', 'green', 'yellow', 'orange'],
         };
     },
     methods: {
-        choiceColour(colour) {
-            console.log(colour);
-            if (this.checkedColours.includes(colour)) {
-                const indexColour = this.checkedColours.indexOf(colour);
-                this.checkedColours.splice(indexColour, 1);
+        choiceColor(color) {
+            // console.log(color);
+            if (this.checkedColors.includes(color)) {
+                const indexColor = this.checkedColors.indexOf(color);
+                this.checkedColors.splice(indexColor, 1);
             } else {
-                this.checkedColours.push(colour);
+                this.checkedColors.push(color);
             }
         },
         resetFilter() {
-            this.checkedColours = [];
+            this.checkedColors = [];
         },
     },
-    watch: {
-        checkedColours(val) {
-            console.log(val);
-            // and emmit to main in future...
-        },
-    },
+    // watch: {
+    //     checkedColors(val) {
+    //         // console.log(val);
+    //         // and emmit to main in future...
+    //     },
+    // },
 };
 </script>
 

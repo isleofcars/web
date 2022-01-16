@@ -52,7 +52,7 @@
                     />
                 </div>
 
-                <div class="filters__column filters__column_colours-laptop">
+                <div class="filters__column filters__column_colors-laptop">
                     <BaseColor />
                 </div>
             </div>
@@ -182,7 +182,7 @@
                 </div>
             </div>
 
-            <div class="filters__row filters__row_colours-phone">
+            <div class="filters__row filters__row_colors-phone">
                 <div class="filters__column">
                     <BaseColor />
                 </div>
@@ -387,8 +387,11 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         modelsList() {
-            const map = this.availableModels.map((item) => item.model);
-            return map.filter((item) => ((item !== null) ? item.length > 0 : false));
+            let models = this.availableModels.map((item) => item.model);
+            models = models.filter((item) => ((item !== null) ? item.length > 0 : false));
+            // models = models.sort();
+            // console.log('models', models);
+            return models;
         },
         isNewSelectedOption() {
             return {
@@ -595,7 +598,7 @@ export default {
         &_last {
             margin-bottom: 0;
         }
-        &_colours-phone {
+        &_colors-phone {
             display: none;
         }
     }
@@ -793,10 +796,10 @@ export default {
 
 @media screen and (max-width: 920px) {
     .filters {
-        &__row_colours-phone {
+        &__row_colors-phone {
             display: flex;
         }
-        &__column_colours-laptop {
+        &__column_colors-laptop {
             display: none;
         }
     }
