@@ -9,34 +9,29 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-DRIVE_CHOICES = (
-    ("AWD", "AWD"),
-    ("RWD", "RWD"),
-    ("FWD", "FWD"),
-)
+DRIVE_CHOICES = [(x, x) for x in (
+    'AWD', 'RWD', 'FWD'
+)]
 
-TRANSMISSION_CHOICES = (
-    ("Automatic", "Automatic"),
-    ("Manual", "Manual"),
-)
+TRANSMISSION_CHOICES = [(x, x) for x in (
+    'Automatic', 'Manual'
+)]
 
-BODY_CHOICES = (
-    ("Hatchback", "Hatchback"),
-    ("Coupe", "Coupe"),
-    ("Convertible", "Convertible"),
-    ("Sedan", "Sedan"),
-    ("SUV", "SUV"),
-    ("Pickup Truck", "Pickup Truck"),
-    ("Commercial", "Commercial"),
-    ("Minivan", "Minivan"),
-    ("Wagon", "Wagon"),
-)
+BODY_CHOICES = [(x, x) for x in (
+    'Hatchback',
+    'Coupe',
+    'Convertible',
+    'Sedan',
+    'SUV',
+    'Pickup',
+    'Commercial',
+    'Minivan',
+    'Wagon'
+)]
 
 
 class CarAdFilter(filters.FilterSet):
-    """
-    Filter not considering city and distance
-    """
+    """Filter with no city and distance."""
     price_from = filters.NumberFilter(field_name="price", method="price_from_exclude_zero")
     price_to = filters.NumberFilter(field_name="price", method="price_to_exclude_zero")
     year_from = filters.NumberFilter(field_name="year", lookup_expr='gte')
@@ -68,10 +63,8 @@ class CarAdFilter(filters.FilterSet):
 
 
 class DistanceOrderingFilter(OrderingFilter):
-    """
-    Order queryset by given params or by distance
-    and filter by city
-    """
+    """Orders queryset by given params or by distance
+    and filter by city."""
 
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request, queryset, view)

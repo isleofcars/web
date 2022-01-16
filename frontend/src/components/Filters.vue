@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="filters__column filters__column_colours-laptop">
-                    <BaseColour />
+                    <BaseColor />
                 </div>
             </div>
             <div class="filters__row">
@@ -184,7 +184,7 @@
 
             <div class="filters__row filters__row_colours-phone">
                 <div class="filters__column">
-                    <BaseColour />
+                    <BaseColor />
                 </div>
             </div>
 
@@ -268,7 +268,7 @@ import BaseCheckbox from '@/components/Base/BaseCheckbox';
 import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
-import BaseColour from '@/components/Base/BaseColour';
+import BaseColor from '@/components/Base/BaseColor';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
@@ -292,7 +292,7 @@ const DEFAULT_FILTERS = {
     power_to: '',
     longitude: 0,
     latitude: 0,
-    ordering: 'Distance (nearest first)',
+    ordering: 'Distance, nearest first',
     items_per_page: '25 per page',
     location: '',
     distance: 'Any',
@@ -305,12 +305,12 @@ export default {
         BaseCheckbox,
         BaseSelect,
         BaseRadioButtonGroup,
-        BaseColour,
+        BaseColor,
     },
     props: {
         minAvailableYear: {
             type: Number,
-            default: 2000,
+            default: 1886,
         },
         availableMakes: {
             type: Array,
@@ -351,11 +351,11 @@ export default {
                 'Wagon',
             ],
             sortByOptions: [
-                'Distance (nearest first)',
-                'Price: low -> high',
-                'Price: high -> low',
-                'Year: low -> high',
-                'Year: high -> low',
+                'Distance, nearest first',
+                'Price, lowest first',
+                'Price, highest first',
+                'Year, lowest first',
+                'Year, highest first',
             ],
             itemsPerPageOptions: [
                 '25 per page',
@@ -524,11 +524,11 @@ export default {
         },
         sortByForQuery(param) {
             return {
-                'Distance (nearest first)': 'distance',
-                'Price: low -> high': 'price',
-                'Price: high -> low': '-price',
-                'Year: low -> high': 'year',
-                'Year: high -> low': '-year',
+                'Distance, nearest first': 'distance',
+                'Price, lowest first': 'price',
+                'Price, highest first': '-price',
+                'Year, lowest first': 'year',
+                'Year, highest first': '-year',
             }[param];
         },
         selectIsNew(option) {

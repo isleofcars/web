@@ -19,7 +19,7 @@
 
 <script>
 export default {
-    name: 'BaseColour',
+    name: 'BaseColor',
     data() {
         return {
             showAdditionalColours: false,
@@ -72,7 +72,7 @@ export default {
             position: absolute;
             top: 0;
             left: 0;
-            background: url("../../assets/checked_colour.svg");
+            background: url("../../assets/checked_color.svg");
             z-index: 999;
             display: inline-block;
             height: 20px;

@@ -25,7 +25,8 @@ class CarAdSerializer(serializers.ModelSerializer):
             'mileage',
             'transmission',
             'drive',
-            'power'
+            'power',
+            'color'
         ]
 
 

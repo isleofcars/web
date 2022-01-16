@@ -67,7 +67,7 @@ def get_models_and_count(queryset, request):
     queryset - all car advertisements
     """
     # if make is chosen, it has to show the models and their count
-    if request.query_params.get("make", None):
+    if request.query_params.get('make', None):
         return queryset.values('model').annotate(count=Count('model')).order_by('-count')
     return []
 
@@ -93,7 +93,7 @@ def get_makes_and_count(request):
 
 def get_min_year() -> int:
     """Returns a minimum possible year."""
-    DEFAULT_MIN_YEAR = 1885
+    DEFAULT_MIN_YEAR = 1886
     min_year = CarAdvertisement.objects.exclude(year=0.0).order_by('year')[0].year
     try:
         min_year = int(min_year)
@@ -109,11 +109,9 @@ def get_locations_nearby_coords(queryset, latitude, longitude, max_distance, cit
     objects from given city
     """
     # Great circle distance formula in miles
-    gcd_formula = "3440 * acos(least(greatest(\
-    cos(radians(%s)) * cos(radians(latitude)) \
-    * cos(radians(longitude) - radians(%s)) + \
-    sin(radians(%s)) * sin(radians(latitude)) \
-    , -1), 1))"
+    gcd_formula = """
+    3440 * acos(least(greatest(cos(radians(%s)) * cos(radians(latitude))
+    * cos(radians(longitude) - radians(%s)) + sin(radians(%s)) * sin(radians(latitude)), -1), 1))"""
     distance_raw_sql = RawSQL(
         gcd_formula,
         (latitude, longitude, latitude)
