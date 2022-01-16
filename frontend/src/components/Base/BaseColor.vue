@@ -1,16 +1,16 @@
 <template>
-    <div class="filter__colours">
-        <div class="colours">
+    <div class="filter__colors">
+        <div class="colors">
             <div
-                :class="['colour', colour, checkedColours.includes(colour) ? 'selected' : '']"
-                @click="choiceColour(colour)"
-                v-for="colour in mainColours"
-                :key="colour"
+                :class="['color', color, checkedColors.includes(color) ? 'selected' : '']"
+                @click="choiceColor(color)"
+                v-for="color in mainColors"
+                :key="color"
             ></div>
         </div>
-        <div class="filter__colours-reset" v-if="checkedColours.length > 0">
+        <div class="filter__colors-reset" v-if="checkedColors.length > 0">
             <button
-                @click="checkedColours = []"
+                @click="checkedColors = []"
             ><font-awesome-icon :icon="['fas', 'times']"/>
             </button>
         </div>
@@ -53,12 +53,12 @@ export default {
 <style lang='scss' scoped>
 @import '@/_vars.scss';
 
-.filter__colours {
+.filter__colors {
     width: 280px;
     display: flex;
     justify-content: space-between;
 
-    .colour {
+    .color {
         display: inline-block;
         width: 20px;
         height: 20px;
@@ -96,7 +96,7 @@ export default {
 }
 
 @media screen and (max-width: 1000px) {
-    .filter__colours {
+    .filter__colors {
         width: 100%;
     }
 }
