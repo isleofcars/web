@@ -409,13 +409,13 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         makesList() {
-            return this.popularMakes.map((item) => item.make).filter((item) => item.length > 0);
+            let makes = this.popularMakes.map((item) => item.model);
+            makes = makes.filter((item) => ((item) ? item.length > 0 : false));
+            return makes;
         },
         modelsList() {
             let models = this.availableModels.map((item) => item.model);
-            models = models.filter((item) => ((item !== null) ? item.length > 0 : false));
-            // models = models.sort();
-            // console.log('models', models);
+            models = models.filter((item) => ((item) ? item.length > 0 : false));
             return models;
         },
         isNewSelectedOption() {

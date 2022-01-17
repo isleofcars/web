@@ -71,18 +71,7 @@ def get_models_and_count(queryset, request):
     return []
 
 
-def get_makes_and_count(queryset, request):
-    """
-    Return json of models of given make and their counts ordered by count
-    queryset - all car advertisements
-    """
-    # if make is chosen, it has to show the models and their count
-    # if request.query_params.get("make", None):
-    return queryset.values('make').annotate(count=Count('make')).order_by('-count')
-    # return []
-
-
-def get_makes_and_count_sql(request):
+def get_makes_and_count(request):
     """
     Return the 50 most popular makes in alphabet order
     """
