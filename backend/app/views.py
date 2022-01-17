@@ -32,7 +32,7 @@ class CarAdStandardPagination(PageNumberPagination):
         self.page_size = int(request_page_size.split()[0]) if request_page_size else 25  # change number of ads per page
         result = super(CarAdStandardPagination, self).paginate_queryset(queryset, request)
         self.models = utils.get_models_and_count(queryset, request)  # add models and their counts if make is chosen
-        self.makes = utils.get_makes_and_count(queryset, request)  # add models and their counts if make is chosen
+        self.makes = utils.get_makes_and_count(request)  # add models and their counts if make is chosen
         return result
 
 
