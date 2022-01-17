@@ -4,11 +4,11 @@
             <div
                 :class="['color', color, checkedColors.includes(color) ? 'selected' : '']"
                 @click="choiceColor(color)"
-                v-for="color in mainColors"
+                v-for="color in colors"
                 :key="color"
             ></div>
         </div>
-        <div class="filter__colors-reset" v-if="checkedColors.length > 0">
+        <div class="filter__colors-reset" v-visible="checkedColors.length > 0">
             <button
                 @click="checkedColors = []"
             ><font-awesome-icon :icon="['fas', 'times']"/>
@@ -24,12 +24,11 @@ export default {
         return {
             showAdditionalColors: false,
             checkedColors: [],
-            mainColors: ['black', 'white', 'silver', 'blue', 'red', 'green', 'yellow', 'orange'],
+            colors: ['black', 'white', 'gray', 'red', 'blue', 'brown', 'green', 'orange', 'yellow'],
         };
     },
     methods: {
         choiceColor(color) {
-            // console.log(color);
             if (this.checkedColors.includes(color)) {
                 const indexColor = this.checkedColors.indexOf(color);
                 this.checkedColors.splice(indexColor, 1);
@@ -42,10 +41,9 @@ export default {
         },
     },
     watch: {
-        // checkedColors(val) {
-        //     // console.log(val);
-        //     // and emmit to main in future...
-        // },
+        checkedColors(val) {
+            this.$emit('changeColors', val);
+        },
     },
 };
 </script>
@@ -108,8 +106,8 @@ export default {
     background: #ffffff;
     box-shadow: inset 0 0 0 1px #e0e0e0;
 }
-.silver {
-    background-color: $silver;
+.gray {
+    background-color: $gray;
 }
 .blue {
     background-color: $blue;
@@ -125,5 +123,8 @@ export default {
 }
 .yellow {
     background-color: $yellow;
+}
+.brown {
+    background-color: $brown;
 }
 </style>

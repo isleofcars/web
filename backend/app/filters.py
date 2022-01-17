@@ -29,6 +29,18 @@ BODY_CHOICES = [(x, x) for x in (
     'Wagon'
 )]
 
+COLOR_CHOICES = (
+    ('black', 'black'),
+    ('white', 'white'),
+    ('gray', 'gray'),
+    ('blue', 'blue'),
+    ('red', 'red'),
+    ('green', 'green'),
+    ('yellow', 'yellow'),
+    ('orange', 'orange'),
+    ('brown', 'brown'),
+)
+
 
 class CarAdFilter(filters.FilterSet):
     """Filter with no city and distance."""
@@ -38,12 +50,13 @@ class CarAdFilter(filters.FilterSet):
     year_to = filters.NumberFilter(field_name="year", lookup_expr='lte')
     mileage_from = filters.NumberFilter(field_name="mileage", lookup_expr='gte')
     mileage_to = filters.NumberFilter(field_name="mileage", lookup_expr='lte')
-    power_from = filters.NumberFilter(field_name="power", lookup_expr='gte')
-    power_to = filters.NumberFilter(field_name="power", lookup_expr='lte')
+    power_from = filters.NumberFilter(field_name="power", method="power_from_exclude_zero")
+    power_to = filters.NumberFilter(field_name="power", method="power_to_exclude_zero")
     drive = filters.MultipleChoiceFilter(choices=DRIVE_CHOICES)
     transmission = filters.ChoiceFilter(choices=TRANSMISSION_CHOICES)
     body = filters.MultipleChoiceFilter(choices=BODY_CHOICES)
     only_with_photo = filters.BooleanFilter(field_name="photos", method="has_photos", label="Only with photo")
+    color = filters.MultipleChoiceFilter(choices=COLOR_CHOICES, lookup_expr='icontains')
 
     def price_from_exclude_zero(self, queryset, name, value):
         # filters price from the value, excluding zero
@@ -52,6 +65,14 @@ class CarAdFilter(filters.FilterSet):
     def price_to_exclude_zero(self, queryset, name, value):
         # filters price to the value, excluding zero
         return queryset.exclude(price=0).filter(price__lte=value)
+
+    def power_from_exclude_zero(self, queryset, name, value):
+        # filters power from the value, excluding zero
+        return queryset.exclude(power=0).filter(power__gte=value)
+
+    def power_to_exclude_zero(self, queryset, name, value):
+        # filters power to the value, excluding zero
+        return queryset.exclude(power=0).filter(power__lte=value)
 
     def has_photos(self, queryset, name, value):
         # Excludes objects without photos for only_with_photos field

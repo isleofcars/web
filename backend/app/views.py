@@ -7,7 +7,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import CarAdvertisement
 from .serializers import CarAdSerializer, MakesSerializer
 from .filters import CarAdFilter, DistanceOrderingFilter
-from .utils import get_models_and_count, get_min_year, get_client_location_details
 from . import utils
 
 
@@ -17,20 +16,23 @@ class CarAdStandardPagination(PageNumberPagination):
     And also if make is chosen it shows its models and counts
     """
     page_size = 25
-    additional_info = []
+    models = []
+    makes = []
 
     def get_paginated_response(self, data):
         # adding field totalPages to response
         response = super(CarAdStandardPagination, self).get_paginated_response(data)
         response.data['totalPages'] = self.page.paginator.num_pages
-        response.data['models'] = self.additional_info
+        response.data['models'] = self.models
+        response.data['makes'] = self.makes
         return response
 
     def paginate_queryset(self, queryset, request, view=None):
         request_page_size = request.query_params.get('items_per_page', None)
         self.page_size = int(request_page_size.split()[0]) if request_page_size else 25  # change number of ads per page
         result = super(CarAdStandardPagination, self).paginate_queryset(queryset, request)
-        self.additional_info = get_models_and_count(queryset, request)  # add models and their counts if make is chosen
+        self.models = utils.get_models_and_count(queryset, request)  # add models and their counts if make is chosen
+        self.makes = utils.get_makes_and_count(queryset, request)  # add models and their counts if make is chosen
         return result
 
 
@@ -52,7 +54,7 @@ class MinYearView(APIView):
     """
     def get(self, request, format=None):
         result = {
-            "min_year": get_min_year()
+            "min_year": utils.get_min_year()
         }
         return Response(result)
 
@@ -62,7 +64,7 @@ class UserCityView(APIView):
     Return user city for city choice
     """
     def get(self, request, format=None):
-        result = get_client_location_details(request)
+        result = utils.get_client_location_details(request)
         return Response(result)
 
 

@@ -31,7 +31,7 @@
                     <BaseSelect
                         class="filters__item_large"
                         placeholder="Make"
-                        :options="availableMakes"
+                        :options="availableMakes.map((item) => item.make)"
                         :selectedOption="filters.make"
                         @selectOption="(option) => {filters.model = ''; filters.make = option;}"
                         @resetSelectedOptions="filters.make = ''; isModelReset = false;"
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="filters__column filters__column_colors-laptop">
-                    <BaseColor />
+                    <BaseColor @changeColors="changeColors"/>
                 </div>
             </div>
             <div class="filters__row">
@@ -224,6 +224,23 @@
             </div>
         </div>
 
+        <div class="filters__available-models" v-if="makesList.length && !filters.make ">
+            <div class="filters__models-items">
+                <div
+                    class="filters__models-item"
+                    v-for="make in mostPopularMakes"
+                    :key="make.make"
+                >
+                    <div class="filters__models-item-name" @click="filters.make = make.make">
+                        {{ make.make }}
+                    </div>
+                    <div class="filters__models-item-count">
+                        {{ make.count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="filters__below-selects">
             <BaseSelect
                 v-show="!$store.getters.showMobile"
@@ -296,6 +313,7 @@ const DEFAULT_FILTERS = {
     items_per_page: '25 per page',
     location: '',
     distance: 'Any',
+    color: [],
 };
 export default {
     name: 'Filters',
@@ -313,6 +331,10 @@ export default {
             default: 1886,
         },
         availableMakes: {
+            type: Array,
+            default: () => [],
+        },
+        popularMakes: {
             type: Array,
             default: () => [],
         },
@@ -385,6 +407,9 @@ export default {
                 return this.yearsRange;
             }
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
+        },
+        makesList() {
+            return this.popularMakes.map((item) => item.make).filter((item) => item.length > 0);
         },
         modelsList() {
             let models = this.availableModels.map((item) => item.model);
@@ -461,6 +486,15 @@ export default {
         appliedFiltersCount() {
             return this.appliedFiltersInfo[1];
         },
+        mostPopularMakes() {
+            const tempMakes = this.popularMakes;
+            for (let i = 0; i < tempMakes.length; i++) {
+                if (tempMakes[i].make === 'Unknown') {
+                    tempMakes.splice(i, 1);
+                }
+            }
+            return tempMakes.sort((first, second) => second.count - first.count).slice(1, 17);
+        },
     },
     created() {
         window.addEventListener('scroll', this.onScroll);
@@ -520,6 +554,9 @@ export default {
         },
         changeDistance(distance) {
             this.filters.distance = distance;
+        },
+        changeColors(colors) {
+            this.filters.color = colors;
         },
         resetFilters() {
             this.filters = { ...DEFAULT_FILTERS };

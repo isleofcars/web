@@ -13,10 +13,12 @@ export default {
 
 <style lang="scss" scoped>
 .ad {
-    width: 320px;
-    height: 50px;
+    width: 100%;
+    height: 65vh;
     position: relative;
     background-color: lightgrey;
+    margin: 8px 0;
+    border-radius: 8px;
 
     &:hover {
         cursor: pointer;
@@ -28,6 +30,24 @@ export default {
         left: 50%;
         transform: translate(-50%, -50%);
         font-size: 24px;
+    }
+}
+
+@media screen and (max-width: 580px ){
+    .ad {
+        height: 55vh;
+    }
+}
+
+@media screen and (max-width: 470px ){
+    .ad {
+        height: 50vh;
+    }
+}
+
+@media screen and (max-width: 410px ){
+    .ad {
+        height: 43vh;
     }
 }
 </style>

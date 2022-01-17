@@ -5,6 +5,7 @@
                 <Filters
                     :minAvailableYear="minYear"
                     :availableMakes="availableMakes"
+                    :popularMakes="popularMakes"
                     :availableModels="availableModels"
                     :resultsCount="resultsCount"
                     @changeFilters="changeFilters"
@@ -99,6 +100,7 @@ export default {
             resultsCount: null,
             minYear: 2000,
             availableMakes: [],
+            popularMakes: [],
             availableModels: [],
             filtersQueryString: 'only_with_photo=true&is_broken=false',
             perPage: 25,
@@ -138,11 +140,13 @@ export default {
                         count,
                         totalPages,
                         results,
+                        makes,
                         models,
                     } = res.data;
                     this.resultsCount = count;
                     this.cars = results;
                     this.maxPage = (totalPages > 99) ? 99 : totalPages;
+                    this.popularMakes = makes;
                     this.availableModels = (shouldUpdateModelsList) ? models : oldModels;
                 })
                 .catch((err) => {
@@ -165,7 +169,8 @@ export default {
         getAvailableMakes() {
             API.getMakes()
                 .then((res) => {
-                    this.availableMakes = res.data.map((item) => item.make);
+                    this.availableMakes = res.data;
+                    this.popularMakes = res.data;
                 })
                 .catch((err) => console.log(err));
         },
