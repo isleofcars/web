@@ -189,14 +189,13 @@
             </div>
 
             <div class="filters__row filters__row_last">
+                <div class="filters__column"></div>
+                <div class="filters__column"></div>
                 <div class="filters__column">
                     <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
                         Reset filters
                         <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
                     </div>
-                </div>
-                <div class="filters__column"></div>
-                <div class="filters__column">
                     <div class="filters__results-count" v-if="resultsCount > 0">
                         {{ resultsCountFormatted }} results
                     </div>
@@ -416,6 +415,7 @@ export default {
         modelsList() {
             let models = this.availableModels.map((item) => item.model);
             models = models.filter((item) => ((item) ? item.length > 0 : false));
+            models.sort();
             return models;
         },
         isNewSelectedOption() {
@@ -676,6 +676,7 @@ export default {
         font-size: 15px;
         line-height: 24px;
         display: flex;
+        margin-left: auto;
         justify-content: center;
         align-items: center;
         transition: color .3s ease;
@@ -733,7 +734,7 @@ export default {
     &__below-selects {
         width: 50%;
         display: flex;
-        margin: 0 0 16px auto;
+        margin: 0 auto 16px 16px;
     }
     &__available-models {
         padding: 24px 16px 9px;
