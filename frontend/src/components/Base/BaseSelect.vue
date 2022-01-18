@@ -141,6 +141,10 @@ export default {
             type: String,
             default: '',
         },
+        strictFilter: {
+            type: Boolean,
+            default: false,
+        },
     },
     mounted() {
         eventBus.$on('clear-form', this.resetInput);
@@ -171,8 +175,10 @@ export default {
             }
             // console.log(this.options);
             // if user entered sth, we should autocomplete and suggest filtered options
+            if (this.strictFilter) {
+                return this.options.filter((option) => option.toLowerCase().startsWith(this.inputValue.toLowerCase()));
+            }
             return this.options.filter((option) => option.toLowerCase().indexOf(this.inputValue.toLowerCase()) !== -1);
-            // return this.options.filter((option) => option.toLowerCase().startsWith(this.inputValue.toLowerCase()));
         },
         inputPlaceholder() {
             return this.tempInputValue || this.placeholder;
