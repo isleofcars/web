@@ -31,7 +31,8 @@
                     <BaseSelect
                         class="filters__item_large"
                         placeholder="Make"
-                        :options="availableMakes.map((item) => item.make)"
+                        :strictFilter="true"
+                        :options="availableMakes.map((item) => item.make).sort()"
                         :selectedOption="filters.make"
                         @selectOption="(option) => {filters.model = ''; filters.make = option;}"
                         @resetSelectedOptions="filters.make = ''; isModelReset = false;"
@@ -43,6 +44,7 @@
                     <BaseSelect
                         class="filters__item_large"
                         :placeholder="'Model'"
+                        :strictFilter="true"
                         :options="modelsList"
                         :selectedOption="filters.model"
                         @selectOption="(option) => {this.isModelReset = false;return filters.model = option;   } "
