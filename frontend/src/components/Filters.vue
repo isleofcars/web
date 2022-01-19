@@ -196,12 +196,6 @@
                         Reset filters
                         <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
                     </div>
-                    <div class="filters__results-count" v-if="resultsCount > 0">
-                        {{ resultsCountFormatted }} results
-                    </div>
-                    <div class="filters__results-count" v-else-if="resultsCount === 0">
-                        No results
-                    </div>
                 </div>
             </div>
         </div>
@@ -260,6 +254,14 @@
                 hideResetOption
                 valuePrependText="Sort by "
             />
+
+            <div class="filters__results-count" v-if="resultsCount > 0">
+                {{ resultsCountFormatted }} results
+            </div>
+            <div class="filters__results-count" v-else-if="resultsCount === 0">
+                No results
+            </div>
+
         </div>
 
         <div class="filters__hint-top" v-if="showHintTop">
@@ -692,8 +694,9 @@ export default {
     &__results-count {
         font-size: 15px;
         color: grey;
-        margin-left: auto;
-        margin-right: 0;
+        margin: 10px 35px 0 auto;
+        width: 100%;
+        text-align: right;
     }
     &__hint-top {
         top: 0;
@@ -732,7 +735,7 @@ export default {
         color: grey;
     }
     &__below-selects {
-        width: 50%;
+        width: 100%;
         display: flex;
         margin: 0 auto 16px 16px;
     }
@@ -828,6 +831,9 @@ export default {
         }
         &__models-item {
             width: auto;
+        }
+        &__results-count {
+            margin: 10px 2px 0 auto;
         }
     }
 }
