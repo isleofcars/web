@@ -442,6 +442,7 @@ export default {
         box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
         max-height: 250px;
         overflow: auto;
+        overscroll-behavior: none;
 
         &:hover {
             .select-container {
