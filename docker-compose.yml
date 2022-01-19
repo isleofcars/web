@@ -5,14 +5,25 @@ services:
     container_name: backend
     volumes:
       - ./backend:/app
+    ports:
+      - "127.0.0.1:8000:8000"
     restart: always
+    networks:
+      - wcw
 
   frontend:
     build: ./frontend
     container_name: frontend
+    networks:
+      - wcw
     ports:
-      - "80:80"
+      - "127.0.0.1:8080:8080"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     restart: always
+
+networks:
+  wcw:
+    external: true
+    driver: bridge
