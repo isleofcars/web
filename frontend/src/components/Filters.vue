@@ -117,7 +117,7 @@
             </div>
 
             <div class="filters__row">
-                <div class="filters__column filters__column-top">
+                <div class="filters__column">
                     <BaseSelect
                         class="filters__item_grouped"
                         placeholder="Year from"
