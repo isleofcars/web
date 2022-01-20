@@ -292,6 +292,7 @@ import BaseColor from '@/components/Base/BaseColor';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
+import router from '@/router';
 
 const DEFAULT_FILTERS = {
     is_new: null,
@@ -412,7 +413,7 @@ export default {
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
         makesList() {
-            let makes = this.popularMakes.map((item) => item.model);
+            let makes = this.popularMakes.map((item) => item.make);
             makes = makes.filter((item) => ((item) ? item.length > 0 : false));
             return makes;
         },
@@ -444,6 +445,21 @@ export default {
                     // Either a boolean or a 'truthy' value
                     // Also we make an exception for distance because we do want to pass '&distance=0'
                     if (typeof value === 'boolean' || value || (key === 'distance' && value !== '')) {
+                        acc[key] = value;
+                    }
+                    return acc;
+                }, {});
+            reduce.isModelReset = this.isModelReset;
+            return reduce;
+        },
+        nonDefaultFilters() {
+            // select not default values from filters object
+            const reduce = Object.keys(this.filters)
+                .reduce((acc, key) => {
+                    const value = this.filters[key];
+                    if (key in DEFAULT_FILTERS && DEFAULT_FILTERS[key] !== value) {
+                        acc[key] = value;
+                    } else if (!(key in DEFAULT_FILTERS)) {
                         acc[key] = value;
                     }
                     return acc;
@@ -502,6 +518,11 @@ export default {
     },
     created() {
         window.addEventListener('scroll', this.onScroll);
+        Object.keys(this.$route.query).forEach((key) => {
+            if (key in this.filters) {
+                this.filters[key] = this.$route.query[key];
+            }
+        });
     },
     async mounted() {
         eventBus.$on('reset-filters', this.resetFilters);
@@ -615,6 +636,7 @@ export default {
                     delete this.appliedFilters.ordering;
                 }
                 this.$emit('changeFilters', this.appliedFilters);
+                router.replace({ query: this.nonDefaultFilters });
             },
             deep: true,
         },

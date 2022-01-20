@@ -46,6 +46,13 @@ export default {
             validator: (value) => value === 'all' || value === 'left' || value === 'right',
         },
     },
+    mounted() {
+        const onlyDigits = this.tempValue.replace(/\D/g, '');
+        if (onlyDigits) {
+            this.tempValue = new Intl.NumberFormat('en-US').format(onlyDigits);
+        }
+        this.prepareUnits();
+    },
     data(props) {
         return {
             finishedTyping: false,
@@ -77,13 +84,7 @@ export default {
             if (!val) {
                 // Because it doesn't work otherwise.
                 setTimeout(() => {
-                    if (this.tempValue !== '') {
-                        if (this.showUnits === '$') {
-                            this.tempValue = `${this.showUnits}${this.tempValue}`;
-                        } else {
-                            this.tempValue += ` ${this.showUnits}`;
-                        }
-                    }
+                    this.prepareUnits();
                 }, 100);
             }
         },
@@ -151,6 +152,15 @@ export default {
             } else {
                 this.isValueSelected = false;
                 this.finishedTyping = true;
+            }
+        },
+        prepareUnits() {
+            if (this.tempValue !== '') {
+                if (this.showUnits === '$') {
+                    this.tempValue = `${this.showUnits}${this.tempValue}`;
+                } else {
+                    this.tempValue += ` ${this.showUnits}`;
+                }
             }
         },
     },

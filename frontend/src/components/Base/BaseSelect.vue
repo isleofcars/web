@@ -148,6 +148,11 @@ export default {
     },
     mounted() {
         eventBus.$on('clear-form', this.resetInput);
+        if (this.options.includes(this.selectedOption)) {
+            this.inputValue = this.selectedOption;
+        } else {
+            this.resetSelections();
+        }
     },
     destroyed() {
         eventBus.$off('clear-form');
