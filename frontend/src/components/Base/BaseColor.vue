@@ -10,7 +10,7 @@
         </div>
         <div class="filter__colors-reset" v-visible="checkedColors.length > 0">
             <button
-                @click="checkedColors = []"
+                @click="resetFilter"
             ><font-awesome-icon :icon="['fas', 'times']"/>
             </button>
         </div>
@@ -20,10 +20,15 @@
 <script>
 export default {
     name: 'BaseColor',
+    props: {
+        checkedColors: {
+            type: Array,
+            default() { return []; },
+        },
+    },
     data() {
         return {
             showAdditionalColors: false,
-            checkedColors: [],
             colors: ['black', 'white', 'gray', 'red', 'blue', 'brown', 'green', 'orange', 'yellow'],
         };
     },
@@ -35,14 +40,11 @@ export default {
             } else {
                 this.checkedColors.push(color);
             }
+            this.$emit('changeColors', this.checkedColors);
         },
         resetFilter() {
             this.checkedColors = [];
-        },
-    },
-    watch: {
-        checkedColors(val) {
-            this.$emit('changeColors', val);
+            this.$emit('changeColors', this.checkedColors);
         },
     },
 };

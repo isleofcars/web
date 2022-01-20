@@ -55,7 +55,7 @@
                 </div>
 
                 <div class="filters__column filters__column_colors-laptop">
-                    <BaseColor @changeColors="changeColors"/>
+                    <BaseColor :checkedColors=this.filters.color @changeColors="changeColors"/>
                 </div>
             </div>
             <div class="filters__row">
@@ -186,7 +186,7 @@
 
             <div class="filters__row filters__row_colors-phone">
                 <div class="filters__column">
-                    <BaseColor />
+                    <BaseColor :checkedColors=this.filters.color @changeColors="changeColors"/>
                 </div>
             </div>
 
