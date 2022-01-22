@@ -547,7 +547,7 @@ export default {
                     tempMakes.splice(i, 1);
                 }
             }
-            return tempMakes.sort((first, second) => second.count - first.count).slice(1, 17);
+            return tempMakes.sort((first, second) => second.count - first.count).slice(0, 17);
         },
     },
     created() {
@@ -560,11 +560,6 @@ export default {
     },
     async mounted() {
         eventBus.$on('reset-filters', this.resetFilters);
-
-        this.showFilters = !(this.nonDefaultFilters
-            && Object.keys(this.nonDefaultFilters).length === 0
-            && Object.getPrototypeOf(this.nonDefaultFilters) === Object.prototype);
-
         const userCity = await this.getUserCity();
         const allOptions = getStatesCities();
         const optionOfUserCity = allOptions.filter((option) => option.name.toLowerCase()
@@ -759,6 +754,14 @@ export default {
                 }
                 this.$emit('changeFilters', this.appliedFilters);
                 router.replace({ query: this.nonDefaultFilters });
+            },
+            deep: true,
+        },
+        nonDefaultFilters: {
+            handler() {
+                this.showFilters = !(this.nonDefaultFilters
+            && Object.keys(this.nonDefaultFilters).length === 0
+            && Object.getPrototypeOf(this.nonDefaultFilters) === Object.prototype);
             },
             deep: true,
         },
