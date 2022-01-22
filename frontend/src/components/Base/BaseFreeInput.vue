@@ -14,6 +14,7 @@
             v-model="tempValue"
             @focus="isInputFocused = true"
             ref="input"
+            v-bind="$attrs"
         />
     </div>
 </template>

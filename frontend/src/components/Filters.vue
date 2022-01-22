@@ -9,6 +9,7 @@
                         @input="onSearchInput"
                         @keyup.native.enter="search"
                         bordersType="left"
+                        autofocus
                     />
                     <BaseButton
                         bordersType="right"
