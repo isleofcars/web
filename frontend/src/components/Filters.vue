@@ -1,202 +1,232 @@
 <template>
     <div>
         <div class="filters" ref="filtersBlock">
-            <div class="filters__row filters__row_header">
-                <div class="filters__column">
-                    <BaseRadioButtonGroup
-                        :options="['All', 'New', 'Used']"
-                        :selectedOption="isNewSelectedOption"
-                        @selectOption="selectIsNew"
-                    />
-                </div>
-                <div class="filters__column">
-                    <BaseRadioButtonGroup
-                        :options="['All', 'Working', 'Broken']"
-                        :selectedOption="(filters.is_new) ? null : isBrokenSelectedOption"
-                        :disabled="!!filters.is_new"
-                        @selectOption="selectIsBroken"
-                    />
-                </div>
-                <div class="filters__column filters__column_align-right">
-                    <BaseLocation
-                        :userCity="filters.location"
-                        :distance="filters.distance"
-                        @changeLocation="changeUserLocation"
-                        @changeLocationOffset="changeDistance"
-                    />
-                </div>
-            </div>
-            <div class="filters__row">
-                <div class="filters__column">
-                    <BaseSelect
-                        class="filters__item_large"
-                        placeholder="Make"
-                        :strictFilter="true"
-                        :options="availableMakes.map((item) => item.make).sort()"
-                        :selectedOption="filters.make"
-                        @selectOption="(option) => {filters.model = ''; filters.make = option;}"
-                        @resetSelectedOptions="filters.make = ''; isModelReset = false;"
-                        withInput
-                    />
-                </div>
-
-                <div class="filters__column">
-                    <BaseSelect
-                        class="filters__item_large"
-                        :placeholder="'Model'"
-                        :strictFilter="true"
-                        :options="modelsList"
-                        :selectedOption="filters.model"
-                        @selectOption="(option) => {this.isModelReset = false;return filters.model = option;   } "
-                        @resetSelectedOptions="onResetSelectedOptions()"
-                        :disabled="!this.modelsList.length"
-                        withInput
-                    />
-                </div>
-
-                <div class="filters__column filters__column_colors-laptop">
-                    <BaseColor :checkedColors=this.filters.color @changeColors="changeColors"/>
-                </div>
-            </div>
-            <div class="filters__row">
-                <div class="filters__column">
-                    <BaseSelect
-                        class="filters__item_small"
-                        placeholder="Body"
-                        :options="bodyOptions"
-                        :selectedOption="filters.body"
-                        @selectOption="(option) => filters.body = option"
-                        @resetSelectedOptions="filters.body = ''; isModelReset = false;"
-                    />
-
-                    <BaseSelect
-                        class="filters__item_small"
-                        placeholder="Transmission"
-                        :options="transmissionOptions"
-                        :selectedOption="filters.transmission"
-                        @selectOption="(option) => filters.transmission = option"
-                        @resetSelectedOptions="filters.transmission = ''; isModelReset = false;"
-                    />
-                </div>
-
-                <div class="filters__column">
-                    <BaseSelect
-                        class="filters__item_small"
-                        placeholder="Drive"
-                        :options="driveOptions"
-                        :selectedOption="filters.drive"
-                        @selectOption="(option) => filters.drive = option"
-                        @resetSelectedOptions="filters.drive = ''; isModelReset = false;"
-                    />
-
-                    <BaseCheckbox
-                        class="filters__item_small filters__item_align-right filters__checkbox"
-                        label="With photos"
-                        v-model="filters.only_with_photo"
-                    />
-                </div>
-
-                <div class="filters__column">
-                    <BaseInput
+            <div class="filters__row_header">
+                <div class="filters__full_column">
+                    <BaseFreeInput
                         class="filters__item_grouped"
-                        placeholder="Power from, hp"
-                        v-model="filters.power_from"
+                        placeholder="Search request"
+                        @input="onSearchInput"
+                        @keyup.native.enter="search"
                         bordersType="left"
-                        showUnits="hp"
                     />
-
-                    <BaseInput
-                        class="filters__item_grouped"
-                        placeholder="to"
-                        v-model="filters.power_to"
+                    <BaseButton
                         bordersType="right"
-                        showUnits="hp"
-                        :from-value="filters.power_from"
-                    />
+                        :onClick="search"
+                    >
+                        Search
+                    </BaseButton>
                 </div>
             </div>
-
-            <div class="filters__row">
-                <div class="filters__column">
-                    <BaseSelect
-                        class="filters__item_grouped"
-                        placeholder="Year from"
-                        :options="yearFromOptions"
-                        :selectedOption="filters.year_from"
-                        @selectOption="(option) => filters.year_from = option"
-                        @resetSelectedOptions="filters.year_from = ''; isModelReset = false;"
-                        resetText="Reset"
-                        bordersType="left"
-                        withInput
-                        onlyNumbers
-                    />
-
-                    <BaseSelect
-                        class="filters__item_grouped"
-                        placeholder="to"
-                        :options="yearToOptions"
-                        :selectedOption="filters.year_to"
-                        @selectOption="(option) => filters.year_to = option"
-                        @resetSelectedOptions="filters.year_to = ''; isModelReset = false;"
-                        resetText="Reset"
-                        bordersType="right"
-                        withInput
-                        onlyNumbers
-                    />
-                </div>
-
-                <div class="filters__column">
-                    <BaseInput
-                        class="filters__item_grouped"
-                        placeholder="Mileage from, mi"
-                        v-model="filters.mileage_from"
-                        bordersType="left"
-                        showUnits="mi"
-                    />
-
-                    <BaseInput
-                        class="filters__item_grouped"
-                        placeholder="to"
-                        v-model="filters.mileage_to"
-                        bordersType="right"
-                        showUnits="mi"
-                        :from-value="filters.mileage_from"
-                    />
-                </div>
-
-                <div class="filters__column">
-                    <BaseInput
-                        class="filters__item_grouped"
-                        placeholder="Price from, $"
-                        v-model="filters.price_from"
-                        bordersType="left"
-                        showUnits="$"
-                    />
-
-                    <BaseInput
-                        class="filters__item_grouped"
-                        placeholder="to"
-                        v-model="filters.price_to"
-                        bordersType="right"
-                        showUnits="$"
-                        :fromValue="filters.price_from"
-                    />
+            <div v-if="showFilters" class="filters__expand" title="Hide filters">
+                <div class="filters__expand_clicker" @click="showFilters = false">
+                    <font-awesome-icon :icon="['fas', 'chevron-up']"/>
                 </div>
             </div>
-
-            <div class="filters__row filters__row_colors-phone">
-                <div class="filters__column">
-                    <BaseColor :checkedColors=this.filters.color @changeColors="changeColors"/>
+            <div v-else class="filters__expand">
+                <div class="filters__expand_clicker" @click="showFilters = true">
+                     Expand filters
+                    <font-awesome-icon :icon="['fas', 'chevron-down']"/>
                 </div>
             </div>
+            <div v-if="showFilters">
+                <div class="filters__row filters__row_header">
+                    <div class="filters__column">
+                        <BaseRadioButtonGroup
+                            :options="['All', 'New', 'Used']"
+                            :selectedOption="isNewSelectedOption"
+                            @selectOption="selectIsNew"
+                        />
+                    </div>
+                    <div class="filters__column">
+                        <BaseRadioButtonGroup
+                            :options="['All', 'Working', 'Broken']"
+                            :selectedOption="(filters.is_new) ? null : isBrokenSelectedOption"
+                            :disabled="!!filters.is_new"
+                            @selectOption="selectIsBroken"
+                        />
+                    </div>
+                    <div class="filters__column filters__column_align-right">
+                        <BaseLocation
+                            :userCity="filters.location"
+                            :distance="filters.distance"
+                            @changeLocation="changeUserLocation"
+                            @changeLocationOffset="changeDistance"
+                        />
+                    </div>
+                </div>
+                <div class="filters__row">
+                    <div class="filters__column">
+                        <BaseSelect
+                            class="filters__item_large"
+                            placeholder="Make"
+                            :strictFilter="true"
+                            :options="availableMakes.map((item) => item.make).sort()"
+                            :selectedOption="filters.make"
+                            @selectOption="(option) => {filters.model = ''; filters.make = option;}"
+                            @resetSelectedOptions="filters.make = ''; isModelReset = false;"
+                            withInput
+                        />
+                    </div>
 
-            <div class="filters__row filters__row_last">
-                <div class="filters__column"></div>
-                <div class="filters__column"></div>
-                <div class="filters__column">
-                    <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
-                        Reset filters
-                        <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
+                    <div class="filters__column">
+                        <BaseSelect
+                            class="filters__item_large"
+                            :placeholder="'Model'"
+                            :strictFilter="true"
+                            :options="modelsList"
+                            :selectedOption="filters.model"
+                            @selectOption="(option) => {this.isModelReset = false;return filters.model = option;   } "
+                            @resetSelectedOptions="onResetSelectedOptions()"
+                            :disabled="!this.modelsList.length"
+                            withInput
+                        />
+                    </div>
+
+                    <div class="filters__column filters__column_colors-laptop">
+                        <BaseColor :checkedColors=this.filters.color @changeColors="changeColors"/>
+                    </div>
+                </div>
+                <div class="filters__row">
+                    <div class="filters__column">
+                        <BaseSelect
+                            class="filters__item_small"
+                            placeholder="Body"
+                            :options="bodyOptions"
+                            :selectedOption="filters.body"
+                            @selectOption="(option) => filters.body = option"
+                            @resetSelectedOptions="filters.body = ''; isModelReset = false;"
+                        />
+
+                        <BaseSelect
+                            class="filters__item_small"
+                            placeholder="Transmission"
+                            :options="transmissionOptions"
+                            :selectedOption="filters.transmission"
+                            @selectOption="(option) => filters.transmission = option"
+                            @resetSelectedOptions="filters.transmission = ''; isModelReset = false;"
+                        />
+                    </div>
+
+                    <div class="filters__column">
+                        <BaseSelect
+                            class="filters__item_small"
+                            placeholder="Drive"
+                            :options="driveOptions"
+                            :selectedOption="filters.drive"
+                            @selectOption="(option) => filters.drive = option"
+                            @resetSelectedOptions="filters.drive = ''; isModelReset = false;"
+                        />
+
+                        <BaseCheckbox
+                            class="filters__item_small filters__item_align-right filters__checkbox"
+                            label="With photos"
+                            v-model="filters.only_with_photo"
+                        />
+                    </div>
+
+                    <div class="filters__column">
+                        <BaseInput
+                            class="filters__item_grouped"
+                            placeholder="Power from, hp"
+                            v-model="filters.power_from"
+                            bordersType="left"
+                            showUnits="hp"
+                        />
+
+                        <BaseInput
+                            class="filters__item_grouped"
+                            placeholder="to"
+                            v-model="filters.power_to"
+                            bordersType="right"
+                            showUnits="hp"
+                            :from-value="filters.power_from"
+                        />
+                    </div>
+                </div>
+
+                <div class="filters__row">
+                    <div class="filters__column">
+                        <BaseSelect
+                            class="filters__item_grouped"
+                            placeholder="Year from"
+                            :options="yearFromOptions"
+                            :selectedOption="filters.year_from"
+                            @selectOption="(option) => filters.year_from = option"
+                            @resetSelectedOptions="filters.year_from = ''; isModelReset = false;"
+                            resetText="Reset"
+                            bordersType="left"
+                            withInput
+                            onlyNumbers
+                        />
+
+                        <BaseSelect
+                            class="filters__item_grouped"
+                            placeholder="to"
+                            :options="yearToOptions"
+                            :selectedOption="filters.year_to"
+                            @selectOption="(option) => filters.year_to = option"
+                            @resetSelectedOptions="filters.year_to = ''; isModelReset = false;"
+                            resetText="Reset"
+                            bordersType="right"
+                            withInput
+                            onlyNumbers
+                        />
+                    </div>
+
+                    <div class="filters__column">
+                        <BaseInput
+                            class="filters__item_grouped"
+                            placeholder="Mileage from, mi"
+                            v-model="filters.mileage_from"
+                            bordersType="left"
+                            showUnits="mi"
+                        />
+
+                        <BaseInput
+                            class="filters__item_grouped"
+                            placeholder="to"
+                            v-model="filters.mileage_to"
+                            bordersType="right"
+                            showUnits="mi"
+                            :from-value="filters.mileage_from"
+                        />
+                    </div>
+
+                    <div class="filters__column">
+                        <BaseInput
+                            class="filters__item_grouped"
+                            placeholder="Price from, $"
+                            v-model="filters.price_from"
+                            bordersType="left"
+                            showUnits="$"
+                        />
+
+                        <BaseInput
+                            class="filters__item_grouped"
+                            placeholder="to"
+                            v-model="filters.price_to"
+                            bordersType="right"
+                            showUnits="$"
+                            :fromValue="filters.price_from"
+                        />
+                    </div>
+                </div>
+
+                <div class="filters__row filters__row_colors-phone">
+                    <div class="filters__column">
+                        <BaseColor :checkedColors=this.filters.color @changeColors="changeColors"/>
+                    </div>
+                </div>
+
+                <div class="filters__row filters__row_last">
+                    <div class="filters__column"></div>
+                    <div class="filters__column"></div>
+                    <div class="filters__column">
+                        <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
+                            Reset filters
+                            <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -286,6 +316,8 @@
 import BaseSelect from '@/components/Base/BaseSelect';
 import BaseCheckbox from '@/components/Base/BaseCheckbox';
 import BaseInput from '@/components/Base/BaseInput';
+import BaseFreeInput from '@/components/Base/BaseFreeInput';
+import BaseButton from '@/components/Base/BaseButton';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
 import BaseColor from '@/components/Base/BaseColor';
@@ -324,6 +356,8 @@ export default {
     components: {
         BaseLocation,
         BaseInput,
+        BaseFreeInput,
+        BaseButton,
         BaseCheckbox,
         BaseSelect,
         BaseRadioButtonGroup,
@@ -356,6 +390,8 @@ export default {
         return {
             isModelReset: false,
             filters: { ...DEFAULT_FILTERS },
+            search_request: '',
+            showFilters: false,
             driveOptions: [
                 'AWD',
                 'RWD',
@@ -454,7 +490,7 @@ export default {
         },
         nonDefaultFilters() {
             // select not default values from filters object
-            const reduce = Object.keys(this.filters)
+            return Object.keys(this.filters)
                 .reduce((acc, key) => {
                     const value = this.filters[key];
                     if (key in DEFAULT_FILTERS && DEFAULT_FILTERS[key] !== value) {
@@ -464,8 +500,6 @@ export default {
                     }
                     return acc;
                 }, {});
-            reduce.isModelReset = this.isModelReset;
-            return reduce;
         },
         appliedFiltersInfo() {
             const appliedFiltersInfo = [];
@@ -526,6 +560,11 @@ export default {
     },
     async mounted() {
         eventBus.$on('reset-filters', this.resetFilters);
+
+        this.showFilters = !(this.nonDefaultFilters
+            && Object.keys(this.nonDefaultFilters).length === 0
+            && Object.getPrototypeOf(this.nonDefaultFilters) === Object.prototype);
+
         const userCity = await this.getUserCity();
         const allOptions = getStatesCities();
         const optionOfUserCity = allOptions.filter((option) => option.name.toLowerCase()
@@ -545,7 +584,7 @@ export default {
         eventBus.$off('reset-filters');
     },
     methods: {
-        async getUserCity() {
+        getUserCity() {
             return API.getUserCity()
                 .then((res) => res.data)
                 .catch((err) => {
@@ -624,6 +663,89 @@ export default {
                 break;
             }
         },
+        onSearchInput(val) {
+            this.search_request = val;
+        },
+        search() {
+            this.resetFilters();
+            const words = this.search_request.match(/\b(\w+)\b/g);
+            const found = {
+                year: false,
+                make: false,
+                model: false,
+            };
+
+            words.forEach((word, index) => {
+                // Looking for the year in the request
+                if (!found.year && this.yearFromOptions.includes(word)) {
+                    found.year = true;
+                    this.filters.year_from = word;
+                    this.filters.year_to = word;
+                }
+
+                // Looking for the make in request
+                if (!found.make) {
+                    // Checking for exact match
+                    let idx = this.availableMakes.findIndex((o) => o.make.toLowerCase() === word.toLowerCase());
+                    if (idx !== -1) {
+                        found.make = true;
+                        this.filters.make = this.availableMakes[idx].make;
+                    } else {
+                        // CHecking for the partial (starts with) match
+                        const matchedMakes = this.availableMakes.filter(
+                            (item) => item.make.toLowerCase().startsWith(word.toLowerCase()),
+                        );
+                        if (matchedMakes.length === 1) {
+                            idx = this.availableMakes.findIndex((o) => o.make.toLowerCase()
+                                .startsWith(word.toLowerCase()));
+                            found.make = true;
+                            this.filters.make = this.availableMakes[idx].make;
+                        }
+
+                        // Looking for two-word makes match
+                        if (index < words.length - 1) {
+                            idx = this.availableMakes.findIndex((o) => o.make.toLowerCase()
+                                === `${word} ${words[index + 1]}`.toLowerCase());
+                            if (idx !== -1) {
+                                found.make = true;
+                                this.filters.make = this.availableMakes[idx].make;
+                            }
+                        }
+                    }
+                }
+
+                // Looking for the model in request
+                if (!found.model) {
+                    // Checking for exact match
+                    let idx = this.availableModels.findIndex((o) => o.model.toLowerCase() === word.toLowerCase());
+                    if (idx !== -1) {
+                        found.model = true;
+                        this.filters.model = this.availableModels[idx].model;
+                    } else {
+                        // CHecking for the partial (starts with) match
+                        const matchedMakes = this.availableModels.filter(
+                            (item) => item.model.toLowerCase().startsWith(word.toLowerCase()),
+                        );
+                        if (matchedMakes.length === 1) {
+                            idx = this.availableModels.findIndex((o) => o.model.toLowerCase()
+                                .startsWith(word.toLowerCase()));
+                            found.model = true;
+                            this.filters.model = this.availableModels[idx].model;
+                        }
+
+                        // Looking for two-word makes match
+                        if (index < words.length - 1) {
+                            idx = this.availableModels.findIndex((o) => o.model.toLowerCase()
+                                === `${word} ${words[index + 1]}`.toLowerCase());
+                            if (idx !== -1) {
+                                found.model = true;
+                                this.filters.model = this.availableModels[idx].model;
+                            }
+                        }
+                    }
+                }
+            });
+        },
     },
     watch: {
         filters: {
@@ -678,6 +800,28 @@ export default {
         }
         &-top {
             z-index: 100;
+        }
+    }
+    &__full_column {
+        justify-content: center;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-left: 20px;
+        &:first-child {
+            margin-left: 0;
+        }
+        margin-bottom: 12px;
+    }
+    &__expand {
+        width: 100%;
+        position: relative;
+        text-align: right;
+        &_clicker {
+            font-size: 15px;
+            color: grey;
+            cursor: pointer;
+            display: inline-block;
         }
     }
     &__item {
