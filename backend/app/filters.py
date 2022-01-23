@@ -75,8 +75,8 @@ class CarAdFilter(filters.FilterSet):
         return queryset.exclude(power=0).filter(power__lte=value)
 
     def has_photos(self, queryset, name, value):
-        # Excludes objects without photos for only_with_photos field
-        return queryset.exclude(photos__exact=[]) if value else queryset
+        """Excludes ads without photos for only_with_photos field."""
+        return queryset.exclude(photos__isnull=True).exclude(photos__exact=[]) if value else queryset
 
     class Meta:
         model = CarAdvertisement

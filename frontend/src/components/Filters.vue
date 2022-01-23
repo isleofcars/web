@@ -239,7 +239,7 @@
         <div class="filters__below-selects">
             <BaseSelect
                 v-show="!$store.getters.showMobile"
-                class="filters__item_small"
+                class="filters__item_small filters__per-page"
                 placeholder="25 per page"
                 :options="itemsPerPageOptions"
                 :selectedOption="filters.items_per_page"
@@ -786,11 +786,15 @@ export default {
             margin-right: 8px;
             margin-bottom: 4px;
             content: "";
-            border-bottom: 1px solid #e0e0e0
+            border-bottom: 1px solid #e0e0e0;
         }
+    }
+    &__per-page {
+        max-width: 174px;
     }
     &__sort-by {
         min-width: 245px;
+        max-width: 350px;
     }
 }
 @media screen and (max-width: 1000px) {

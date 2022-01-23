@@ -191,10 +191,12 @@ export default {
             return this.car.body;
         },
         previewPhotos() {
-            return this.car.photos.slice(0, 5);
+            if (this.car.photos) return this.car.photos.slice(0, 5);
+            return [];
         },
         totalPhotos() {
-            return this.car.photos.length;
+            if (this.car.photos) return this.car.photos.length;
+            return 0;
         },
         placeholderPhotoUrl() {
             return `https://via.placeholder.com/200x150?text=${this.title}`;
