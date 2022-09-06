@@ -5,7 +5,7 @@
                 <h1 class="header__logo" @click="clickLogo">
                     <router-link :to="{ name: 'Main Page', query: { page: 1 } }" class="header__logo-link">
                         <img class="header__logo-img" src="@/assets/logo.svg" alt="logo"/>
-                        <span class="header__logo-name">WHOLE CARS MARKET</span>
+                        <span class="header__logo-name">ISLE OF CARS</span>
                     </router-link>
                 </h1>
                 <h2 class="header__motto">All cars in one place</h2>

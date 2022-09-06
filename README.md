@@ -1,4 +1,4 @@
-# WholeCarsMarket: WEB
+# Isle of Cars: WEB
 
 ## Installation
 
@@ -11,8 +11,8 @@ Supposed to work on the *nix machine.
 cd backend
 python3 -m venv env
 source env/bin/activate
-pip install -r requirements.txt  # 1 note
-python manage.py makemigrations  # 2 note
+pip install -r requirements.txt
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```

@@ -11,7 +11,7 @@
                 <ul class="footer__section">
                     <li>
                         All rights belong to their respective owners.
-                        WholeCarsMarket is not responsible for the content published here.
+                        Isle of Cars is not responsible for the content published here.
                     </li>
                 </ul>
             </div>
