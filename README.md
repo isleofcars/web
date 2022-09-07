@@ -39,3 +39,10 @@ If there is no space left on the device run these commands
 docker system prune
 docker volume rm $(docker volume ls -qf dangling=true)
 ```
+
+## TODO:
+
+- [ ] Change the domain to isleofcars.com
+- [ ] Add reporting app
+- [ ] Add test environment (test db + test.isleofcars.com domain)
+- [ ] Develop style rules
