@@ -5,6 +5,21 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Chunk Five Print';
+  src: url('~@/assets/fonts/chunkfive/chunkfive.print.ttf');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Chunk Five Regular';
+  src: url('~@/assets/fonts/chunkfive/chunkfive.regular.ttf');
+  font-weight: 900;
+  font-style: normal;
+}
+
+$body-background: #ffffca5e;
 $accent-color: #DB3727;
 $footer-color: #212121;
 $footer-text-color: #929292;
@@ -15,10 +30,10 @@ $white: #FFF;
 $whitish: rgba(255, 255, 255, 0.7);
 $text-color: #000;
 $secondary-text-color: grey;
-$logo-font: 'Gerbera Black';
+$logo-font: 'Chunk Five Regular';
 $default-font-size: 14px;
 $default-font-weight: 400;
-
+$black: #000;
 $gray: #9C9999FF;
 $blue: #334DFFFF;
 $orange: #fc8029;

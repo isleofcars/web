@@ -35,17 +35,19 @@ export default {
 
 <style lang="scss">
 @import 'index';
+@import '@/_vars';
+
+body {
+    background: $body-background;
+    min-width: 320px;
+    touch-action: pan-x pan-y;
+}
 
 #app {
     display: flex;
     flex: 1 0 auto;
     flex-direction: column;
     height: 100%;
-}
-
-body {
-    min-width:320px;
-    touch-action: pan-x pan-y;
 }
 
 .vue-content-placeholders {

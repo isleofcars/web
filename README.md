@@ -5,7 +5,6 @@
 Supposed to work on the *nix machine.
 
 
-
 ###### 1. Run these commands for build back-end:
 ```bash
 cd backend
