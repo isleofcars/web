@@ -7,6 +7,7 @@
 </template>
 
 <script>
+
 import TheHeader from '@/components/TheHeader';
 import TheFooter from '@/components/TheFooter';
 
@@ -41,6 +42,7 @@ body {
     background: $body-background;
     min-width: 320px;
     touch-action: pan-x pan-y;
+    margin: 0;
 }
 
 #app {

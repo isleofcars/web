@@ -19,6 +19,7 @@ export default {
     background-color: lightgrey;
     margin: 8px 0;
     border-radius: 8px;
+    display: none;
 
     &:hover {
         cursor: pointer;

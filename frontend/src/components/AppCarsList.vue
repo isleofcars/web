@@ -1,33 +1,26 @@
 <template>
-    <div>
-        <template
-            v-for="(car, index) in cars"
+    <masonry
+        :cols="{default: 6, 1000: 4, 700: 3, 400: 1}"
+        :gutter="{default: 'var(--margin-ads-default)', 700: '15px'}"
         >
-            <component
-                v-if="index > 0 && index % 10 === 0"
-                :key="`ad-${car.id}`"
-                :is="($store.getters.showMobile) ? 'AdMobileLeaderboard' : 'AdLeaderboard'"
-            />
-
+        <template
+            v-for="car in cars"
+        >
             <AppCarCard
                 :car="car"
                 :key="`car-${car.id}`"
             />
         </template>
-    </div>
+    </masonry>
 </template>
 
 <script>
 import AppCarCard from '@/components/AppCarCard';
-import AdLeaderboard from '@/components/Ads/AdLeaderboard';
-import AdMobileLeaderboard from '@/components/Ads/AdMobileLeaderboard';
 
 export default {
     name: 'AppCarsList',
     components: {
         AppCarCard,
-        AdLeaderboard,
-        AdMobileLeaderboard,
     },
     props: {
         cars: {

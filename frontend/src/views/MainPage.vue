@@ -19,7 +19,7 @@
                 </div>
                 <div v-else-if="resultsCount !== 0">
                     <AppCarsList
-                        class="cars-list"
+                        class=""
                         :cars="cars"
                     />
                     <infinite-loading
@@ -210,7 +210,7 @@ export default {
     },
     watch: {
         // eslint-disable-next-line func-names
-        '$route.query': function (val) {
+        '$route.query': function(val) {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
@@ -233,10 +233,10 @@ main {
 }
 
 section {
-    max-width: 920px;
-    margin-right: 20px;
+    // max-width: 920px;
+    // margin-right: 20px;
     width: 100%;
-    padding: 40px 0;
+    // padding: 40px 0;
     box-sizing: content-box;
 }
 
@@ -274,6 +274,9 @@ aside {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 1rem;
 }
 
 @media screen and (max-width: 1300px) {
