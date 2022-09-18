@@ -1,0 +1,51 @@
+<svg class="favicon" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        @font-face {
+            font-family: 'Chunk Five Print';
+            src: url('./chunkfive.print.ttf');
+            font-weight: 900;
+            font-style: normal;
+        }
+        svg.favicon {
+            width: 250px;
+        }
+        .favicon {
+            background: #FCF4E97C;
+            font-family: 'Chunk Five Print';
+            color: #29201A;
+        }
+        .favicon__text--1 {
+            font-size: 106px;
+            fill: #29201A;
+        }
+        .favicon__text--2 {
+            font-size: 100px;
+            fill: #29201A;
+        }
+        .favicon__text--3 {
+            font-size: 84px;
+            fill: #29201A;
+        }
+        @media (prefers-color-scheme: dark) {
+            .favicon {
+                background: #29201A;
+                font-family: 'Chunk Five Print';
+            }
+            .favicon__text--1 {
+                font-size: 106px;
+                fill: #FCF4E97C;
+            }
+            .favicon__text--2 {
+                font-size: 100px;
+                fill: #FCF4E97C;
+            }
+            .favicon__text--3 {
+                font-size: 84px;
+                fill: #FCF4E97C;
+            }
+        }
+    </style>
+    <text x="0" y="31%" class="favicon__text--1">ISLE</text>
+    <text x="21%" y="67%" class="favicon__text--2">OF</text>
+    <text x="0" y="98%" class="favicon__text--3">CARS</text>
+</svg>

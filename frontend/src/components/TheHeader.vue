@@ -5,7 +5,7 @@
                 <h1 class="header__logo" @click="clickLogo">
                     <router-link :to="{ name: 'Main Page' }" class="header__logo-link">
                         <svg viewBox="0 0 250 30" xmlns="http://www.w3.org/2000/svg">
-                            <text x="11%" y="80%" class="header__logo-name">ISLE OF CARS</text>
+                            <text x="10%" y="80%" class="header__logo-name">ISLE OF CARS</text>
                         </svg>
                     </router-link>
                 </h1>
@@ -33,7 +33,7 @@ export default {
 .header {
     // background-color: $white;
     // padding: 24px 0;
-    // margin: 10px 0;
+    margin: 10px 0;
 
     &__container {
         max-width: 920px;
@@ -45,9 +45,8 @@ export default {
 
     &__logo-link {
         // font-size: 110px;
-        color: $black;
+        color: $text-color;
         font-family: $logo-font;
-        color: $black;
         text-decoration: none;
     }
 }
@@ -64,11 +63,6 @@ export default {
     .header {
         width: 100%;
         justify-content: space-between;
-
-        &__logo {
-            width: auto;
-            // font-size: 28px;
-        }
     }
 }
 

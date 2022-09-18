@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="filters-container">
         <div class="filters" ref="filtersBlock">
             <div class="filters__row filters__row_header">
                 <div class="filters__column">
@@ -624,12 +624,18 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/_vars.scss';
+
+.filters-container {
+    display: none;
+}
+
 .filters {
     margin-bottom: 24px;
     padding: 20px;
     border-radius: 8px;
     background: $white;
     box-shadow: 0 3px 14px $card-shadow-color;
+
     &__row {
         display: flex;
         margin: 12px 0;
@@ -643,6 +649,7 @@ export default {
             display: none;
         }
     }
+
     &__column {
         width: 33.34%;
         display: flex;

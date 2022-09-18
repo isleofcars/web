@@ -2,14 +2,14 @@
     <main>
         <div class="container container-sm">
             <section>
-                <!-- <Filters
+                <Filters
                     :minAvailableYear="minYear"
                     :availableMakes="availableMakes"
                     :popularMakes="popularMakes"
                     :availableModels="availableModels"
                     :resultsCount="resultsCount"
                     @changeFilters="changeFilters"
-                /> -->
+                />
                 <div v-if="isLoading || requestsPending > 0">
                     <component
                         v-for="_ in perPage"
