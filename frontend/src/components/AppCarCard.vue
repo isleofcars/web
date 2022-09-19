@@ -1,44 +1,41 @@
 <template>
     <div class="card">
-        <a :href="car.url" class="card__link" target="_blank" rel="noreferrer">
+        <div class="card-m__gallery" v-if="photosLoaded">
+            <img
+                class="card__photo"
+                v-for="(photo, index) in previewPhotos"
+                :key="index"
+                :src="getPhoto(index)"
+            />
+        </div>
+        <div v-else class="card-m__gallery">
+            <content-placeholders :rounded="true">
+                <content-placeholders-img class="card__photo" />
+                <content-placeholders-img class="card__photo" />
+                <content-placeholders-img class="card__photo" />
+            </content-placeholders>
+        </div>
 
-            <div class="card-m__gallery" v-if="photosLoaded">
-                <img
-                    class="card-m__photo"
-                    v-for="(photo, index) in previewPhotos"
-                    :key="index"
-                    :src="getPhoto(index)"
-                />
+        <div class="card__description">
+            <p>
+                <span class="card__title">
+                    {{ title }}
+                    <span v-if="car !== 0"> {{ car.year }}</span>
+                </span>
+                <span>&nbsp;–&nbsp;</span>
+                <span>
+                    {{ power }} {{ transmission }} {{ mileage }} {{ drive }} {{ body }} {{ car.location }}
+                </span>
+            </p>
+            <div class="card__footer">
+                <a :href="car.url" class="card__link" target="_blank" rel="noreferrer">
+                    View on {{ car.source }}
+                </a>
+                <h3 class="card__price">
+                    {{ price }}
+                </h3>
             </div>
-            <div v-else class="card-m__gallery">
-                <content-placeholders :rounded="true">
-                    <content-placeholders-img class="card-m__photo" />
-                    <content-placeholders-img class="card-m__photo" />
-                    <content-placeholders-img class="card-m__photo" />
-                </content-placeholders>
-            </div>
-
-            <div class="card__description">
-                <p>
-                    <span class="card__title">
-                        {{ title }}
-                        <span v-if="car !== 0"> {{ car.year }}</span>
-                    </span>
-                    <span>&nbsp;–&nbsp;</span>
-                    <span>
-                        {{ power }} {{ transmission }} {{ mileage }} {{ drive }} {{ body }} {{ car.location }}
-                    </span>
-                </p>
-                <div class="card__footer">
-                    <span class="card__source">
-                        View on {{ car.source }}
-                    </span>
-                    <h3 class="card__price">
-                        {{ price }}
-                    </h3>
-                </div>
-            </div>
-        </a>
+        </div>
     </div>
 </template>
 
@@ -179,10 +176,6 @@ export default {
         // box-shadow: 0 5px 20px 0 $card-shadow-color;
     }
 
-    &:hover .card__title {
-        color: $accent-color;
-    }
-
     &__main {
         display: flex;
     }
@@ -220,8 +213,9 @@ export default {
     }
 
     &__link {
-        color: $text-color;
-        text-decoration: none;
+        // font-size: 12px;
+        color: grey;
+        font-size: 0.75rem;
     }
 
     &__column {
@@ -293,16 +287,21 @@ export default {
         left: 0;
     }
 
+    &__photo {
+        opacity: 0.9;
+        overflow: hidden;
+        scroll-snap-align: start;
+        // border-radius: 8px;
+        // margin-right: 2px;
+        max-width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
     &__footer {
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
-    }
-
-    &__source {
-        // font-size: 12px;
-        color: grey;
-        font-size: 0.75rem;
     }
 }
 
@@ -342,16 +341,6 @@ export default {
         -webkit-overflow-scrolling: touch;
         scroll-snap-type: x mandatory;
         // margin-top: 12px;
-    }
-
-    &__photo {
-        overflow: hidden;
-        scroll-snap-align: start;
-        // border-radius: 8px;
-        // margin-right: 2px;
-        max-width: 100%;
-        height: 100%;
-        object-fit: contain;
     }
 
     &__params {
