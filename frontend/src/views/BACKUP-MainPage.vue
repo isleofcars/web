@@ -1,10 +1,7 @@
 <template>
     <main>
         <div class="container container-sm">
-            <masonry
-                :cols="{default: 6, 1480: 5, 1280: 4, 1080: 3, 780: 2, 500: 1}"
-                :gutter="{default: 'var(--margin-main)'}"
-                >
+            <section>
                 <Filters
                     :minAvailableYear="minYear"
                     :availableMakes="availableMakes"
@@ -13,21 +10,29 @@
                     :resultsCount="resultsCount"
                     @changeFilters="changeFilters"
                     />
-                <template
-                    v-for="car in cars"
-                >
-                    <AppCarCard
-                        :car="car"
-                        :key="`car-${car.id}`"
-                    />
-                </template>
-                <infinite-loading
-                    v-if="cars.length"
-                    @infinite="infiniteHandler"
-                    >
-                    <div slot="no-results"></div>
-                </infinite-loading>
-            </masonry>
+                <div v-if="isLoading || requestsPending > 0">
+                    <component
+                        v-for="_ in perPage"
+                        :key="_"
+                        :is="($store.getters.showMobile) ? 'ContentPlaceholderCardMobile' : 'ContentPlaceholderCard'"
+                        />
+                </div>
+                <div v-else-if="resultsCount !== 0">
+                    <AppCarsList
+                        class=""
+                        :cars="cars"
+                        />
+                    <infinite-loading
+                        v-if="cars.length"
+                        @infinite="infiniteHandler"
+                        >
+                        <div slot="no-results"></div>
+                    </infinite-loading>
+                </div>
+                <p v-else class="no-results">
+                    Unfortunately we could not find any cars for you. Please try to change the filters.
+                </p>
+            </section>
             <CookiesWarning v-if="userAgreeCookies !== 'true'" />
         </div>
     </main>
@@ -37,7 +42,9 @@
 import qs from 'qs';
 import { isCancel } from 'axios';
 import InfiniteLoading from 'vue-infinite-loading';
-import AppCarCard from '@/components/AppCarCard';
+import AppCarsList from '@/components/AppCarsList';
+import ContentPlaceholderCard from '@/components/ContentPlaceholderCard';
+import ContentPlaceholderCardMobile from '@/components/ContentPlaceholderCardMobile';
 import CookiesWarning from '@/components/CookiesWarning';
 import { API } from '@/services/api';
 import Filters from '@/components/Filters';
@@ -46,7 +53,9 @@ export default {
     name: 'MainPage',
     components: {
         Filters,
-        AppCarCard,
+        AppCarsList,
+        ContentPlaceholderCard,
+        ContentPlaceholderCardMobile,
         CookiesWarning,
         InfiniteLoading,
     },
@@ -195,7 +204,6 @@ main {
     height: fit-content;
     display: flex;
     flex: 1 0 auto;
-    padding-right: var(--margin-main);
 }
 
 section {

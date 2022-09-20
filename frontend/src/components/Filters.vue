@@ -59,7 +59,7 @@
                         />
                         <span>–</span>
                         <BaseSelect
-                            :placeholder="new Date().getFullYear()"
+                            :placeholder="new Date().getFullYear() + ''"
                             :options="yearToOptions"
                             :selectedOption="filters.year_to"
                             @selectOption="(option) => filters.year_to = option"
@@ -629,10 +629,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/_vars.scss';
 
-.filters-container {
-    max-width: var(--filters-width);
-}
-
 .filters {
     margin-bottom: 24px;
     /* padding: 20px; */
@@ -660,7 +656,7 @@ export default {
     }
 
     tr td:first-child {
-        max-width: calc(var(--filters-width) * 0.4);
+        // max-width: calc(var(--filters-width) * 0.4);
         text-transform: capitalize;
         // font-size: 1.2rem;
         padding-right: calc(var(--margin-main) / 4);
@@ -671,9 +667,9 @@ export default {
     }
 
     tr td:last-child {
-        width: 100%;
+        // width: 100%;
         border-bottom: 1px solid var(--color--black);
-        width: calc(var(--filters-width) * 0.6);
+        // width: calc(var(--filters-width) * 0.6);
     }
 
     tr:last-child td:last-child {
@@ -732,16 +728,16 @@ export default {
     }
     &__item {
         &_large {
-            width: 100%;
+            // width: 100%;
         }
         &_small {
-            width: calc(50% - 5px);
+            // width: calc(50% - 5px);
             &:first-of-type {
-                margin-right: 10px;
+                // margin-right: 10px;
             }
         }
         &_grouped {
-            width: 50%;
+            // width: 50%;
         }
         &_align-right {
             justify-content: flex-end;

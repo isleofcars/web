@@ -332,7 +332,7 @@ export default {
     }
 
     &__gallery {
-        max-height: 65vw;
+        max-height: 50vh;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;

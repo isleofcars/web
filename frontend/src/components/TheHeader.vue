@@ -1,16 +1,12 @@
 <template>
-    <header class="header">
-        <div class="container">
-            <div class="header__container">
-                <h1 class="header__logo" @click="clickLogo">
-                    <router-link :to="{ name: 'Main Page' }" class="header__logo-link">
-                        <svg viewBox="0 0 250 30" xmlns="http://www.w3.org/2000/svg">
-                            <text x="0" y="80%" class="header__logo-name">ISLE OF CARS</text>
-                        </svg>
-                    </router-link>
-                </h1>
-            </div>
-        </div>
+    <header>
+        <h1 class="header__logo" @click="clickLogo">
+            <router-link :to="{ name: 'Main Page' }" class="header__logo-link">
+                <svg viewBox="0 0 201 21" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="99%" class="header__logo-name">ISLE OF CARS</text>
+                </svg>
+            </router-link>
+        </h1>
     </header>
 </template>
 
@@ -44,15 +40,14 @@ export default {
 <style lang="scss" scoped>
 @import '@/_vars';
 
-.header {
-    // margin: -20px 0 -50px 0;
+header {
+    padding: calc(var(--margin-main) - 9px) var(--margin-main);
+}
 
-    &__container {
-        max-width: 920px;
-        width: 100%;
-        // display: flex;
-        justify-content: space-between;
-        text-align: center;
+.header  {
+
+    &__logo {
+        max-width: calc(50vw - var(--margin-main) * 1.5);
     }
 
     &__logo-link {
