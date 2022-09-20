@@ -16,12 +16,26 @@
 
 <script>
 import eventBus from '@/eventBus';
+// import $ from 'jquery';
 
 export default {
     name: 'TheHeader',
+    created() {
+        window.addEventListener('scroll', this.handleScroll);
+    },
+    destroyed() {
+        window.removeEventListener('scroll', this.handleScroll);
+    },
     methods: {
         clickLogo() {
             eventBus.$emit('reset-filters');
+        },
+        handleScroll() {
+            // if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+            //     $('.header__container').css('transform', 'scale(0.5)');
+            // } else {
+            //     $('.header__container').css('transform', 'scale(1)');
+            // }
         },
     },
 };

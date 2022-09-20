@@ -1,21 +1,11 @@
 <template>
     <div class="location" v-click-outside="hideSearchBox">
         <div class="location__select" @click="toggleSearchBox">
-            <div class="location__select-icon">
-                <svg viewBox="0 0 24 24" id="geo">
-                    <g fill-rule="evenodd" fill="currentColor">
-                        <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2m0 2c4.411 0 8
-                    3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8"></path>
-                        <path d="M7 12l9-4-4 9-1-4z"></path>
-                    </g>
-                </svg>
-            </div>
             <div class="location__text">{{ text }}</div>
         </div>
         <div class="location__search" v-show="showSearchBox">
             <div class="location__search-box">
                 <div class="location__dropdown-input-container">
-                    <font-awesome-icon class="location__search-icon" :icon="['fas', 'search']"/>
                     <input
                         class="location__dropdown-input"
                         :placeholder="tempLocationInput || 'City or ZIP code'"
@@ -221,12 +211,15 @@ export default {
 @import '@/_vars.scss';
 .location {
     position: relative;
+    // margin: auto;
+
     &__select {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         font-size: 15px;
-        height: 44px;
-        color: #157ee1;
+        // height: 44px;
+        // color: #157ee1;
+
         &:hover {
             cursor: pointer;
         }
@@ -258,7 +251,7 @@ export default {
         padding: 0 12px;
         border: 1px solid rgba(0, 0, 0, .12);
         background: #f0f0f0;
-        border-radius: 8px;
+        // border-radius: 8px;
         &:focus-within, &:hover {
             border-color: #157ee1;
         }

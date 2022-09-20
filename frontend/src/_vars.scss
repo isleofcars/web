@@ -20,7 +20,9 @@
 }
 
 :root {
-  --margin-ads-default: 20px;
+  --margin-main: 20px;
+  --color--black: #29201A;
+  --filters-width: 20vw;
 }
 
 $body-background: #FCF4E97C;
@@ -45,3 +47,8 @@ $green: #35BA2BFF;
 $red: #C5172DFF;
 $yellow: #FDE90FFF;
 $brown: #964B00;
+
+// TODO: Put in in Filters.vue (does not work there)
+.filters__group  input {
+  text-align: center;
+}

@@ -26,7 +26,7 @@
                         v-if="cars.length"
                         @infinite="infiniteHandler"
                         >
-                        <div slot="no-results" class="no-more-records">No more records</div>
+                        <div slot="no-results"></div>
                     </infinite-loading>
                 </div>
                 <p v-else class="no-results">
@@ -212,6 +212,7 @@ section {
     width: 100%;
     // padding: 40px 0;
     box-sizing: content-box;
+    display: flex;
 }
 
 aside {

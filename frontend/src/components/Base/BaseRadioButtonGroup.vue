@@ -110,13 +110,13 @@ export default {
         }
 
         &:first-of-type {
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
+            // border-top-left-radius: 8px;
+            // border-bottom-left-radius: 8px;
         }
 
         &:last-of-type {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
+            // border-top-right-radius: 8px;
+            // border-bottom-right-radius: 8px;
         }
     }
 }

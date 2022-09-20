@@ -1,7 +1,7 @@
 <template>
     <masonry
         :cols="{default: 6, 1000: 4, 700: 3, 400: 1}"
-        :gutter="{default: 'var(--margin-ads-default)', 700: '15px'}"
+        :gutter="{default: 'var(--margin-main)', 700: '15px'}"
         >
         <template
             v-for="car in cars"

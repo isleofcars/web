@@ -167,7 +167,7 @@ export default {
     // padding: 16px;
     // background-color: $white;
     z-index: 1;
-    margin-bottom: var(--margin-ads-default);
+    margin-bottom: var(--margin-main);
 
     &:hover {
         z-index: 2;
@@ -210,6 +210,7 @@ export default {
         font-weight: 700;
         text-align: right;
         word-break: keep-all;
+        line-height: 1rem;
     }
 
     &__link {
