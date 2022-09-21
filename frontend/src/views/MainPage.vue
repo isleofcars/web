@@ -154,6 +154,8 @@ export default {
         },
         changeFilters(filters) {
             this.perPage = parseInt(filters.items_per_page, 10) || 50;
+            console.log('filters', filters);
+            console.log('this.filtersQueryString', this.filtersQueryString);
             this.filtersQueryString = qs.stringify(filters, { indices: false });
             this.pageClicked(1);
         },

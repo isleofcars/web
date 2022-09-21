@@ -99,7 +99,7 @@ export default {
                 return (this.location || this.userCity) + ((this.locationOffset !== 'Any' && this.locationOffset > 0)
                     ? ` + ${this.locationOffset} mi` : '');
             }
-            return 'Choose location';
+            return 'Any';
         },
     },
     methods: {
@@ -231,12 +231,12 @@ export default {
     }
     &__search {
         position: absolute;
-        right: 0;
-        width: 380px;
+        // right: 0;
+        width: 300px;
         background-color: #fff;
-        box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
-        border-radius: 8px;
-        overflow: hidden;
+        // box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
+        // border-radius: 8px;
+        // overflow: hidden;
         z-index: 120;
     }
     &__search-box {

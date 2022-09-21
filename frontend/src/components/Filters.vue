@@ -275,12 +275,9 @@
                 <svg class="filters__hint-arrow-icon" viewBox="0 0 24 24" id="arrow-rounded">
                     <path fill-rule="evenodd" fill="currentColor"
                           d="M15.483 9.297l-3.9 3.9-3.9-3.9a.99.99 0 00-1.4
-                    1.4l4.593 4.593a1 1 0 001.414 0l4.593-4.593a.99.99 0 10-1.4-1.4z"></path>
+                             1.4l4.593 4.593a1 1 0 001.414 0l4.593-4.593a.99.99 0 10-1.4-1.4z">
+                    </path>
                 </svg>
-                {{ appliedFiltersMessage }}
-            </div>
-            <div class="filters__hint-results-count" v-if="resultsCount">
-                {{ resultsCountFormatted }} results
             </div>
         </div>
     </div>
@@ -317,7 +314,7 @@ const DEFAULT_FILTERS = {
     longitude: 0,
     latitude: 0,
     ordering: 'Distance',
-    items_per_page: '25 per page',
+    items_per_page: '50 per page',
     location: '',
     distance: 'Any',
     color: [],
@@ -630,7 +627,7 @@ export default {
 @import '@/_vars.scss';
 
 .filters {
-    margin-bottom: 24px;
+    // margin-bottom: 24px;
     /* padding: 20px; */
     // border-radius: 8px;
     /* background: #FFF; */
@@ -643,10 +640,17 @@ export default {
     // justify-content: space-between;
     max-height: calc(100vh - 2 * var(--margin-main));
     // width: 100%;
-    border: 2px solid black;
+    // border: 2px solid black;
     // box-shadow: 5px 5px 0 black;
-    border: 2px solid black;
+    border: 1px solid black;
     padding: 0 10px 10px 10px;
+
+    &-container {
+        border: 2px solid black;
+        padding: 1px;
+        margin-bottom: var(--margin-main);
+        width: fit-content;
+    }
 
     tr td {
         vertical-align: bottom;
@@ -681,6 +685,7 @@ export default {
         justify-content: space-between;
     }
 
+    &__filter--location,
     &__filter--color,
     &__filter--mileage,
     &__filter--is-new,
@@ -768,37 +773,43 @@ export default {
         width: 100%;
         text-align: right;
     }
+
     &__hint-top {
-        top: 0;
-        font-size: 15px;
+        right: calc(var(--margin-main) * 1.5);
+        bottom: calc(var(--margin-main) / 2);
         position: fixed;
         z-index: 3000;
-        display: flex;
-        justify-content: space-between;
         align-items: center;
         overflow: hidden;
-        width: 920px;
-        height: 44px;
-        // border-radius: 0 0 8px 8px;
-        background: #fff;
-        box-shadow: 0 3px 14px rgb(0 0 0 / 12%);
-        transition: top .2s;
+        height: 50px;
+        background: var(--color--white);
+        transition: top 0.2s;
+        border: 2px solid var(--color--black);
+        width: 50px;
+        padding: 1px;
     }
+
     &__hint-title {
-        line-height: 44px;
         transition: color .3s ease;
+        margin: auto;
+        width: 100%;
+        text-align: center;
+        height: 100%;
+        border: 1px solid var(--color--black);
+
         &:hover {
             cursor: pointer;
             color: $accent-color;
         }
     }
+
     &__hint-arrow-icon {
-        width: 24px;
-        height: 24px;
-        margin: 0 8px 0 16px;
+        height: 100%;
+        width: 100%;
         vertical-align: middle;
-        transform: rotate(180deg) translateY(2px);
+        transform: rotate(180deg);
     }
+
     &__hint-results-count {
         line-height: 44px;
         margin: 0 24px 0 auto;
@@ -892,7 +903,7 @@ export default {
             justify-content: flex-start;
         }
         &__hint-top {
-            width: calc(100% - 10%);
+            // width: calc(100% - 10%);
         }
         &__below-selects {
             width: auto;
@@ -949,9 +960,9 @@ export default {
     .filters {
         padding: 20px 11px;
         &__hint-top {
-            flex-direction: column;
-            align-items: flex-start;
-            height: auto;
+            // flex-direction: column;
+            // align-items: flex-start;
+            // height: auto;
         }
         &__hint-results-count {
             margin: 0;

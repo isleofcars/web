@@ -12,7 +12,6 @@ class Api {
                 'Content-Type': 'application/json',
             },
         });
-
         this.getCarsRequest = axios.CancelToken.source();
     }
 
