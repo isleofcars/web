@@ -1,6 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 import environ
+import os
 
 # Initialize environment variables
 
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'app',
+    'account',
     # TODO: Add a report app
     'django_filters',
     'ipinfo_django',
@@ -76,7 +78,7 @@ ROOT_URLCONF = 'isleofcars.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],  # remove later
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

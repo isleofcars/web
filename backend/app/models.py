@@ -3,7 +3,7 @@ from django.db import models
 
 class CarAdvertisement(models.Model):
     source = models.CharField(max_length=255, null=True, blank=True)
-    url = models.CharField(max_length=255, null=True, blank=True)
+    url = models.CharField(max_length=255, default='', null=True, blank=True)
     is_new = models.BooleanField(null=True, blank=True)
     is_broken = models.BooleanField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
