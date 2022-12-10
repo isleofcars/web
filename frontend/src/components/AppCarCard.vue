@@ -295,7 +295,6 @@ export default {
         // border-radius: 8px;
         // margin-right: 2px;
         max-width: 100%;
-        height: 100%;
         object-fit: contain;
     }
 
