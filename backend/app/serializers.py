@@ -25,9 +25,11 @@ class CarAdSerializer(serializers.ModelSerializer):
             'mileage',
             'transmission',
             'drive',
-            'power'
+            'power',
+            'color'
         ]
 
 
 class MakesSerializer(serializers.Serializer):
     make = serializers.CharField(max_length=200)
+    count = serializers.IntegerField()

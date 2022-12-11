@@ -2,29 +2,28 @@ version: '3.7'
 services:
   backend:
     build: ./backend
-    ports:
-      - "127.0.0.1:8000:8000"
-    container_name: backend  
-    networks:
-      - wcw
+    container_name: backend
     volumes:
       - ./backend:/app
-    restart: always  
-  
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: always
+    networks:
+      - wcw
+
   frontend:
     build: ./frontend
     container_name: frontend
     networks:
       - wcw
     ports:
-      - "127.0.0.1:8080:8080"    
+      - "127.0.0.1:8080:8080"
     volumes:
-       - ./frontend:/app
-       - /app/node_modules
-    command: /bin/sh -c "yarn serve"   
+      - ./frontend:/app
+      - /app/node_modules
     restart: always
 
 networks:
-    wcw:
-      external: true
-      driver:  bridge    
+  wcw:
+    external: true
+    driver: bridge

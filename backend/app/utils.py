@@ -1,5 +1,4 @@
 from django.conf import settings
-from collections import Counter
 import ipinfo
 from django.db.models.expressions import RawSQL
 
@@ -67,7 +66,7 @@ def get_models_and_count(queryset, request):
     queryset - all car advertisements
     """
     # if make is chosen, it has to show the models and their count
-    if request.query_params.get("make", None):
+    if request.query_params.get('make', None):
         return queryset.values('model').annotate(count=Count('model')).order_by('-count')
     return []
 
@@ -77,25 +76,29 @@ def get_makes_and_count(request):
     Return the 50 most popular makes in alphabet order
     """
     query = """
-        SELECT 1 as id, make 
+        SELECT 1 as id, make, counter as count
         FROM ( 
             SELECT make, count(*) counter 
             FROM ads
             WHERE make <> '' 
             GROUP BY make 
-            ORDER BY counter 
-            desc LIMIT 50 
-            ) m 
+            ORDER BY counter desc
+            -- LIMIT 50 
+        ) m 
         ORDER BY make asc
     """
     return CarAdvertisement.objects.raw(query)
 
 
-def get_min_year():
-    """
-    Return the minimum year of all cars not considering 0 year
-    """
-    return int(CarAdvertisement.objects.exclude(year=0.0).order_by('year')[0].year)
+def get_min_year() -> int:
+    """Returns a minimum possible year."""
+    DEFAULT_MIN_YEAR = 1886
+    min_year = CarAdvertisement.objects.exclude(year=0.0).order_by('year')[0].year
+    try:
+        min_year = int(min_year)
+    except:
+        min_year = DEFAULT_MIN_YEAR
+    return min_year
 
 
 def get_locations_nearby_coords(queryset, latitude, longitude, max_distance, city):
@@ -105,11 +108,9 @@ def get_locations_nearby_coords(queryset, latitude, longitude, max_distance, cit
     objects from given city
     """
     # Great circle distance formula in miles
-    gcd_formula = "3440 * acos(least(greatest(\
-    cos(radians(%s)) * cos(radians(latitude)) \
-    * cos(radians(longitude) - radians(%s)) + \
-    sin(radians(%s)) * sin(radians(latitude)) \
-    , -1), 1))"
+    gcd_formula = """
+    3440 * acos(least(greatest(cos(radians(%s)) * cos(radians(latitude))
+    * cos(radians(longitude) - radians(%s)) + sin(radians(%s)) * sin(radians(latitude)), -1), 1))"""
     distance_raw_sql = RawSQL(
         gcd_formula,
         (latitude, longitude, latitude)
@@ -120,17 +121,3 @@ def get_locations_nearby_coords(queryset, latitude, longitude, max_distance, cit
     qs2 = queryset.filter(location__icontains=city).annotate(distance=distance_raw_sql)
     qs = qs1 | qs2
     return qs
-
-
-# def get_distance_between_coords(lt1, lg1, lt2, lg2):
-#     """ Distance
-#     Return squared hypotenuse between two coords in degrees,
-#     Used only for testing!
-#     lt1, lg1 - first point coords
-#     lt2, lg2 - second point coords
-#     """
-#     # coalesce(ACOS(SIN(latitude * 3.14159 / 180) * SIN({latitude} * 3.14159 / 180) + COS(latitude * 3.14159 / 180) * COS(
-#     #     {latitude} * 3.14159 / 180) * COS((longitude - {longitude}) * 3.14159 / 180)), 99999)
-#
-#
-#     return (lt1-lt2)**2 + (lg1-lg2)**2

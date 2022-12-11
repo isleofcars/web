@@ -1,7 +1,7 @@
 // Large Skyscraper ad template for AdSense (300x600)
 <template>
     <div class="ad">
-        <p class="ad__text">Your ad here</p>
+        <p class="ad__text"></p>
     </div>
 </template>
 
@@ -13,8 +13,8 @@ export default {
 
 <style lang="scss" scoped>
 .ad {
-    width: 300px;
-    height: 600px;
+    width: 0px;
+    height: 0px;
     position: sticky;
     top: 20px;
     right: 0;

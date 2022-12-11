@@ -3,52 +3,60 @@ from rest_framework.filters import OrderingFilter
 from django.db.models import FloatField, Value
 
 from .models import CarAdvertisement
-from .services import get_ip_details, get_client_ip, get_locations_nearby_coords
+from .utils import get_ip_details, get_client_ip, get_locations_nearby_coords
 
 import logging
 logger = logging.getLogger(__name__)
 
 
-DRIVE_CHOICES = (
-    ("AWD", "AWD"),
-    ("RWD", "RWD"),
-    ("FWD", "FWD"),
-)
+DRIVE_CHOICES = [(x, x) for x in (
+    'AWD', 'RWD', 'FWD'
+)]
 
-TRANSMISSION_CHOICES = (
-    ("Automatic", "Automatic"),
-    ("Manual", "Manual"),
-)
+TRANSMISSION_CHOICES = [(x, x) for x in (
+    'Automatic', 'Manual'
+)]
 
-BODY_CHOICES = (
-    ("Hatchback", "Hatchback"),
-    ("Coupe", "Coupe"),
-    ("Convertible", "Convertible"),
-    ("Sedan", "Sedan"),
-    ("SUV", "SUV"),
-    ("Pickup Truck", "Pickup Truck"),
-    ("Commercial", "Commercial"),
-    ("Minivan", "Minivan"),
-    ("Wagon", "Wagon"),
+BODY_CHOICES = [(x, x) for x in (
+    'Hatchback',
+    'Coupe',
+    'Convertible',
+    'Sedan',
+    'SUV',
+    'Pickup',
+    'Commercial',
+    'Minivan',
+    'Wagon'
+)]
+
+COLOR_CHOICES = (
+    ('black', 'black'),
+    ('white', 'white'),
+    ('gray', 'gray'),
+    ('blue', 'blue'),
+    ('red', 'red'),
+    ('green', 'green'),
+    ('yellow', 'yellow'),
+    ('orange', 'orange'),
+    ('brown', 'brown'),
 )
 
 
 class CarAdFilter(filters.FilterSet):
-    """
-    Filter not considering city and distance
-    """
+    """Filter with no city and distance."""
     price_from = filters.NumberFilter(field_name="price", method="price_from_exclude_zero")
     price_to = filters.NumberFilter(field_name="price", method="price_to_exclude_zero")
     year_from = filters.NumberFilter(field_name="year", lookup_expr='gte')
     year_to = filters.NumberFilter(field_name="year", lookup_expr='lte')
     mileage_from = filters.NumberFilter(field_name="mileage", lookup_expr='gte')
     mileage_to = filters.NumberFilter(field_name="mileage", lookup_expr='lte')
-    power_from = filters.NumberFilter(field_name="power", lookup_expr='gte')
-    power_to = filters.NumberFilter(field_name="power", lookup_expr='lte')
+    power_from = filters.NumberFilter(field_name="power", method="power_from_exclude_zero")
+    power_to = filters.NumberFilter(field_name="power", method="power_to_exclude_zero")
     drive = filters.MultipleChoiceFilter(choices=DRIVE_CHOICES)
     transmission = filters.ChoiceFilter(choices=TRANSMISSION_CHOICES)
     body = filters.MultipleChoiceFilter(choices=BODY_CHOICES)
     only_with_photo = filters.BooleanFilter(field_name="photos", method="has_photos", label="Only with photo")
+    color = filters.MultipleChoiceFilter(choices=COLOR_CHOICES, lookup_expr='icontains')
 
     def price_from_exclude_zero(self, queryset, name, value):
         # filters price from the value, excluding zero
@@ -58,9 +66,17 @@ class CarAdFilter(filters.FilterSet):
         # filters price to the value, excluding zero
         return queryset.exclude(price=0).filter(price__lte=value)
 
+    def power_from_exclude_zero(self, queryset, name, value):
+        # filters power from the value, excluding zero
+        return queryset.exclude(power=0).filter(power__gte=value)
+
+    def power_to_exclude_zero(self, queryset, name, value):
+        # filters power to the value, excluding zero
+        return queryset.exclude(power=0).filter(power__lte=value)
+
     def has_photos(self, queryset, name, value):
-        # Excludes objects without photos for only_with_photos field
-        return queryset.exclude(photos__exact=[]) if value else queryset
+        """Excludes ads without photos for only_with_photos field."""
+        return queryset.exclude(photos__isnull=True).exclude(photos__exact=[]) if value else queryset
 
     class Meta:
         model = CarAdvertisement
@@ -68,10 +84,8 @@ class CarAdFilter(filters.FilterSet):
 
 
 class DistanceOrderingFilter(OrderingFilter):
-    """
-    Order queryset by given params or by distance
-    and filter by city
-    """
+    """Orders queryset by given params or by distance
+    and filter by city."""
 
     def filter_queryset(self, request, queryset, view):
         ordering = self.get_ordering(request, queryset, view)

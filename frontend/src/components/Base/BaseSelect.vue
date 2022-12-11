@@ -141,6 +141,10 @@ export default {
             type: String,
             default: '',
         },
+        strictFilter: {
+            type: Boolean,
+            default: false,
+        },
     },
     mounted() {
         eventBus.$on('clear-form', this.resetInput);
@@ -169,9 +173,12 @@ export default {
             if (this.userChoseOption && this.inputValue === this.selectedOption) {
                 return this.options;
             }
+            // console.log(this.options);
             // if user entered sth, we should autocomplete and suggest filtered options
-            return this.options.filter((option) => option.toLowerCase()
-                .indexOf(this.inputValue.toLowerCase()) !== -1);
+            if (this.strictFilter) {
+                return this.options.filter((option) => option.toLowerCase().startsWith(this.inputValue.toLowerCase()));
+            }
+            return this.options.filter((option) => option.toLowerCase().indexOf(this.inputValue.toLowerCase()) !== -1);
         },
         inputPlaceholder() {
             return this.tempInputValue || this.placeholder;
@@ -433,7 +440,7 @@ export default {
         border-radius: 8px;
         background-color: $white;
         box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
-        max-height: 200px;
+        max-height: 250px;
         overflow: auto;
 
         &:hover {

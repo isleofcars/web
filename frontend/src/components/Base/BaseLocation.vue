@@ -244,7 +244,7 @@ export default {
         box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
         border-radius: 8px;
         overflow: hidden;
-        z-index: 101;
+        z-index: 120;
     }
     &__search-box {
         padding: 20px 15px;

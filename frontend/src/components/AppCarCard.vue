@@ -4,7 +4,7 @@
             <a :href="car.url" class="card__link" target="_blank" rel="noreferrer">
                 <div class="card-m__header">
                     <p class="card-m__title">
-                        {{ title }} <span v-if="car !== 0">, {{ car.year }}</span><span v-else>-</span>
+                        {{ title }}<span v-if="car !== 0">, {{ car.year }}</span><span v-else>-</span>
                     </p>
                     <h3 class="card-m__price">
                         {{ price }}
@@ -145,7 +145,7 @@ export default {
     },
     computed: {
         title() {
-            if (this.car.make !== 'Unknown' && this.present(this.car.model)) {
+            if (this.car.make && this.car.model) {
                 return `${this.car.make} ${this.car.model}`;
             }
             return this.car.title;
@@ -191,10 +191,12 @@ export default {
             return this.car.body;
         },
         previewPhotos() {
-            return this.car.photos.slice(0, 5);
+            if (this.car.photos) return this.car.photos.slice(0, 5);
+            return [];
         },
         totalPhotos() {
-            return this.car.photos.length;
+            if (this.car.photos) return this.car.photos.length;
+            return 0;
         },
         placeholderPhotoUrl() {
             return `https://via.placeholder.com/200x150?text=${this.title}`;
@@ -424,7 +426,7 @@ export default {
     }
 
     &__gallery {
-        height: 65vw;
+        max-height: 65vw;
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
@@ -439,11 +441,10 @@ export default {
     &__photo {
         overflow: hidden;
         scroll-snap-align: start;
-        flex-shrink: 0;
         border-radius: 8px;
         margin-right: 2px;
-        width: 280px;
-        height: 65vw;
+        max-width: 100%;
+        height: 100%;
         object-fit: contain;
     }
 
@@ -486,19 +487,6 @@ export default {
     &__location, &__source {
         font-size: 12px;
         color: grey;
-    }
-}
-
-@media screen and (orientation: landscape) {
-    .card-m {
-        &__gallery {
-            height: 65vh;
-        }
-
-        &__photo {
-            width: 250px;
-            height: 65vh;
-        }
     }
 }
 </style>

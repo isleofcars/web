@@ -31,7 +31,8 @@
                     <BaseSelect
                         class="filters__item_large"
                         placeholder="Make"
-                        :options="availableMakes"
+                        :strictFilter="true"
+                        :options="availableMakes.map((item) => item.make).sort()"
                         :selectedOption="filters.make"
                         @selectOption="(option) => {filters.model = ''; filters.make = option;}"
                         @resetSelectedOptions="filters.make = ''; isModelReset = false;"
@@ -43,6 +44,7 @@
                     <BaseSelect
                         class="filters__item_large"
                         :placeholder="'Model'"
+                        :strictFilter="true"
                         :options="modelsList"
                         :selectedOption="filters.model"
                         @selectOption="(option) => {this.isModelReset = false;return filters.model = option;   } "
@@ -52,8 +54,8 @@
                     />
                 </div>
 
-                <div class="filters__column filters__column_colours-laptop">
-                    <BaseColour />
+                <div class="filters__column filters__column_colors-laptop">
+                    <BaseColor @changeColors="changeColors"/>
                 </div>
             </div>
             <div class="filters__row">
@@ -182,26 +184,19 @@
                 </div>
             </div>
 
-            <div class="filters__row filters__row_colours-phone">
+            <div class="filters__row filters__row_colors-phone">
                 <div class="filters__column">
-                    <BaseColour />
+                    <BaseColor />
                 </div>
             </div>
 
             <div class="filters__row filters__row_last">
+                <div class="filters__column"></div>
+                <div class="filters__column"></div>
                 <div class="filters__column">
                     <div class="filters__reset-filters" v-if="appliedFiltersCount" @click="resetFilters">
                         Reset filters
                         <font-awesome-icon class="filters__reset-filters-icon" :icon="['fas', 'times']"/>
-                    </div>
-                </div>
-                <div class="filters__column"></div>
-                <div class="filters__column">
-                    <div class="filters__results-count" v-if="resultsCount > 0">
-                        {{ resultsCountFormatted }} results
-                    </div>
-                    <div class="filters__results-count" v-else-if="resultsCount === 0">
-                        No results
                     </div>
                 </div>
             </div>
@@ -224,10 +219,27 @@
             </div>
         </div>
 
+        <div class="filters__available-models" v-if="makesList.length && !filters.make ">
+            <div class="filters__models-items">
+                <div
+                    class="filters__models-item"
+                    v-for="make in mostPopularMakes"
+                    :key="make.make"
+                >
+                    <div class="filters__models-item-name" @click="filters.make = make.make">
+                        {{ make.make }}
+                    </div>
+                    <div class="filters__models-item-count">
+                        {{ make.count }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="filters__below-selects">
             <BaseSelect
                 v-show="!$store.getters.showMobile"
-                class="filters__item_small"
+                class="filters__item_small filters__per-page"
                 placeholder="25 per page"
                 :options="itemsPerPageOptions"
                 :selectedOption="filters.items_per_page"
@@ -244,6 +256,14 @@
                 hideResetOption
                 valuePrependText="Sort by "
             />
+
+            <div class="filters__results-count" v-if="resultsCount > 0">
+                {{ resultsCountFormatted }} results
+            </div>
+            <div class="filters__results-count" v-else-if="resultsCount === 0">
+                No results
+            </div>
+
         </div>
 
         <div class="filters__hint-top" v-if="showHintTop">
@@ -268,7 +288,7 @@ import BaseCheckbox from '@/components/Base/BaseCheckbox';
 import BaseInput from '@/components/Base/BaseInput';
 import BaseLocation from '@/components/Base/BaseLocation';
 import BaseRadioButtonGroup from '@/components/Base/BaseRadioButtonGroup';
-import BaseColour from '@/components/Base/BaseColour';
+import BaseColor from '@/components/Base/BaseColor';
 import eventBus from '@/eventBus';
 import { API } from '@/services/api';
 import { getStatesCities } from '@/utils/cities';
@@ -292,10 +312,11 @@ const DEFAULT_FILTERS = {
     power_to: '',
     longitude: 0,
     latitude: 0,
-    ordering: 'Distance (nearest first)',
+    ordering: 'Distance, nearest first',
     items_per_page: '25 per page',
     location: '',
     distance: 'Any',
+    color: [],
 };
 export default {
     name: 'Filters',
@@ -305,14 +326,18 @@ export default {
         BaseCheckbox,
         BaseSelect,
         BaseRadioButtonGroup,
-        BaseColour,
+        BaseColor,
     },
     props: {
         minAvailableYear: {
             type: Number,
-            default: 2000,
+            default: 1886,
         },
         availableMakes: {
+            type: Array,
+            default: () => [],
+        },
+        popularMakes: {
             type: Array,
             default: () => [],
         },
@@ -351,11 +376,11 @@ export default {
                 'Wagon',
             ],
             sortByOptions: [
-                'Distance (nearest first)',
-                'Price: low -> high',
-                'Price: high -> low',
-                'Year: low -> high',
-                'Year: high -> low',
+                'Distance, nearest first',
+                'Price, lowest first',
+                'Price, highest first',
+                'Year, lowest first',
+                'Year, highest first',
             ],
             itemsPerPageOptions: [
                 '25 per page',
@@ -386,9 +411,16 @@ export default {
             }
             return this.yearsRange.filter((year) => parseInt(year, 10) >= this.filters.year_from);
         },
+        makesList() {
+            let makes = this.popularMakes.map((item) => item.model);
+            makes = makes.filter((item) => ((item) ? item.length > 0 : false));
+            return makes;
+        },
         modelsList() {
-            const map = this.availableModels.map((item) => item.model);
-            return map.filter((item) => ((item !== null) ? item.length > 0 : false));
+            let models = this.availableModels.map((item) => item.model);
+            models = models.filter((item) => ((item) ? item.length > 0 : false));
+            models.sort();
+            return models;
         },
         isNewSelectedOption() {
             return {
@@ -458,6 +490,15 @@ export default {
         appliedFiltersCount() {
             return this.appliedFiltersInfo[1];
         },
+        mostPopularMakes() {
+            const tempMakes = this.popularMakes;
+            for (let i = 0; i < tempMakes.length; i++) {
+                if (tempMakes[i].make === 'Unknown') {
+                    tempMakes.splice(i, 1);
+                }
+            }
+            return tempMakes.sort((first, second) => second.count - first.count).slice(1, 17);
+        },
     },
     created() {
         window.addEventListener('scroll', this.onScroll);
@@ -518,17 +559,20 @@ export default {
         changeDistance(distance) {
             this.filters.distance = distance;
         },
+        changeColors(colors) {
+            this.filters.color = colors;
+        },
         resetFilters() {
             this.filters = { ...DEFAULT_FILTERS };
             eventBus.$emit('clear-form');
         },
         sortByForQuery(param) {
             return {
-                'Distance (nearest first)': 'distance',
-                'Price: low -> high': 'price',
-                'Price: high -> low': '-price',
-                'Year: low -> high': 'year',
-                'Year: high -> low': '-year',
+                'Distance, nearest first': 'distance',
+                'Price, lowest first': 'price',
+                'Price, highest first': '-price',
+                'Year, lowest first': 'year',
+                'Year, highest first': '-year',
             }[param];
         },
         selectIsNew(option) {
@@ -595,7 +639,7 @@ export default {
         &_last {
             margin-bottom: 0;
         }
-        &_colours-phone {
+        &_colors-phone {
             display: none;
         }
     }
@@ -636,6 +680,7 @@ export default {
         font-size: 15px;
         line-height: 24px;
         display: flex;
+        margin-left: auto;
         justify-content: center;
         align-items: center;
         transition: color .3s ease;
@@ -651,8 +696,9 @@ export default {
     &__results-count {
         font-size: 15px;
         color: grey;
-        margin-left: auto;
-        margin-right: 0;
+        margin: 10px 35px 0 auto;
+        width: 100%;
+        text-align: right;
     }
     &__hint-top {
         top: 0;
@@ -691,9 +737,9 @@ export default {
         color: grey;
     }
     &__below-selects {
-        width: 50%;
+        width: 100%;
         display: flex;
-        margin: 0 0 16px auto;
+        margin: 0 auto 16px 16px;
     }
     &__available-models {
         padding: 24px 16px 9px;
@@ -740,11 +786,15 @@ export default {
             margin-right: 8px;
             margin-bottom: 4px;
             content: "";
-            border-bottom: 1px solid #e0e0e0
+            border-bottom: 1px solid #e0e0e0;
         }
+    }
+    &__per-page {
+        max-width: 174px;
     }
     &__sort-by {
         min-width: 245px;
+        max-width: 350px;
     }
 }
 @media screen and (max-width: 1000px) {
@@ -788,15 +838,18 @@ export default {
         &__models-item {
             width: auto;
         }
+        &__results-count {
+            margin: 10px 2px 0 auto;
+        }
     }
 }
 
 @media screen and (max-width: 920px) {
     .filters {
-        &__row_colours-phone {
+        &__row_colors-phone {
             display: flex;
         }
-        &__column_colours-laptop {
+        &__column_colors-laptop {
             display: none;
         }
     }

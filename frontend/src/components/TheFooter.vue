@@ -1,18 +1,20 @@
 <template>
     <footer class="footer">
-        <div class="footer__content">
-            <ul class="footer__section">
-                <li>
-                    We gathered all cars for sale in the US market to allow you easily find the best car to buy.
-                </li>
-            </ul>
-            <hr class="footer__section-divider"/>
-            <ul class="footer__section">
-                <li>
-                    All rights belong to their respective owners.
-                    WholeCarsMarket is not responsible for the content published here.
-                </li>
-            </ul>
+        <div class="container container-sm">
+            <div class="footer__content">
+                <ul class="footer__section">
+                    <li>
+                        We gathered all cars for sale in the US market to allow you easily find the best car to buy.
+                    </li>
+                </ul>
+                <hr class="footer__section-divider"/>
+                <ul class="footer__section">
+                    <li>
+                        All rights belong to their respective owners.
+                        Isle of Cars is not responsible for the content published here.
+                    </li>
+                </ul>
+            </div>
         </div>
     </footer>
 </template>
@@ -61,6 +63,12 @@ export default {
 
     &__icon {
         margin-right: 12px;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    .footer__content {
+        margin: 0 auto;
     }
 }
 
