@@ -9,6 +9,15 @@ header .logo {
     font-size: 50px;
 }
 
+.ad {
+    border: 1px solid black;
+    margin: 0 0 1rem 0;
+}
+
+.pagination {
+    display: none;
+}
+
 secret {
     display: none;
 }

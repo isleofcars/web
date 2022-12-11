@@ -12,7 +12,7 @@
     {% for ad in ads %}
       <div class="ad">
         <a href="{% url 'ad_page' ad.id %}">
-          <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}" style="max-width: 30vw;" loading="lazy">
+          <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}" style="max-width: 350px;" loading="lazy">
           <div>{{ ad.title }}</div>
         </a>
       </div>

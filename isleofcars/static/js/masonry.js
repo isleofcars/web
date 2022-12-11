@@ -3,7 +3,9 @@ $(document).ready(() => {
         $('.ads').masonry({
             // options
             itemSelector: '.ad',
-            columnWidth: 200
+            columnWidth: 200,
+            gutter: 0,
+            horizontalOrder: true
         });
     });
     $(window).scroll(function () { 
@@ -15,6 +17,7 @@ $(document).ready(() => {
                 success : function(data) {     
                     let adsNew = $(data).find('.ad');
                     $('.ads').append(adsNew).masonry("appended", adsNew, true);
+                    $('.pagination').empty().append($(data).find('> *'));
                 },
             })
         }
