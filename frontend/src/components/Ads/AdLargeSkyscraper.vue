@@ -20,6 +20,7 @@ export default {
     right: 0;
     background-color: lightgrey;
     flex-shrink: 0;
+    display: none;
 
     &:hover {
         cursor: pointer;

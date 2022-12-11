@@ -5,7 +5,7 @@
                 'select-container__focused': isInputFocused,
                  'select-container__opened': showOptions,
                  'select-container__input_hover': isInputHover,
-                'select-container__selected': !!selectedOption ,
+                'select-container__selected': !!selectedOption,
         }]"
         v-click-outside="clickOutside"
     >
@@ -36,25 +36,10 @@
                     @keypress="isNumber"
                     ref="input"
                 />
-
-                <span
-                    class="select-container__arrow"
-                    :class="{'select-container__arrow_disabled': disabled}"
-                    v-if="showChevron"
-                >
-                    <font-awesome-icon :icon="['fas', 'chevron-down']"/>
-                </span>
             </template>
             <template v-else>
                 <span class="select-container__value">
                     {{ `${this.valuePrependText}${this.selectedOption}` || placeholder }}
-                </span>
-
-                <span class="select-container__arrow rotate">
-                    <font-awesome-icon
-                        :class="{'rotate': true, 'rotate-up': showOptions}"
-                        :icon="['fas', 'chevron-down']"
-                    />
                 </span>
             </template>
         </div>
@@ -341,51 +326,64 @@ export default {
 .select-container {
     position: relative;
     font-size: 15px;
+    display: flex;
+
     &:last-child {
-        margin-left: -1px;
+        // margin-left: -1px;
     }
+
     &:hover {
         z-index: 120;
     }
+
     &__focused {
         z-index: 110;
+        // box-shadow: 1.5px 1.5px 0px rgb(0 0 0);
+
         &:hover {
             z-index: 115;
         }
     }
     &__select {
-        height: 36px;
-        background-color: $white;
-        border: 1px solid rgba(0, 0, 0, .12);
-        padding-left: 8px;
+        // height: 36px;
+        // background-color: $white;
+        // border: 1px solid rgba(0, 0, 0, .12);
+        // padding-left: 8px;
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         z-index: 110;
+        // background: linear-gradient(0deg, rgba(212,212,212,1) 0%, rgba(255,255,255,1) 50%, rgba(212,212,212,1) 100%);
+
         &:hover {
             z-index: 15;
         }
+
         &__opened:hover {
             z-index: 110;
+            // box-shadow: 1.5px 1.5px 0px rgb(0 0 0);
         }
+
         &:hover {
-            border: 1px solid #157ee1;
+            // border: 1px solid #157ee1;
             cursor: pointer;
             z-index: 110;
+            // box-shadow: 1.5px 1.5px 0px rgb(0 0 0);
         }
+
         &ed {
             z-index: 112;
         }
         &_borders-all {
-            border-radius: 8px;
+            // border-radius: 8px;
         }
         &_borders-left {
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
+            // border-top-left-radius: 8px;
+            // border-bottom-left-radius: 8px;
         }
         &_borders-right {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
+            // border-top-right-radius: 8px;
+            // border-bottom-right-radius: 8px;
         }
     }
     &__selected {
@@ -393,6 +391,8 @@ export default {
     }
     &__opened {
         z-index: 114;
+        // box-shadow: 1.5px 1.5px 0px rgb(0 0 0);
+
         &:hover {
             z-index: 115;
         }
@@ -410,15 +410,22 @@ export default {
         overflow: hidden;
     }
     &_disabled {
-        border-color: rgba(0, 0, 0, .08);
+        // border-color: rgba(0, 0, 0, .08);
+
         &:hover {
             cursor: default;
-            border: 1px solid rgba(0, 0, 0, .08);
+            // border: 1px solid rgba(0, 0, 0, .08);
+            // box-shadow: 2px 2px 0px rgb(0 0 0);
         }
     }
-    &__has-chosen-value {
-        border: 1px solid rgba(21, 126, 225, .5);
-        background-color: #eef4fa;
+    &__has-chosen-value:not(.select-container__select_opened) {
+        // border: 1px solid rgba(21, 126, 225, .5);
+        background-color: #ffe2a9;
+
+        & * {
+            font-weight: bold;
+        }
+
         .select-container__value {
             color: $text-color;
         }
@@ -436,12 +443,15 @@ export default {
         position: absolute;
         width: 100%;
         z-index: 1500;
-        margin-top: 10px;
-        border-radius: 8px;
+        // margin-top: 10px;
+        // border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, .12);
         background-color: $white;
-        box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
+        // box-shadow: 0 10px 30px 0 rgb(0 0 0 / 10%);
+        box-shadow: 1.5px 1.5px 0px rgb(0 0 0);
         max-height: 250px;
         overflow: auto;
+        border-top: none;
 
         &:hover {
             .select-container {
@@ -457,6 +467,8 @@ export default {
         list-style-type: none;
         color: $text-color;
         padding-left: 8px;
+        margin: -10px 0;
+
         &:hover {
             cursor: pointer;
             color: $white;
@@ -490,13 +502,14 @@ export default {
     outline: none;
     display: block;
     width: 100%;
-    height: 100%;
+    // height: 100%;
     font-family: inherit;
     font-size: 15px;
     border: transparent;
-    margin-right: 8px;
+    // margin-right: 8px;
     background-color: inherit;
     color: #000;
+
     &:disabled::placeholder {
         color: rgba(0, 0, 0, .24);
     }

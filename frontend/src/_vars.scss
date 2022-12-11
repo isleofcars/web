@@ -5,6 +5,28 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Chunk Five Print';
+  src: url('~@/assets/fonts/chunkfive/chunkfive.print.ttf');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Chunk Five Regular';
+  src: url('~@/assets/fonts/chunkfive/chunkfive.regular.ttf');
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root {
+  --margin-main: 20px;
+  --color--black: #29201A;
+  --color--white: #FCF4E97C;
+  --filters-width: 20vw;
+}
+
+$body-background: #FCF4E97C;
 $accent-color: #DB3727;
 $footer-color: #212121;
 $footer-text-color: #929292;
@@ -13,12 +35,12 @@ $card-shadow-color: rgb(0 0 0 / 10%);
 $card-shadow-color: rgb(0 0 0 / 12%);
 $white: #FFF;
 $whitish: rgba(255, 255, 255, 0.7);
-$text-color: #000;
+$text-color: #29201A;
 $secondary-text-color: grey;
-$logo-font: 'Gerbera Black';
+$logo-font: 'Chunk Five Print';
 $default-font-size: 14px;
 $default-font-weight: 400;
-
+$black: #000;
 $gray: #9C9999FF;
 $blue: #334DFFFF;
 $orange: #fc8029;
@@ -26,3 +48,8 @@ $green: #35BA2BFF;
 $red: #C5172DFF;
 $yellow: #FDE90FFF;
 $brown: #964B00;
+
+// TODO: Put in in Filters.vue (does not work there)
+.filters__group  input {
+  text-align: center;
+}

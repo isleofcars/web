@@ -58,8 +58,8 @@ export default {
 
     .color {
         display: inline-block;
-        width: 20px;
-        height: 20px;
+        width: 13px;
+        height: 13px;
         border-radius: 50%;
         cursor: pointer;
         margin-right: 8px;

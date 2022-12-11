@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VueContentPlaceholders from 'vue-content-placeholders';
 import VueSlider from 'vue-slider-component';
 import Paginate from 'vuejs-paginate';
+import VueMasonry from 'vue-masonry-css';
 
 import App from './App';
 import router from './router';
@@ -48,6 +49,7 @@ Vue.directive('click-outside', {
         document.body.removeEventListener('click', el.clickOutsideEvent);
     },
 });
+Vue.use(VueMasonry);
 
 new Vue({
     router,

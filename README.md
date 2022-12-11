@@ -5,7 +5,6 @@
 Supposed to work on the *nix machine.
 
 
-
 ###### 1. Run these commands for build back-end:
 ```bash
 cd backend
@@ -42,7 +41,14 @@ docker volume rm $(docker volume ls -qf dangling=true)
 
 ## TODO:
 
+- [ ] Show filters
+- [ ] Make filters work properly
+- [ ] Add images gallery on preview + on photo click
+- [ ] Show number of cars found in the header
+- [ ] Show normal placeholders on load
 - [ ] Change the domain to isleofcars.com
 - [ ] Add reporting app
 - [ ] Add test environment (test db + test.isleofcars.com domain)
 - [ ] Develop style rules
+
+- 

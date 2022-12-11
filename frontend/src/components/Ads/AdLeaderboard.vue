@@ -18,6 +18,7 @@ export default {
     height: 90px;
     position: relative;
     background-color: lightgrey;
+    display: none;
 
     &:hover {
         cursor: pointer;
