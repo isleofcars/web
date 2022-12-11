@@ -1,22 +1,18 @@
-from datetime import datetime
-from pathlib import Path
-import environ
 import os
+from datetime import datetime
 
-# Initialize environment variables
-
-env = environ.Env()
-
-environ.Env.read_env()
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv_path = os.path.join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,21 +28,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'rest_framework',
-    'app',
-    'account',
-    # TODO: Add a report app
     'django_filters',
     'ipinfo_django',
-
-    'corsheaders'
+    'corsheaders',
+    # 'isleofcars',
+    'app'
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -59,7 +46,7 @@ MIDDLEWARE = [
     'ipinfo_django.middleware.IPinfo'
 ]
 
-IPINFO_TOKEN = env('IPINFO_TOKEN')
+IPINFO_TOKEN = os.environ.get('IPINFO_TOKEN')
 IPINFO_SETTINGS = {
     'cache_options': {
         'ttl': 30,
@@ -95,26 +82,14 @@ WSGI_APPLICATION = 'isleofcars.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'web',
-#         'USER': 'admin',
-#         'PASSWORD': env('DATABASE_PASSWORD'),
-#         'HOST': env('DATABASE_HOST'),
-#         'PORT': 3306,
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DB_WEB_NAME'),
-        'USER': env('DB_WEB_USERNAME'),
-        'PASSWORD': env('DB_WEB_PASSWORD'),
-        'HOST': env('DB_WEB_HOST'),
-        'PORT': env('DB_WEB_PORT'),
+        'NAME': os.environ.get('DB_WEB_NAME'),
+        'USER': os.environ.get('DB_WEB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_WEB_PASSWORD'),
+        'HOST': os.environ.get('DB_WEB_HOST'),
+        'PORT': os.environ.get('DB_WEB_PORT'),
         'TEST': {
             'NAME': 'mytestdatabase',
         },
@@ -123,37 +98,7 @@ DATABASES = {
         }
     }
 }
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'console': {
-            'format': '%(name)-12s %(levelname)-8s %(message)s'
-        },
-        'file': {
-            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s'
-        }
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'console'
-        },
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'formatter': 'file',
-            'filename': 'logs/[{}]debug.log'.format(datetime.now().strftime('%m-%Y')),
-        }
-    },
-    'loggers': {
-        '': {
-            'level': 'INFO',
-            'handlers': ['console', 'file']
-        }
-    }
-}
+# LOGGING = # TODO: Setup logging
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -188,10 +133,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = '/static/'
-
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# STATICFILES_DIRS = ('static',)
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = ''
+STATICFILES_DIRS = (
+  os.path.join(BASE_DIR, 'static'),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+# INTERNAL_IPS = [
+#     '127.0.0.1'
+# ]
+SECURE_SSL_REDIRECT = False

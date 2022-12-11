@@ -5,16 +5,18 @@
 Supposed to work on the *nix machine.
 
 
-###### 1. Run these commands for build back-end:
+###### 1. Run these commands to run a server:
+
 ```bash
-cd backend
+cd isleofcars
 python3 -m venv env
 source env/bin/activate
-pip install -r requirements.txt
+pip install -r isleofcars/requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
+
 > Notes:
 > 1. If you are using linux, you need to install several packages for `mysqlclient` before running this command.
 > ```bash
@@ -22,14 +24,7 @@ python manage.py runserver
 > ```
 > 2. Before creating migrations(_or just before starting the project_) , make sure you have a `logs` folder in the `backend`
 
-
-###### 2. In another session run these commands for build front-end:
-```bash
-cd frontend
-npm i
-npm run serve
-```
-The website will be available on http://localhost:8080
+The website will be available on http://localhost:8000
 
 ## Troubleshooting
 
@@ -42,11 +37,15 @@ docker volume rm $(docker volume ls -qf dangling=true)
 ## TODO:
 
 - [x] Change the domain to isleofcars.com
-- [ ] Move frontend to django templates
-- [ ] Add reporting app
+- [ ] Move frontend to django templates (no vue.js)
+- [ ] Add reporting app (admin?)
+  - [ ] просмотр логов сайта и парсеров
+- [x] Личный кабинет с возможностью добавлять объявления
 - [ ] Add test environment (test db + test.isleofcars.com domain)
 - [ ] Develop style rules
 - [ ] Implement images preview
 - [ ] Show number of cars found in the header
 - [ ] Add login via google account
 - [ ] Add email verification on registration
+- [ ] Разработка мобильного приложения android/iphone
+- [ ] Setup SEO

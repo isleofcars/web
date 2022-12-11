@@ -9,36 +9,100 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+from django.http import HttpRequest, HttpResponse
 
-from .forms import RegisterForm, NewAddForm
-from .models import Favorite
-from app.models import CarAdvertisement
+from app.forms import RegisterForm, NewAddForm
+from app.models import Favorite, CarAdvertisement
 
 
-def ads_list(request, page=1):
+def render_homepage(request: HttpRequest) -> HttpResponse:
+    """Render a main page with ads search."""
+    # TODO: Implement infinite scroll
+    # TODO: Add Masonry view
+    ads = CarAdvertisement.objects.all()
+    paginator = Paginator(ads, per_page=25)
+    page_number = request.GET.get('page')
+    ads = paginator.get_page(page_number)
+    # ctx = {}
+    # page_object = paginator.get_page(page)
+    # page_object.adjusted_elided_pages = paginator.get_elided_page_range(page)
+    # ctx["page_obj"] = page_object
+    # for obj in page_object:
+    #     if len(obj.photos) == 0:
+    #         obj.photos.append("https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png")
+    #     elif type(obj.photos[0]) != str:
+    #         obj.photos[0] = "https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png"
+    #     elif len(obj.photos[0]) <= 7:
+    #         obj.photos[0] = "https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png"
+    return render(
+        request=request,
+        template_name='home.html',
+        context=dict(ads=ads)
+    )
+
+
+def render_new_ad_form(request: HttpRequest) -> HttpResponse:
+    """Render a page to add a new advertisement."""
+    return render(
+        request=request,
+        template_name='new_ad.html',
+        context=dict(
+            form=NewAddForm()
+        )
+    )
+
+
+def save_new_ad(request: HttpRequest) -> HttpResponse:
+    """Save a new advertisement."""
+    if request.method == 'POST':
+        # new = CarAdvertisement()
+        form = NewAddForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    # form = NewAddForm()
+    # return render(
+    #     request=request,
+    #     template_name='new_ad.html',
+    #     context=dict(
+    #         form=NewAddForm()
+    #     )
+    # )
+
+
+# TODO: Add check login decorator
+def render_favorites(request: HttpRequest) -> HttpResponse:
+    """Render favorite ads of a user."""
+    # TODO: Consider how to show sold items here.
+    ads = Favorite.objects.get(user_id=request.user.id)
+    return render(
+        request=request,
+        template_name='favorites.html',
+        context=dict(
+            ads=ads
+        )
+    )
+
+
+# TODO: Add check login decorator
+def render_profile_settings(request: HttpRequest) -> HttpResponse:
+    """Render a user profile settings page."""
+    return render(
+        request=request,
+        template_name='profile-settings.html',
+        context={}
+    )
+
+
+def render_ad(request: HttpRequest, ad_id: int) -> HttpResponse:
+    """Render an advertisement page."""
     ctx = {}
-    ads = CarAdvertisement.objects.all().order_by("id").reverse()
-    paginator = Paginator(ads, per_page=20)
-    page_object = paginator.get_page(page)
-    page_object.adjusted_elided_pages = paginator.get_elided_page_range(page)
-    ctx["page_obj"] = page_object
-    for obj in page_object:
-        if len(obj.photos) == 0:
-            obj.photos.append("https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png")
-        elif type(obj.photos[0]) != str:
-            obj.photos[0] = "https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png"
-        elif len(obj.photos[0]) <= 7:
-            obj.photos[0] = "https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png"
-    return render(request, "ads.html", context=ctx)
-
-
-def account(request):
-    ctx = {}
-    if str(request.user) == 'AnonymousUser':
-        ctx["auth"] = False
-    else:
-        ctx["auth"] = True
-    return render(request, 'profile.html', ctx)
+    ad = CarAdvertisement.objects.get(id=ad_id)
+    ad = model_to_dict(ad)
+    ctx["title"] = ad["title"]
+    ctx["id"] = ad["id"]
+    ctx["ad"] = ad
+    return render(request, 'ad_page.html', ctx)
 
 
 def login_view(request):
@@ -89,18 +153,7 @@ def logout_view(request):
     logout(request)
     return redirect('ads')
 
-def new_ad(request):
-    if request.method == 'POST':
-        new = CarAdvertisement()
-        form = NewAddForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('ads')
-    form = NewAddForm()
-    ctx = {
-        "form": form
-    }
-    return render(request, 'new_ad.html', ctx)
+
 
 
 def settings(request):
@@ -125,20 +178,7 @@ def settings(request):
     return render(request, 'settings.html', ctx)
 
 
-def favorite(request):
-    ctx = {}
-    if str(request.user) == 'AnonymousUser':
-        ctx["auth"] = False
-    else:
-        ctx["auth"] = True
-        try:
-            fav = Favorite.objects.get(user_id=request.user.id)
-        except Favorite.DoesNotExist:
-            user = User.objects.get(id=request.user.id)
-            fav = Favorite.objects.create(user_id=user)
-        ctx["fav"] = fav.ads_id.all()
 
-    return render(request, 'favorite.html', ctx)
 
 
 def add_to_favorite(request, ad_id):
@@ -169,13 +209,3 @@ def remove_from_favorite(request, ad_id):
             return redirect('favorite')
         favorite.ads_id.remove(ad)
     return redirect('favorite')
-
-
-def ad_page(request, ad_id):
-    ctx = {}
-    ad = CarAdvertisement.objects.get(id=ad_id)
-    ad = model_to_dict(ad)
-    ctx["title"] = ad["title"]
-    ctx["id"] = ad["id"]
-    ctx["ad"] = ad
-    return render(request, 'ad_page.html', ctx)

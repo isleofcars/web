@@ -1,28 +1,15 @@
-version: '3.7'
+version: '3.9.7'
 services:
-  backend:
-    build: ./backend
-    container_name: backend
+  isleofcars:
+    build: ./isleofcars
+    container_name: isleofcars
     volumes:
-      - ./backend:/app
-    ports:
-      - "127.0.0.1:8000:8000"
-    restart: always
-    networks:
-      - wcw
-
-  frontend:
-    build: ./frontend
-    container_name: frontend
-    networks:
-      - wcw
+      - ./isleofcars:/app
     ports:
       - "127.0.0.1:8080:8080"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     restart: always
-
+    networks:
+      - wcw
 networks:
   wcw:
     external: true
