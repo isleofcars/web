@@ -13,6 +13,13 @@
   <script src="{% static 'fontawesomefree/js/fontawesome.js' %}"></script>
   <script src="{% static 'fontawesomefree/js/solid.js' %}"></script>
   <script src="{% static 'fontawesomefree/js/brands.js' %}"></script>
+  <script>
+    const csrftoken = "{{ csrf_token }}";
+    const urlPatterns = {
+      like: '{% url "like" %}',
+      unlike: '{% url "unlike" %}',
+    };
+  </script>
   {% block js %}
   {% endblock js %}
   <link rel="stylesheet" href="{% static 'css/main.css' %}?{% now 'U' %}">

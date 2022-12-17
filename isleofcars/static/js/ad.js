@@ -12,19 +12,34 @@ $(document).ready(() => {
         window.open(url, '_blank').focus();
     });
     $('.ad__like').on('click', (e) => {
-        // TODO: Reduce svg area (click outside of the icon -> open ad)
         // TODO: If not logged in -> open modal to log in/ sing up
         let adId = $(e.target).parents('.ad').data('id');
-        console.log('like adId', adId);
-        // Change the icon
         // TODO: Add some nice animation here
         let icon = $(e.target).parents('.ad').find('.ad__like svg use');
         if (icon.attr('href') === '#icon--like') {
+            // Change the icon
             icon.attr('href', '#icon--unlike');
             // TODO: Send ajax
+            console.log('like adId', adId, urlPatterns.like);
+            $.ajax({
+                // csrftoken: csrftoken,
+                headers:{'X-CSRFToken': csrftoken},
+                url: urlPatterns.like,
+                method: 'POST',
+                data: {ad_id: adId}
+            });
         } else {
+            // Change the icon
             icon.attr('href', '#icon--like');
             // TODO: Send ajax
+            console.log('unlike adId', adId, urlPatterns.unlike);
+            $.ajax({
+                // csrftoken: csrftoken,
+                headers:{'X-CSRFToken': csrftoken},
+                url: urlPatterns.unlike,
+                method: 'POST',
+                data: {ad_id: adId}
+            });
         };
     });
 });

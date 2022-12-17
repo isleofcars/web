@@ -37,12 +37,16 @@ docker volume rm $(docker volume ls -qf dangling=true)
 ## TODO:
 
 - [x] Change the domain to isleofcars.com
-- [ ] Move frontend to django templates (no vue.js)
+- [x] Move frontend to django templates (no vue.js)
+- [ ] Add search bar & search filters
 - [ ] Add reporting app (admin?)
   - [ ] просмотр логов сайта и парсеров
 - [x] Личный кабинет с возможностью добавлять объявления
 - [ ] Add test environment (test db + test.isleofcars.com domain)
 - [ ] Develop style rules
+  - [ ] Add animation for icons
+  - [ ] Fix layout (body margins)
+  - [ ] Add placeholders on ads loading
 - [ ] Implement images preview
 - [ ] Show number of cars found in the header
 - [ ] Add login via google account

@@ -75,23 +75,6 @@ def save_new_ad(request: HttpRequest) -> HttpResponse:
 
 
 # TODO: Add check login decorator
-def render_favorites(request: HttpRequest) -> HttpResponse:
-    """Render favorite ads of a user."""
-    # TODO: Consider how to show sold items here.
-    ads = Favorite.objects.filter(user_id=request.user.id)
-    paginator = Paginator(ads, per_page=25)
-    page_number = request.GET.get('page')
-    ads = paginator.get_page(page_number)
-    return render(
-        request=request,
-        template_name='favorites.html',
-        context=dict(
-            ads=ads
-        )
-    )
-
-
-# TODO: Add check login decorator
 def render_profile_settings(request: HttpRequest) -> HttpResponse:
     """Render a user profile settings page."""
     return render(
@@ -185,27 +168,53 @@ def settings(request):
     return render(request, 'settings.html', ctx)
 
 
+
+# TODO: Add check login decorator
+def render_favorites(request: HttpRequest) -> HttpResponse:
+    """Render favorite ads of a user."""
+    # TODO: Consider how to show sold items here.
+    ads = Favorite.objects.get(user_id=request.user).ads_id.all()
+    for ad in ads:
+        ad.is_favorite = True
+    paginator = Paginator(ads, per_page=25)
+    page_number = request.GET.get('page')
+    ads = paginator.get_page(page_number)
+    return render(
+        request=request,
+        template_name='favorites.html',
+        context=dict(
+            ads=ads
+        )
+    )
+
+
 # TODO: Check if POST
+# TODO: Check if ajax
 # TODO: Check if user logged in
 def like(request: HttpRequest) -> JsonResponse:
     ad_id = request.POST['ad_id']
     print('like', ad_id)
-    Favorite.objects.get_or_create(user_id=request.user.id).add(
-        CarAdvertisement.objects.get(id=ad_id)
-    )
+    ad = CarAdvertisement.objects.get(id=ad_id)
+    try:
+        favorite = Favorite.objects.get(user_id=request.user)
+    except Favorite.DoesNotExist:
+        favorite = Favorite.objects.create(user_id=request.user)
+    favorite.ads_id.add(ad)
     print('success!')
     return JsonResponse({})
 
 
-def remove_from_favorite(request, ad_id):
-    if str(request.user) == 'AnonymousUser':
-        pass #Add message
-    else:
-        user = User.objects.get(id=request.user.id)
-        try:
-            ad = CarAdvertisement.objects.get(id=ad_id)
-            favorite = Favorite.objects.get(user_id=user)
-        except Favorite.DoesNotExist:
-            return redirect('favorite')
-        favorite.ads_id.remove(ad)
-    return redirect('favorite')
+# TODO: Check if POST
+# TODO: Check if ajax
+# TODO: Check if user logged in
+def unlike(request: HttpRequest) -> JsonResponse:
+    ad_id = request.POST['ad_id']
+    print('unlike', ad_id)
+    ad = CarAdvertisement.objects.get(id=ad_id)
+    try:
+        favorite = Favorite.objects.get(user_id=request.user)
+    except Favorite.DoesNotExist:
+        favorite = Favorite.objects.create(user_id=request.user)
+    favorite.ads_id.remove(ad)
+    print('success!')
+    return JsonResponse({})
