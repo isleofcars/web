@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-
+from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -10,18 +10,22 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
 from django.http import HttpRequest, HttpResponse, JsonResponse
-
+from functools import reduce
+import operator
 from app.forms import RegisterForm, NewAddForm
 from app.models import Favorite, CarAdvertisement
 
 
 def render_homepage(request: HttpRequest) -> HttpResponse:
     """Render a main page with ads search."""
-    # TODO: Implement infinite scroll
-    # TODO: Add Masonry view
     ads = CarAdvertisement.objects.all()
+    search = request.GET.get('search')
+    if search:
+        search = search.split()
+        # TODO: Search in make/model/description/etc
+        tag_qs = reduce(operator.or_, (Q(title__icontains=x) for x in search))
+        ads = CarAdvertisement.objects.filter(tag_qs)
     favorites = request.user.favorite_set.values_list('ads_id', flat=True)
-    print('favorites', favorites)
     for ad in ads:
         ad.is_favorite = ad.id in favorites
     paginator = Paginator(ads, per_page=25)

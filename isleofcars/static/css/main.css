@@ -1,10 +1,12 @@
 :root {
   --margin-main: 8px;
-  --columns: 6;
+  --columns: 5;
   --color--gray-1: #262626;
   --color--gray-2: #808080;
   --color--gray-3: #a0a0a0;
   --color--red: #DB565B;
+  --color--white: #ffffff;
+  --size--small-1: 2px;
 }
 
 body {
@@ -31,7 +33,28 @@ header .logo a {
   text-decoration: none;
 }
 
+aside {
+  width: 23.7vw;
+  height: 80vh;
+  /* background-color: gray; */
+  /* border: 1px dashed green; */
+  position: sticky;
+  top: 0;
+  margin-right: var(--margin-main);
+  padding: var(--margin-main) 0;
+}
+
+#search-filters input {
+  outline: none;
+}
+
+main {
+  width: 100%;
+  padding-top: 4px;
+}
+
 .ads {
+  position: relative;
   margin: 0 calc(0px - var(--margin-main) / 2);
 }
 
@@ -40,7 +63,7 @@ header .logo a {
   margin: 0 0 1rem 0;
   margin: calc(var(--margin-main) / 2);
   cursor: pointer;
-  border-radius: 2px;
+  border-radius: var(--size--small-1);
 }
 
 .ad img {
@@ -49,7 +72,8 @@ header .logo a {
 
 .ad,
 .ad img {
-  max-width: calc((100vw - (var(--margin-main) + 40px) * 2) / var(--columns));
+  /* max-width: calc((100vw - (var(--margin-main) + 40px) * 2) / var(--columns)); */
+  max-width: 15vw;
 }
 
 .ad__header {
@@ -92,6 +116,10 @@ secret,
   display: none;
 }
 
+.d-flex {
+  display: flex;
+}
+
 #icon--like {
   color: var(--color--gray-1);
   fill: var(--color--gray-1);
@@ -100,4 +128,25 @@ secret,
 #icon--unlike {
   color: var(--color--red);
   fill: var(--color--red);
+}
+
+.input-box--search {
+  border: 1px solid var(--color--gray-3);
+  display: flex;
+  border-radius: var(--size--small-1);
+  background: transparent;
+  height: 25px;
+  align-items: center;
+}
+
+.input-box--search:hover,
+.input-box--search.focused {
+  background: var(--color--white);
+  border: 1px solid var(--color--gray-1);
+}
+
+input[name="search"] {
+  border: none;
+  background: transparent;
+  width: 100%;
 }
