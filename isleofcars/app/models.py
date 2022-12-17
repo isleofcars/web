@@ -23,6 +23,7 @@ class CarAdvertisement(models.Model):
     drive = models.CharField(max_length=255, null=True, blank=True)
     power = models.FloatField(null=True, blank=True)
     color = models.CharField(max_length=255, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     objects = models.Manager()
 
     def __str__(self):

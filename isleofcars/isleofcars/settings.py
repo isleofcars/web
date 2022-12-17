@@ -31,6 +31,12 @@ INSTALLED_APPS = [
     'django_filters',
     'ipinfo_django',
     'corsheaders',
+    'fontawesomefree',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',  # for Google OAuth 2.0
+    'django.contrib.humanize',
     # 'isleofcars',
     'app'
 ]
@@ -74,6 +80,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'filters': 'isleofcars.filters',
+            }
         },
     },
 ]
@@ -148,4 +157,44 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # INTERNAL_IPS = [
 #     '127.0.0.1'
 # ]
-SECURE_SSL_REDIRECT = False
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+# Additional configuration settings
+# SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': '810154157535-mh8li77e33bqn7p918h5rhqdn2q6d5v2.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+# http://localhost:8000/accounts/social/signup/# -> home
+# # Provider specific settings
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         # For each OAuth based provider, either add a ``SocialApp``
+#         # (``socialaccount`` app) containing the required client
+#         # credentials, or list them here:
+#         'APP': {
+#             'client_id': '123',
+#             'secret': '456',
+#             'key': ''
+#         }
+#     }
+# }

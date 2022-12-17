@@ -1,0 +1,35 @@
+{% load filters %}
+{% load humanize %}
+<div class="ad" data-id="{{ ad.id }}" data-href="{{ ad.url }}">
+  <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}"
+        loading="lazy">
+  <div class="ad__description">
+    <div class="ad__header">
+      <div class="ad__title">
+        {% if ad.year and ad.make and ad.model %}
+          {{ ad.year }} {{ ad.make }} {{ ad.model }}
+        {% else %}
+          {{ ad.title }}
+        {% endif %}
+      </div>
+      <div class="ad__like">
+        <svg width="24" height="16">
+          <use href="#icon--{% if ad.is_favorite %}un{% endif %}like">
+        </svg>
+      </div>
+    </div>
+    <div class="ad__text">
+      {{ ad|make_ad_text }}
+    </div>
+    <div class="ad__description-bottom">
+      <div class="ad__location">
+        {{ ad.location|default_if_none:'' }}
+      </div>
+      <div class="ad__price">
+        {% if ad.price %}
+          ${{ ad.price|add:"0"|intcomma }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

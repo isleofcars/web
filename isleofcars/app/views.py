@@ -9,7 +9,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 
 from app.forms import RegisterForm, NewAddForm
 from app.models import Favorite, CarAdvertisement
@@ -20,6 +20,10 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
     # TODO: Implement infinite scroll
     # TODO: Add Masonry view
     ads = CarAdvertisement.objects.all()
+    favorites = request.user.favorite_set.values_list('ads_id', flat=True)
+    print('favorites', favorites)
+    for ad in ads:
+        ad.is_favorite = ad.id in favorites
     paginator = Paginator(ads, per_page=25)
     page_number = request.GET.get('page')
     ads = paginator.get_page(page_number)
@@ -74,7 +78,10 @@ def save_new_ad(request: HttpRequest) -> HttpResponse:
 def render_favorites(request: HttpRequest) -> HttpResponse:
     """Render favorite ads of a user."""
     # TODO: Consider how to show sold items here.
-    ads = Favorite.objects.get(user_id=request.user.id)
+    ads = Favorite.objects.filter(user_id=request.user.id)
+    paginator = Paginator(ads, per_page=25)
+    page_number = request.GET.get('page')
+    ads = paginator.get_page(page_number)
     return render(
         request=request,
         template_name='favorites.html',
@@ -115,7 +122,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("profile")
+                return redirect('ads')
             else:
                 messages.error(request,"Invalid username or password.")
         else:
@@ -178,23 +185,16 @@ def settings(request):
     return render(request, 'settings.html', ctx)
 
 
-
-
-
-def add_to_favorite(request, ad_id):
-    ctx = {}
-    if str(request.user) == 'AnonymousUser':
-        pass #Add message
-    else:
-        user = User.objects.get(id=request.user.id)
-        try:
-            ad = CarAdvertisement.objects.get(id=ad_id)
-            favorite = Favorite.objects.get(user_id=user)
-        except Favorite.DoesNotExist:
-            ad = CarAdvertisement.objects.get(id=ad_id)
-            favorite = Favorite.objects.create(user_id=user)
-        favorite.ads_id.add(ad)
-    return redirect('favorite')
+# TODO: Check if POST
+# TODO: Check if user logged in
+def like(request: HttpRequest) -> JsonResponse:
+    ad_id = request.POST['ad_id']
+    print('like', ad_id)
+    Favorite.objects.get_or_create(user_id=request.user.id).add(
+        CarAdvertisement.objects.get(id=ad_id)
+    )
+    print('success!')
+    return JsonResponse({})
 
 
 def remove_from_favorite(request, ad_id):

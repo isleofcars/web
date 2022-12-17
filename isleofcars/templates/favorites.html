@@ -1,36 +1,21 @@
 {% extends "main.html" %}
+{% load static %}
 {% block title %}
   Favorite Ads
 {% endblock title %}
 {% block js %}
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+  <script defer src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.js"></script>
+  <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+  <script defer src="{% static 'js/ads-list.js' %}"></script>
 {% endblock js %}
 {% block content %}
-  {% for ad in ads %}
-  <hr>
-  <br>
-  <a href="{% url 'ad_page' ad.id %}">
-    <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}" width="350px" loading="lazy">
-    <br>
-    {{ ad.title }}
-    <br>
-    <br>
-  </a>
-  <br>
-  {% endfor %}
-  <div class="pagination">
-    <span class="step-links">
-      {% if ads.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-        <a href="?page={{ ads.previous_page_number }}">previous</a>
-      {% endif %}
-      <span class="current">
-        Page {{ ads.number }} of {{ ads.paginator.num_pages }}.
-      </span>
-      {% if ads.has_next %}
-        <a href="?page={{ ads.next_page_number }}">next</a>
-        <a href="?page={{ ads.paginator.num_pages }}">last &raquo;</a>
-      {% endif %}
-    </span>
+  <div class="ads">
+    {% for ad in ads %}
+      {% include 'ad.html' with ad=ad %}
+    {% endfor %}
   </div>
+  {% if not ads %}
+    <span>You haven't saved any ads yet.</span>
+  {% endif %}
+  {% include 'inclusions/pagination.html' %}
 {% endblock content %}

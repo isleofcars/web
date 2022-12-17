@@ -7,7 +7,7 @@
       <a href="">My Ads</a>
       <a href="{% url 'profile-settings' %}">Profile Settings</a>
     {% else %}
-      <a href="">Log In</a>
+      <a href="{% url 'login' %}">Log In</a>
       <span>/</span>
       <a href="">Sign Up</a>
     {% endif %}

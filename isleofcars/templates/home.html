@@ -3,34 +3,17 @@
 {% block js %}
   <script defer src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.js"></script>
   <script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
-  {% comment %} <script src="https://unpkg.com/infinite-scroll@4/dist/infinite-scroll.pkgd.js"></script> {% endcomment %}
-  <script src="{% static 'lib/inf.js' %}"></script>
-  <script defer src="{% static 'js/masonry.js' %}"></script>
+  <script defer src="{% static 'js/ads-list.js' %}"></script>
+  <script defer src="{% static 'js/ad.js' %}"></script>
 {% endblock js %}
 {% block content %}
   <div class="ads">
     {% for ad in ads %}
-      <div class="ad">
-        <a href="{% url 'ad_page' ad.id %}">
-          <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}" style="max-width: 350px;" loading="lazy">
-          <div>{{ ad.title }}</div>
-        </a>
-      </div>
+      {% include 'ad.html' with ad=ad %}
     {% endfor %}
   </div>
-  <div class="pagination">
-    <span class="step-links">
-      {% if ads.has_previous %}
-        <a href="?page=1">&laquo; first</a>
-        <a href="?page={{ ads.previous_page_number }}">previous</a>
-      {% endif %}
-      <span class="current">
-        Page {{ ads.number }} of {{ ads.paginator.num_pages }}.
-      </span>
-      {% if ads.has_next %}
-        <a href="?page={{ ads.next_page_number }}" class="next">next</a>
-        <a href="?page={{ ads.paginator.num_pages }}">last &raquo;</a>
-      {% endif %}
-    </span>
-  </div>
+  {% include 'inclusions/pagination.html' %}
+  <secret>
+    <data content="url-like">{% url 'like' %}</data>
+  </secret>
 {% endblock content %}
