@@ -120,6 +120,7 @@ function applyFormFilters(e) {
         success : function(response) {
             $('.ads').empty().removeAttr('style');
             addNewAds(response);
+            // TODO: Remove empty ?search=
             document.location.href = url;
         },
         // TODO: Show loader
