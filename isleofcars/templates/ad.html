@@ -1,8 +1,21 @@
 {% load filters %}
 {% load humanize %}
 <div class="ad" data-id="{{ ad.id }}" data-href="{{ ad.url }}">
-  <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}"
-        loading="lazy">
+  <div class="ad__gallery">
+    <div class="ad__gallery__image">
+      <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}" loading="lazy">
+    </div>
+    <div class="ad__gallery__buttons">
+      {% for image in ad.photos|slice:"5" %}
+        <img class="hidden"
+             src="{{ image }}"
+             alt="{{ ad.title }}"
+             data-number="{{ forloop.counter }}">
+        <div class="ad__gallery__button" data-number="{{ forloop.counter }}">
+        </div>
+      {% endfor %}
+    </div>
+  </div>
   <div class="ad__description">
     <div class="ad__header">
       <div class="ad__title">

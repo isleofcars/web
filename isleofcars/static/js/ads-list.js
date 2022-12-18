@@ -98,6 +98,25 @@ function setAdsClickEvents(ads=null) {
                 });
             };
         });
+
+        // Image gallery on hover
+        for (let adButton of  $('.ad__gallery__button')) {
+            $(adButton).unbind().on('mouseenter', (e) => {
+                let number = $(e.target).data('number');
+                let image = $(e.target).parent().find(`img[data-number="${number}"]`)
+                .clone().removeClass('hidden');
+                $(e.target).parents('.ad__gallery').find('.ad__gallery__image')
+                .empty().append(image);
+            });
+        };
+        for (let gallery of $('.ad__gallery')) {
+            $(gallery).unbind().on('mouseleave', (e) => {
+                let image = $(e.target).parent().find('img[data-number="1"]')
+                .clone().removeClass('hidden');
+                $(e.target).parents('.ad__gallery').find('.ad__gallery__image')
+                .empty().append(image);
+            });
+        };
     };
 };
 
