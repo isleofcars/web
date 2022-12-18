@@ -1,26 +1,37 @@
 :root {
-  --margin-main: 8px;
   --columns: 5;
   --color--gray-1: #262626;
   --color--gray-2: #808080;
   --color--gray-3: #a0a0a0;
   --color--red: #DB565B;
-  --color--white: #ffffff;
+  --color--white-1: #ffffff;
+  --color--white-2: #fbf9f5;
+  --color--white-2--semi-transparent: rgb(251, 249, 245, 0.96);
   --size--small-1: 2px;
+  --size--small-2: 8px;
+  --size--header-height: 50px;
 }
 
 body {
   display: block;
-  margin: var(--margin-main);
-  background-color: #fbf9f5;
+  margin: var(--size--small-2);
+  background-color: var(--color--white-2);
   opacity: 0.96;
+  margin: 0;
+  padding: 0;
 }
 
 header {
-  height: 50px;
+  height: var(--size--header-height);
+  /* width: 100vw; */
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background-color: var(--color--white-2--semi-transparent);
+  padding: 0 var(--size--small-2);
 }
 
 header .logo {
@@ -39,13 +50,37 @@ aside {
   /* background-color: gray; */
   /* border: 1px dashed green; */
   position: sticky;
-  top: 0;
-  margin-right: var(--margin-main);
-  padding: var(--margin-main) 0;
+  top: var(--size--header-height);
+  padding: var(--size--small-2);
 }
 
 #search-filters input {
   outline: none;
+}
+
+.input-box--search {
+  border: 1px solid var(--color--gray-3);
+  display: flex;
+  border-radius: var(--size--small-1);
+  background: transparent;
+  height: 25px;
+  align-items: center;
+}
+
+.input-box--search:hover,
+.input-box--search.focused {
+  background: var(--color--white-1);
+  border: 1px solid var(--color--gray-1);
+}
+
+input[name="search"] {
+  border: none;
+  background: transparent;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
 }
 
 main {
@@ -55,16 +90,24 @@ main {
 
 .ads {
   position: relative;
-  margin: 0 calc(0px - var(--margin-main) / 2);
+  margin: 0 calc(0px - var(--size--small-2) / 2);
 }
 
 .ad {
   border: 1px solid var(--color--gray-3);
   margin: 0 0 1rem 0;
-  margin: calc(var(--margin-main) / 2);
+  margin: calc(var(--size--small-2) / 2);
   cursor: pointer;
   border-radius: var(--size--small-1);
 }
+
+/* .ad:hover {
+  box-shadow: 0 0 7px 0 var(--color--gray-3);
+}
+
+.ad:hover .ad__title {
+  text-decoration: underline;
+} */
 
 .ad img {
   border-bottom: 1px solid var(--color--gray-3);
@@ -72,7 +115,7 @@ main {
 
 .ad,
 .ad img {
-  /* max-width: calc((100vw - (var(--margin-main) + 40px) * 2) / var(--columns)); */
+  /* max-width: calc((100vw - (var(--size--small-2) + 40px) * 2) / var(--columns)); */
   max-width: 15vw;
 }
 
@@ -128,25 +171,4 @@ secret,
 #icon--unlike {
   color: var(--color--red);
   fill: var(--color--red);
-}
-
-.input-box--search {
-  border: 1px solid var(--color--gray-3);
-  display: flex;
-  border-radius: var(--size--small-1);
-  background: transparent;
-  height: 25px;
-  align-items: center;
-}
-
-.input-box--search:hover,
-.input-box--search.focused {
-  background: var(--color--white);
-  border: 1px solid var(--color--gray-1);
-}
-
-input[name="search"] {
-  border: none;
-  background: transparent;
-  width: 100%;
 }
