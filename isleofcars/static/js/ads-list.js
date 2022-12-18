@@ -14,7 +14,7 @@ $('.ads').imagesLoaded(() => {
 
 // Infinite scroll
 $(window).scroll(function () { 
-    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 10) {
+    if ($(window).scrollTop() >= $(document).height() - $(window).height() - 300) {
         let url = $('.pagination .next').attr('href');
         if (!url) return;
         console.log('load', url);
@@ -100,7 +100,7 @@ function setAdsClickEvents(ads=null) {
         });
 
         // Image gallery on hover
-        for (let adButton of  $('.ad__gallery__button')) {
+        for (let adButton of ad.find('.ad__gallery__button')) {
             $(adButton).unbind().on('mouseenter', (e) => {
                 let number = $(e.target).data('number');
                 let image = $(e.target).parent().find(`img[data-number="${number}"]`)
@@ -109,7 +109,7 @@ function setAdsClickEvents(ads=null) {
                 .empty().append(image);
             });
         };
-        for (let gallery of $('.ad__gallery')) {
+        for (let gallery of ad.find('.ad__gallery')) {
             $(gallery).unbind().on('mouseleave', (e) => {
                 let image = $(e.target).parent().find('img[data-number="1"]')
                 .clone().removeClass('hidden');
