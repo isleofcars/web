@@ -48,7 +48,7 @@ aside {
   height: 80vh;
   position: sticky;
   top: var(--size--header-height);
-  padding: var(--size--small-2);
+  padding: 0 var(--size--small-2);
 }
 
 #search-filters input {
@@ -82,7 +82,6 @@ input[name="search"] {
 
 main {
   width: 100%;
-  padding-top: 4px;
 }
 
 .ads {
@@ -91,8 +90,7 @@ main {
 }
 
 .ad {
-  margin: 0 0 1rem 0;
-  margin: calc(var(--size--small-2) / 2);
+  margin: 0 calc(var(--size--small-2) / 2) calc(var(--size--small-2) / 2) calc(var(--size--small-2) / 2);
   cursor: pointer;
 }
 
@@ -140,7 +138,7 @@ main {
 
 .ad,
 .ad img {
-  max-width: 16vw;
+  max-width: 16.25vw;
 }
 
 .ad__header {
