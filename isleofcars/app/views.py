@@ -23,7 +23,7 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
     if search:
         search = search.split()
         # TODO: Search in make/model/description/etc
-        tag_qs = reduce(operator.or_, (Q(title__icontains=x) for x in search))
+        tag_qs = reduce(operator.and_, (Q(title__icontains=x) for x in search))
         ads = CarAdvertisement.objects.filter(tag_qs)
     favorites = request.user.favorite_set.values_list('ads_id', flat=True)
     for ad in ads:
