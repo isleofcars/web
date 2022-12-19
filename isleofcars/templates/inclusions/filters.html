@@ -1,7 +1,7 @@
 <form autocomplete="off"
       id="search-filters"
-      onsubmit="applyFormFilters(event);">
-  <div class="input-box--search">
+      onchange="applyFormFilters(event);">
+  <p class="input-box--search">
     <svg width="24" height="16">
       <use href="#icon--search">
     </svg>
@@ -9,8 +9,6 @@
            name="search"
            spellcheck="false"
            value="{{ request.GET.search }}">
-  </div>
-  <button type="submit" class="hidden">
-    Search
-  </button> 
+  </p>
+  {{ filters_form.as_p }}
 </form>

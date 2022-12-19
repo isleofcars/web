@@ -1,4 +1,6 @@
-$('.ads').imagesLoaded(() => {
+const maxGallerySize = 300;
+
+function buildMasonryGrid() {
     $('.ads').masonry({
         // options
         itemSelector: '.ad',
@@ -10,7 +12,7 @@ $('.ads').imagesLoaded(() => {
         isFitWidth: true,
         // cols: {default: 5, 1000: 4, 700: 3, 400: 1},
     });
-});
+};
 
 // Infinite scroll
 $(window).scroll(function () { 
@@ -31,19 +33,12 @@ $(window).scroll(function () {
 
 // Add new loaded ads
 function addNewAds(response) {
-    // $('.ads').append($('<div height="100vh" id="fakeDiv"></div>'));
     let adsNew = $(response).find('.ad');
     setAdsClickEvents(adsNew);
     $('.ads').append(adsNew);
-    // console.log('height', $('.ads').attr('style'));
-    $('.ads').imagesLoaded(() => {
-        $('.ads').masonry('appended', adsNew, true);
-        // $('#fakeDiv').remove();
-    });
-    // console.log(JSON.stringify($(response).find('.pagination')[0]));
+    $('.ads').masonry('appended', adsNew, true);
+    // buildMasonryGrid();
     $('.pagination').replaceWith($(response).filter('.pagination'));
-    // console.log(response);
-    // $('.pagination').empty().append($(response).find('.pagination > *'));
 };
 
 // Ads click events
@@ -54,7 +49,6 @@ function setAdsClickEvents(ads=null) {
 
         // Open an ad
         ad.on('click', (e) => {
-            // console.log($(e.target).prop('tagName'));
             e = e || event;
             // Don't open an ad if like/unlike was clicked
             let elements = document.elementsFromPoint(e.clientX, e.clientY);
@@ -75,11 +69,8 @@ function setAdsClickEvents(ads=null) {
             if (icon.attr('href') === '#icon--like') {
                 // Change the icon
                 icon.attr('href', '#icon--unlike');
-                // TODO: Send ajax
-                // console.log('like adId', adId, urlPatterns.like);
                 $.ajax({
-                    // csrftoken: csrftoken,
-                    headers:{'X-CSRFToken': csrftoken},
+                    headers: {'X-CSRFToken': csrftoken},
                     url: urlPatterns.like,
                     method: 'POST',
                     data: {ad_id: adId}
@@ -87,11 +78,8 @@ function setAdsClickEvents(ads=null) {
             } else {
                 // Change the icon
                 icon.attr('href', '#icon--like');
-                // TODO: Send ajax
-                // console.log('unlike adId', adId, urlPatterns.unlike);
                 $.ajax({
-                    // csrftoken: csrftoken,
-                    headers:{'X-CSRFToken': csrftoken},
+                    headers: {'X-CSRFToken': csrftoken},
                     url: urlPatterns.unlike,
                     method: 'POST',
                     data: {ad_id: adId}
@@ -117,21 +105,24 @@ function setAdsClickEvents(ads=null) {
                 .empty().append(image);
             });
         };
+
+        // Refresh masonry grid when the title image is loaded
+        // TODO: Trigger this when EACH image is loaded (not all)
+        ad.find('img[data-number="0"]').imagesLoaded((e) => {
+            let img = e.elements[0];
+            // Fit a gallery size to the title image width/height ratio
+            let newHeight = img.clientWidth / (img.naturalWidth / img.naturalHeight);
+            newHeight = Math.min(maxGallerySize, newHeight);
+            $(img).parents('.ad__gallery__image').css({height: `${newHeight}px`});
+            buildMasonryGrid();
+        });
     };
 };
-
-// Form filters events
-$('input[name="search"]').on('focus blur', (e) => {
-    $(e.target).parents('.input-box--search').toggleClass('focused');
-});
 
 // Search ads
 function applyFormFilters(e) {
     e.preventDefault();
-    console.log('applyFormFilters');
-    // console.log(e.target);
     document.activeElement.blur();
-    // $(e.target).blur();
     let query = new URLSearchParams(new FormData($('#search-filters')[0])).toString();
     let url = '/?' + query;
     $.ajax({
@@ -139,6 +130,7 @@ function applyFormFilters(e) {
         success : function(response) {
             $('.ads').empty().removeAttr('style');
             addNewAds(response);
+            $('#search-filters').replaceWith($(response).filter('#search-filters'));
             // TODO: Remove empty ?search=
             document.location.href = url;
         },
@@ -147,5 +139,6 @@ function applyFormFilters(e) {
 };
 
 $(document).ready(() => {
+    buildMasonryGrid();
     setAdsClickEvents();
 });

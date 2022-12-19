@@ -1,17 +1,18 @@
-from django.shortcuts import render, redirect
-from django.db.models import Q
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import AuthenticationForm
+import operator
+from functools import reduce
+
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.forms.models import model_to_dict
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from functools import reduce
-import operator
+from django.shortcuts import render, redirect
+
+from app import forms
 from app.forms import RegisterForm, NewAddForm
 from app.models import Favorite, CarAdvertisement
 
@@ -19,33 +20,29 @@ from app.models import Favorite, CarAdvertisement
 def render_homepage(request: HttpRequest) -> HttpResponse:
     """Render a main page with ads search."""
     ads = CarAdvertisement.objects.all()
+    for key, values in request.GET.lists():
+        if key in {'search', 'page'} or values == ['']:
+            continue
+        ads = ads.filter(Q(**{f'{key}__in': values}))
     search = request.GET.get('search')
     if search:
         search = search.split()
         # TODO: Search in make/model/description/etc
         tag_qs = reduce(operator.and_, (Q(title__icontains=x) for x in search))
-        ads = CarAdvertisement.objects.filter(tag_qs)
+        ads = ads.filter(tag_qs)
     favorites = request.user.favorite_set.values_list('ads_id', flat=True)
     for ad in ads:
         ad.is_favorite = ad.id in favorites
     paginator = Paginator(ads, per_page=25)
     page_number = request.GET.get('page')
     ads = paginator.get_page(page_number)
-    # ctx = {}
-    # page_object = paginator.get_page(page)
-    # page_object.adjusted_elided_pages = paginator.get_elided_page_range(page)
-    # ctx["page_obj"] = page_object
-    # for obj in page_object:
-    #     if len(obj.photos) == 0:
-    #         obj.photos.append("https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png")
-    #     elif type(obj.photos[0]) != str:
-    #         obj.photos[0] = "https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png"
-    #     elif len(obj.photos[0]) <= 7:
-    #         obj.photos[0] = "https://www.rehab.cv.ua/wp-content/themes/apexclinic/images/no-image/No-Image-Found-400x264.png"
     return render(
         request=request,
         template_name='home.html',
-        context=dict(ads=ads)
+        context=dict(
+            ads=ads,
+            filters_form=forms.FiltersForm(request.GET)
+        )
     )
 
 

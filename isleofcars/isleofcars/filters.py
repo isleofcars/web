@@ -1,5 +1,5 @@
 from django import template
-
+import random
 register = template.Library()
 
 
@@ -31,3 +31,12 @@ def make_ad_text(ad) -> str:
     if len(description) > 1024 + 3:
         description = description[:max_len] + '...'
     return description
+
+
+@register.simple_tag
+def get_random_gallery_height():
+    """Generate a random number to set up
+    ads gallery sizes when images are loading."""
+    left = 180
+    right = 250
+    return random.randint(left, right)

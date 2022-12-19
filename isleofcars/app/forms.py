@@ -40,6 +40,7 @@ class RegisterForm(UserCreationForm):
         help_text='Enter Password Again',
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password Again'}),
         )
+
     class Meta:
         model = User
         fields = [
@@ -52,3 +53,13 @@ class NewAddForm(forms.ModelForm):
     class Meta:
         model = CarAdvertisement
         fields = '__all__'
+
+
+class FiltersForm(forms.Form):
+    make = forms.ChoiceField(choices=[], required=False)
+    model = forms.ChoiceField(choices=[], required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        all_makes = CarAdvertisement.objects.exclude(make__isnull=True).values_list('make', 'make').distinct().order_by()
+        self.fields['make'].choices = [[None, 'All Makes']] + list(all_makes)

@@ -2,8 +2,12 @@
 {% load humanize %}
 <div class="ad" data-id="{{ ad.id }}" data-href="{{ ad.url }}">
   <div class="ad__gallery">
-    <div class="ad__gallery__image">
-      <img src="{{ ad.photos.0 }}" alt="{{ ad.title }}" loading="lazy">
+    <div class="ad__gallery__image"
+         style="height: {% get_random_gallery_height %}px;">
+      <img src="{{ ad.photos.0 }}"
+           alt="{{ ad.title }}"
+           loading="lazy"
+           data-number="0">
     </div>
     <div class="ad__gallery__buttons">
       {% for image in ad.photos|slice:"5" %}
