@@ -25,7 +25,7 @@ class Ad(models.Model):
     power = models.FloatField(null=True, blank=True)
     color = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
-    favored_by = models.ManyToManyField(User, through='FavoriteAd')
+    favored_by = models.ManyToManyField(User)
     author = models.ForeignKey(User, on_delete=models.CASCADE,
                                related_name='author', null=True, blank=True)
     objects = models.Manager()
@@ -38,28 +38,3 @@ class Ad(models.Model):
         db_table = 'ad'
         managed = True
         ordering = ('-id',)
-
-
-class FavoriteAd(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
-    objects = models.Manager()
-
-    class Meta:
-        db_table = 'ad_favored_by'
-        managed = True
-        ordering = ('-id',)
-
-#
-# class Favorite(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
-#     added = models.DateTimeField(auto_now_add=True)
-#     objects = models.Manager()
-#
-#     class Meta:
-#         db_table = 'favorite'
-#         managed = True
-#         ordering = ('-id',)

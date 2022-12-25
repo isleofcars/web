@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 
 from app import forms
 from app.forms import RegisterForm, NewAddForm
-from app.models import Ad, FavoriteAd
+from app.models import Ad
 
 
 def render_homepage(request: HttpRequest) -> HttpResponse:
@@ -51,21 +51,6 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
 def render_favorites(request: HttpRequest) -> HttpResponse:
     """Render favorite ads of a user."""
     # TODO: Consider how to show sold items here.
-    # TODO: order items by id of the middle table
-    # ads = Ad.objects.filter(favored_by=request.user).all().order_by('-ad_favored_by.id')
-    # ads = Ad.objects.filter(favored_by=request.user).all().order_by(
-    #     '-ad_favored_by.id')
-    # ads = request.user.ad_set.all().order_by('-ad_favored_by.id')
-    # ads = Ad.objects.prefetch_related(
-    #     Prefetch(
-    #         'notes',
-    #         Note.objects.order_by('pinboard_pins__position'),
-    #     )
-    # )
-    # ads = FavoriteAd.objects.filter(user=request.user).ad_set.all()
-    # ads = Ad.favorite_ad_set.all()
-    # ads = request.user.ad_set.through.objects.all()
-    # ads = request.user.ad_set.through.ad_set.all()
     # TODO: Replace raw query with django ORM if it is possible
     ads = Ad.objects.raw(f"""
         select a.*, 1 as is_favorite
