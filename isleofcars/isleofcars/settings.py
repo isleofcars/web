@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-    'ipinfo_django',
     'corsheaders',
     'fontawesomefree',
     'allauth',
@@ -37,7 +36,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',  # for Google OAuth 2.0
     'django.contrib.humanize',
-    # 'isleofcars',
     'app'
 ]
 MIDDLEWARE = [
@@ -49,19 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'ipinfo_django.middleware.IPinfo'
 ]
-
-IPINFO_TOKEN = os.environ.get('IPINFO_TOKEN')
-IPINFO_SETTINGS = {
-    'cache_options': {
-        'ttl': 30,
-        'maxsize': 128
-    },
-    # 'countries_file': 'custom_countries.json'
-}
-IPINFO_FILTER = lambda request: request.scheme == 'http'
-
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080"
 ]

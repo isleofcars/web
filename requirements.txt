@@ -1,5 +1,5 @@
 aiohttp==3.7.4.post0
-asgiref==3.4.1
+asgiref==3.6.0
 async-timeout==3.0.1
 attrs==21.2.0
 cachetools==4.2.2
@@ -9,15 +9,13 @@ chardet==4.0.0
 charset-normalizer==2.0.5
 cryptography==38.0.4
 defusedxml==0.7.1
-Django==3.2.7
+Django==4.1.4
 django-allauth==0.51.0
 django-cors-headers==3.8.0
 django-filter==2.4.0
 djangorestframework==3.12.4
 fontawesomefree==6.2.1
 idna==3.2
-ipinfo==3.0.0
-ipinfo-django==1.1.0
 multidict==5.1.0
 mysql-connector-python==8.0.26
 mysqlclient==2.0.3

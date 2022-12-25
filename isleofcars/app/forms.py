@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from app.models import CarAdvertisement
+from app.models import Ad
 
 
 class RegisterForm(UserCreationForm):
@@ -51,7 +51,7 @@ class RegisterForm(UserCreationForm):
 class NewAddForm(forms.ModelForm):
 
     class Meta:
-        model = CarAdvertisement
+        model = Ad
         fields = '__all__'
 
 
@@ -61,5 +61,5 @@ class FiltersForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        all_makes = CarAdvertisement.objects.exclude(make__isnull=True).values_list('make', 'make').distinct().order_by()
+        all_makes = Ad.objects.exclude(make__isnull=True).values_list('make', 'make').distinct().order_by()
         self.fields['make'].choices = [[None, 'All Makes']] + list(all_makes)

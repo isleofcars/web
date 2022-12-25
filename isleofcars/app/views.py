@@ -12,12 +12,12 @@ from django.shortcuts import render, redirect
 
 from app import forms
 from app.forms import RegisterForm, NewAddForm
-from app.models import Favorite, CarAdvertisement
+from app.models import Ad, FavoriteAd
 
 
 def render_homepage(request: HttpRequest) -> HttpResponse:
     """Render a main page with ads search."""
-    ads = CarAdvertisement.objects.all()
+    ads = Ad.objects.all()
     for key, values in request.GET.lists():
         if key in {'search', 'page'} or values == ['']:
             continue
@@ -28,7 +28,10 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
         # TODO: Search in make/model/description/etc
         tag_qs = reduce(operator.and_, (Q(title__icontains=x) for x in search))
         ads = ads.filter(tag_qs)
-    favorites = request.user.favorite_set.values_list('ads_id', flat=True)
+    # favorites = request.user.favorite_set.values_list('ads_id', flat=True)
+    favorites = set(Ad.objects.filter(favored_by=request.user)
+                    .values_list('id', flat=True))
+    print(favorites)
     for ad in ads:
         ad.is_favorite = ad.id in favorites
     paginator = Paginator(ads, per_page=25)
@@ -42,6 +45,70 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
             filters_form=forms.FiltersForm(request.GET)
         )
     )
+
+
+# TODO: Add check login decorator
+def render_favorites(request: HttpRequest) -> HttpResponse:
+    """Render favorite ads of a user."""
+    # TODO: Consider how to show sold items here.
+    # TODO: order items by id of the middle table
+    # ads = Ad.objects.filter(favored_by=request.user).all().order_by('-ad_favored_by.id')
+    # ads = Ad.objects.filter(favored_by=request.user).all().order_by(
+    #     '-ad_favored_by.id')
+    # ads = request.user.ad_set.all().order_by('-ad_favored_by.id')
+    # ads = Ad.objects.prefetch_related(
+    #     Prefetch(
+    #         'notes',
+    #         Note.objects.order_by('pinboard_pins__position'),
+    #     )
+    # )
+    # ads = FavoriteAd.objects.filter(user=request.user).ad_set.all()
+    # ads = Ad.favorite_ad_set.all()
+    # ads = request.user.ad_set.through.objects.all()
+    # ads = request.user.ad_set.through.ad_set.all()
+    # TODO: Replace raw query with django ORM if it is possible
+    ads = Ad.objects.raw(f"""
+        select a.*, 1 as is_favorite
+        from web.ad_favored_by f
+        left join web.ad a
+            on f.ad_id = a.id
+        where f.user_id = 1
+        order by f.id desc
+    """)
+    paginator = Paginator(ads, per_page=25)
+    page_number = request.GET.get('page')
+    ads = paginator.get_page(page_number)
+    return render(
+        request=request,
+        template_name='favorites.html',
+        context=dict(
+            ads=ads
+        )
+    )
+
+
+# TODO: Check if POST
+# TODO: Check if ajax
+# TODO: Check if user logged in
+def like(request: HttpRequest) -> JsonResponse:
+    ad_id = request.POST['ad_id']
+    print('like', ad_id)
+    ad = Ad.objects.get(id=ad_id)
+    ad.favored_by.add(request.user)
+    print('success!')
+    return JsonResponse({})
+
+
+# TODO: Check if POST
+# TODO: Check if ajax
+# TODO: Check if user logged in
+def unlike(request: HttpRequest) -> JsonResponse:
+    ad_id = request.POST['ad_id']
+    print('unlike', ad_id)
+    ad = Ad.objects.get(id=ad_id)
+    ad.favored_by.remove(request.user)
+    print('success!')
+    return JsonResponse({})
 
 
 def render_new_ad_form(request: HttpRequest) -> HttpResponse:
@@ -86,7 +153,7 @@ def render_profile_settings(request: HttpRequest) -> HttpResponse:
 def render_ad(request: HttpRequest, ad_id: int) -> HttpResponse:
     """Render an advertisement page."""
     ctx = {}
-    ad = CarAdvertisement.objects.get(id=ad_id)
+    ad = Ad.objects.get(id=ad_id)
     ad = model_to_dict(ad)
     ctx["title"] = ad["title"]
     ctx["id"] = ad["id"]
@@ -143,8 +210,6 @@ def logout_view(request):
     return redirect('ads')
 
 
-
-
 def settings(request):
     """In settings avalible only password change"""
 
@@ -165,55 +230,3 @@ def settings(request):
         else:
             ctx["form"] = PasswordChangeForm(request.user)
     return render(request, 'settings.html', ctx)
-
-
-
-# TODO: Add check login decorator
-def render_favorites(request: HttpRequest) -> HttpResponse:
-    """Render favorite ads of a user."""
-    # TODO: Consider how to show sold items here.
-    ads = Favorite.objects.get(user_id=request.user).ads_id.all()
-    for ad in ads:
-        ad.is_favorite = True
-    paginator = Paginator(ads, per_page=25)
-    page_number = request.GET.get('page')
-    ads = paginator.get_page(page_number)
-    return render(
-        request=request,
-        template_name='favorites.html',
-        context=dict(
-            ads=ads
-        )
-    )
-
-
-# TODO: Check if POST
-# TODO: Check if ajax
-# TODO: Check if user logged in
-def like(request: HttpRequest) -> JsonResponse:
-    ad_id = request.POST['ad_id']
-    print('like', ad_id)
-    ad = CarAdvertisement.objects.get(id=ad_id)
-    try:
-        favorite = Favorite.objects.get(user_id=request.user)
-    except Favorite.DoesNotExist:
-        favorite = Favorite.objects.create(user_id=request.user)
-    favorite.ads_id.add(ad)
-    print('success!')
-    return JsonResponse({})
-
-
-# TODO: Check if POST
-# TODO: Check if ajax
-# TODO: Check if user logged in
-def unlike(request: HttpRequest) -> JsonResponse:
-    ad_id = request.POST['ad_id']
-    print('unlike', ad_id)
-    ad = CarAdvertisement.objects.get(id=ad_id)
-    try:
-        favorite = Favorite.objects.get(user_id=request.user)
-    except Favorite.DoesNotExist:
-        favorite = Favorite.objects.create(user_id=request.user)
-    favorite.ads_id.remove(ad)
-    print('success!')
-    return JsonResponse({})

@@ -11,7 +11,7 @@ Supposed to work on the *nix machine.
 cd isleofcars
 python3 -m venv env
 source env/bin/activate
-pip install -r isleofcars/requirements.txt
+pip install -r requirements.txt
 python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
@@ -38,7 +38,7 @@ docker volume rm $(docker volume ls -qf dangling=true)
 
 - [x] Change the domain to isleofcars.com
 - [x] Move frontend to django templates (no vue.js)
-- [ ] Add search bar & search filters
+- [x] Add search bar & search filters
 - [ ] Add reporting app (admin?)
   - [ ] просмотр логов сайта и парсеров
 - [x] Личный кабинет с возможностью добавлять объявления
@@ -53,3 +53,4 @@ docker volume rm $(docker volume ls -qf dangling=true)
 - [ ] Add email verification on registration
 - [ ] Разработка мобильного приложения android/iphone
 - [ ] Setup SEO
+- [ ] Unite all databases (parsers & web into a single db)

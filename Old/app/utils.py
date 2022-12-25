@@ -1,5 +1,4 @@
 from django.conf import settings
-import ipinfo
 from django.db.models.expressions import RawSQL
 
 from .models import CarAdvertisement
@@ -18,18 +17,6 @@ def string_to_json_array(string, max_len_of_array):
     for i in range(len(clipped_array)):
         clipped_array[i] = clipped_array[i].replace("\"", "")
     return clipped_array if clipped_array != [""] else []
-
-
-def get_ip_details(ip_address=None):
-    """
-    Return client's ip details such as city, region, country, latitude, longitude etc.
-    ip_address - is taken from get_client_ip(request)
-    """
-    ipinfo_token = getattr(settings, "IPINFO_TOKEN", None)
-    ipinfo_settings = getattr(settings, "IPINFO_SETTINGS", {})
-    ip_data = ipinfo.getHandler(ipinfo_token, **ipinfo_settings)
-    ip_data = ip_data.getDetails(ip_address)
-    return ip_data
 
 
 def get_client_ip(request):

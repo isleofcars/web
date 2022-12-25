@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from app import models
 
 
-@admin.register(models.CarAdvertisement)
+@admin.register(models.Ad)
 class CarAdvertisementAdmin(admin.ModelAdmin):
     list_display = ['id', 'show_url', 'make', 'model', 'year', 'price']
     list_filter = ['make', 'model', 'year', 'price']

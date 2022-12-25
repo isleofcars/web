@@ -2,13 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class CarAdvertisement(models.Model):
+class Ad(models.Model):
     id = models.AutoField(primary_key=True)
     make = models.CharField(max_length=255, null=True, blank=True)
     model = models.CharField(max_length=255, null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     source = models.CharField(max_length=255, null=True, blank=True)
+    source_url = models.CharField(max_length=1024, null=True, blank=True)
     url = models.CharField(max_length=255, null=True, blank=True)
     is_new = models.BooleanField(null=True, blank=True)
     is_broken = models.BooleanField(null=True, blank=True)
@@ -24,6 +25,9 @@ class CarAdvertisement(models.Model):
     power = models.FloatField(null=True, blank=True)
     color = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    favored_by = models.ManyToManyField(User, through='FavoriteAd')
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               related_name='author', null=True, blank=True)
     objects = models.Manager()
 
     def __str__(self):
@@ -31,14 +35,31 @@ class CarAdvertisement(models.Model):
                 f'(id={self.id})')
 
     class Meta:
-        db_table = 'ads'
+        db_table = 'ad'
+        managed = True
         ordering = ('-id',)
 
 
-class Favorite(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    ads_id = models.ManyToManyField('app.CarAdvertisement')
+class FavoriteAd(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
     objects = models.Manager()
 
     class Meta:
-        db_table = 'ads_favorite'
+        db_table = 'ad_favored_by'
+        managed = True
+        ordering = ('-id',)
+
+#
+# class Favorite(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     ad = models.ForeignKey(Ad, on_delete=models.CASCADE)
+#     added = models.DateTimeField(auto_now_add=True)
+#     objects = models.Manager()
+#
+#     class Meta:
+#         db_table = 'favorite'
+#         managed = True
+#         ordering = ('-id',)
