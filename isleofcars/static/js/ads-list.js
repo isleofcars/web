@@ -1,4 +1,5 @@
 const maxGallerySize = 300;
+var newAdsLoading = false;
 
 function buildMasonryGrid() {
     $('.ads').masonry({
@@ -16,7 +17,9 @@ function buildMasonryGrid() {
 
 // Infinite scroll
 $(window).scroll(function () { 
+    if (newAdsLoading) return;
     if ($(window).scrollTop() >= $(document).height() - $(window).height() - 300) {
+        newAdsLoading = true;
         let url = $('.pagination .next').attr('href');
         if (!url) return;
         console.log('load', url);
@@ -27,6 +30,9 @@ $(window).scroll(function () {
             success: function(response) {
                 addNewAds(response);
             },
+            complete: () => {
+                newAdsLoading = false;
+            }
         })
     }
 });
@@ -38,6 +44,8 @@ function addNewAds(response) {
     $('.ads').append(adsNew);
     $('.ads').masonry('appended', adsNew, true);
     // buildMasonryGrid();
+    // console.log(response);
+    console.log('new next', $(response).filter('.pagination').find('.next')[0]);
     $('.pagination').replaceWith($(response).filter('.pagination'));
 };
 
