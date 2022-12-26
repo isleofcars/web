@@ -17,7 +17,7 @@ def make_ad_text(ad) -> str:
     max_len = 1024
     description = ''
     if ad.mileage:
-        description += f'{ad.mileage:,} mi'
+        description += f'{ad.mileage:,.0f} mi'
     if ad.body:
         description += f', {ad.body}'
     if ad.transmission:
