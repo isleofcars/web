@@ -28,12 +28,14 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
         # TODO: Search in make/model/description/etc
         tag_qs = reduce(operator.and_, (Q(title__icontains=x) for x in search))
         ads = ads.filter(tag_qs)
-    # favorites = request.user.favorite_set.values_list('ads_id', flat=True)
-    favorites = set(Ad.objects.filter(favored_by=request.user)
-                    .values_list('id', flat=True))
-    print(favorites)
-    for ad in ads:
-        ad.is_favorite = ad.id in favorites
+    # Set favorite ads
+    if request.user.is_authenticated:
+        # favorites = request.user.favorite_set.values_list('ads_id', flat=True)
+        favorites = set(Ad.objects.filter(favored_by=request.user)
+                        .values_list('id', flat=True))
+        print(favorites)
+        for ad in ads:
+            ad.is_favorite = ad.id in favorites
     paginator = Paginator(ads, per_page=25)
     page_number = request.GET.get('page')
     ads = paginator.get_page(page_number)
