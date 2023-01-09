@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+</head>
+<body>
+    <a href="{% url 'add_to_favorite' id %}">Add to favorite</a> | <a href="{% url 'ads' %}">Home</a>
+
+        <h2>{{ad.title}}</h2>
+        <p>Source: <a href="{{ad.url}}">{{ad.source}}</a></p>
+        <p>Status: 
+            {% if ad.is_new %} New {% else %} Not new {% endif %},
+            {% if ad.is_broken %} Broken {% else %} Not broken {% endif %}
+        </p>
+        <p>Price:  {% if ad.price == None %}No data{% else %}{{ad.price}}{% endif %}</p>
+        <p>Location:  {% if ad.location == None %}No data{% else %}{{ad.location}}{% endif %}</p>
+        <p>Latitude | Longitude:  {% if ad.latitude == None %}No data{% else %}{{ad.latitude}}{% endif %} |  {% if ad.longitude == None %}No data{% else %}{{ad.longitude}}{% endif %}</p>
+        <div>
+            Photos: <br>
+            {% for photo in ad.photos %}
+            <img src="{{photo}}" alt="{{title}}" width="350px" loading="lazy">
+            {% endfor %}
+        </div>
+        <p>Make:  {% if ad.make == None %}No data{% else %}{{ad.make}}{% endif %}</p>
+        <p>Model:  {% if ad.model == None %}No data{% else %}{{ad.model}}{% endif %}</p>
+        <p>Year:  {% if ad.year == None %}No data{% else %}{{ad.year}}{% endif %}</p>
+        <p>
+            Body: {% if ad.body == None %}No data{% else %}{{ad.body}}{% endif %}
+        </p>
+        <p>Mileage: {{ad.mileage}}</p>
+        <p>Transmission: {% if ad.transmission == None %}No data{% else %}{{ad.transmission}}{% endif %}</p>
+        <p>Drive: {% if ad.drive == None %}No data{% else %}{{ad.drive}}{% endif %}</p>
+        <p>Power: {% if ad.power == None %}No data{% else %}{{ad.power}}{% endif %}</p>
+        <p>Color: {% if ad.color == None %}No data{% else %}{{ad.color}}{% endif %}</p>
+
+
+</body>
+</html>
