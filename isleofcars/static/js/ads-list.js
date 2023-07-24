@@ -6,7 +6,7 @@ function buildMasonryGrid() {
         // options
         itemSelector: '.ad',
         // columnWidth: 180,
-        gutter: 0,
+        gutter: 8,
         horizontalOrder: true,
         isAnimated: true,
         // transitionDuration: 0.5,

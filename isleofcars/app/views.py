@@ -33,7 +33,7 @@ def render_homepage(request: HttpRequest) -> HttpResponse:
         # favorites = request.user.favorite_set.values_list('ads_id', flat=True)
         favorites = set(Ad.objects.filter(favored_by=request.user)
                         .values_list('id', flat=True))
-        print(favorites)
+        # print(favorites)
         for ad in ads:
             ad.is_favorite = ad.id in favorites
     paginator = Paginator(ads, per_page=25)

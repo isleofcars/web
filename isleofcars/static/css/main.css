@@ -4,7 +4,7 @@
 }
 
 :root {
-  --columns: 5;
+  --columns: 6;
   --color--gray-1: #262626;
   --color--gray-2: #808080;
   --color--gray-3: #a0a0a0;
@@ -16,6 +16,36 @@
   --size--small-2: 4px;
   --size--small-3: 8px;
   --size--header-height: 50px;
+}
+
+@media only screen and (max-width: 1670px) {
+  :root {
+    --columns: 5;
+  }
+}
+
+@media only screen and (max-width: 1366px) {
+  :root {
+    --columns: 4;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  :root {
+    --columns: 3;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  :root {
+    --columns: 2;
+  }
+}
+
+@media only screen and (max-width: 960px) {
+  :root {
+    --columns: 1;
+  }
 }
 
 body {
@@ -37,32 +67,27 @@ header {
   top: 0;
   z-index: 50;
   background-color: var(--color--white-2);
-  padding: 0 var(--size--small-3);
-  margin-top: 8px;
-}
-
-header .logo {
-  font-family: 'ChunkFive', sans-serif;
-  font-size: 50px;
-  font-weight: bold;
+  /* padding: 0 var(--size--small-3); */
+  /* margin-top: 8px; */
 }
 
 header .logo a {
   color: var(--color--gray-1);
   text-decoration: none;
+  font-family: 'ChunkFive', sans-serif;
+  font-size: 50px;
+  font-weight: bold;
 }
 
-aside {
-  width: 15vw;
-  height: 80vh;
-  position: sticky;
-  top: var(--size--header-height);
-  padding: 0 var(--size--small-3);
+header a[title="Favorites"] {
+  vertical-align: middle;
+  text-decoration: none;
 }
 
 #search-filters {
   border: 1px solid var(--color--gray-4);
   border-radius: var(--size--small-1);
+  display: flex;
 }
 
 #search-filters > p {
@@ -105,13 +130,21 @@ main {
   margin: 0 calc(0px - var(--size--small-3) / 2);
   display: flex;
   flex-wrap: wrap;
+  padding-left: 4px;
 }
 
 .ad {
-  margin: 0 calc(var(--size--small-3) / 2) calc(var(--size--small-3) / 2) calc(var(--size--small-3) / 2);
+  /* margin: 0 calc(var(--size--small-3) / 2) calc(var(--size--small-3) / 2) calc(var(--size--small-3) / 2); */
   cursor: pointer;
   border: 1px solid var(--color--gray-4);
   border-radius: var(--size--small-1);
+  margin-bottom: var(--size--small-3);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  /* width: 20%; */
+  /* width: calc((100vw - 40px) / 6); */
+  width: calc((100vw - (var(--size--small-3) * (var(--columns) - 1))) / var(--columns));
 }
 
 .ad__gallery {
@@ -160,7 +193,10 @@ main {
 
 .ad,
 .ad .ad__gallery__image {
-  width: 16.25vw;
+  /* width: 16.25vw; */
+  /* width: calc((100vw - (2px * var(--columns)) - ((var(--columns) - 1) * 8)) / var(--columns)); */
+  /* width: calc((100vw - (8px * 5)) / 6 - 2px); */
+  /* width: 20%; */
 }
 
 .ad__gallery__image {
